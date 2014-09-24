@@ -35,6 +35,7 @@ public class Controller {
 						try {
 							int variation = Integer.parseInt(input);
 							if (variation == 1) {
+
 								this.rules = new ClassicChess();
 							}
 							else {
@@ -45,7 +46,7 @@ public class Controller {
 						catch (Exception e)
 						{
 							input = null;
-							System.out.println("Input Error: Not an integer.");
+							System.out.println("Error loading variation.");
 						}
 					}
 					
@@ -55,6 +56,7 @@ public class Controller {
 			if (game == null) {
 				//start new game
 				this.game = new Game();
+				this.rules.SetStartingPositions(this.game.white, this.game.black);
 				
 				//TODO: move this output to the view
 				System.out.println("New game of chess started!");

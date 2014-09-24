@@ -16,8 +16,6 @@ public class Tile {
 	public void addPiece(Piece piece) {
 		if(piece != null) {
 			this.piece = piece;
-		} else {
-			this.piece = new Piece();
 		}
 	}
 	

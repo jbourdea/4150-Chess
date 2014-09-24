@@ -10,6 +10,10 @@ public class Rules {
 		
 	}
 	
+	public void SetStartingPositions(Player white, Player black) {
+		
+	}
+	
 	
 	
 }

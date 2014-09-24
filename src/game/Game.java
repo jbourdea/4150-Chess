@@ -5,8 +5,8 @@ public class Game {
 	public int turnNumber = 0;
 	public Player activePlayer = null;
 	
-	private Player white = null;
-	private Player black = null;
+	public Player white = null;
+	public Player black = null;
 	
 	public Game() {
 		white = new Player();
