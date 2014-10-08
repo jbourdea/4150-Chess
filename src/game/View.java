@@ -9,7 +9,7 @@ public class View {
 		for(int y = 0; y < gameBoard.height; y++) {
 			for(int x = 0; x < gameBoard.width; x++) {
 				if (gameBoard.tiles[x][y].piece == null) {
-					System.out.print("0 ");
+					System.out.print("- ");
 				}
 				else {
 					System.out.print(gameBoard.tiles[x][y].piece.toString() + " ");

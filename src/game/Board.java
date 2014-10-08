@@ -5,7 +5,7 @@ public class Board {
 	public int width = 0;
 	public int height = 0;
 	
-	public Rules gameRules;
+	//public Rules gameRules;
 	
 	
 	public Board(int width, int height) {

@@ -12,14 +12,15 @@ public class Tile {
 	public Tile(Piece piece) {
 		this.piece = piece;
 	}
-	
+
 	public void addPiece(Piece piece) {
 		if(piece != null) {
 			this.piece = piece;
 		}
 	}
-	
+
 	public Piece getPiece() {
 		return this.piece;
 	}
+	
 }
