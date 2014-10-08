@@ -2,6 +2,10 @@ package game;
 
 public class Game {
 	
+	public Rules rules = null;
+	
+	public Board board = null;
+	
 	public int turnNumber = 0;
 	public Player activePlayer = null;
 	

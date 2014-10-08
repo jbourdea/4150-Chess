@@ -5,11 +5,13 @@ public class ClassicChess extends Rules {
 	public ClassicChess() {
 		super();
 		
-		this.board = new Board(8,8);
 		
 	}
 	
-	public void SetStartingPositions(Player white, Player black) {
+	public Board SetStartingPositions(Player white, Player black) {
+		
+		Board board = new Board(8,8);
+		
 		board.tiles[0][1].addPiece(new Pawn(white));
 		board.tiles[1][1].addPiece(new Pawn(white));
 		board.tiles[2][1].addPiece(new Pawn(white));
@@ -28,5 +30,6 @@ public class ClassicChess extends Rules {
 		board.tiles[6][6].addPiece(new Pawn(black));
 		board.tiles[7][6].addPiece(new Pawn(black));
 		
+		return board;
 	}
 }

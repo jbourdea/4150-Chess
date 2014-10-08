@@ -3,7 +3,7 @@ import java.io.*;
 
 public class Controller {
 	public View view = null;
-	public Rules rules = null;
+	//public Rules rules = null;
 	public Game game = null;
 	
 	public Controller(View view) {
@@ -14,7 +14,13 @@ public class Controller {
 		
 		while (true) {
 			
-			if (rules == null) {
+			if (game == null) {
+				//start new game
+				this.game = new Game();
+			
+			}
+			
+			if (game.rules == null) {
 				//request rules
 				//TODO: move this output to view
 				System.out.println("What variation of Chess do you want to play?");
@@ -36,7 +42,7 @@ public class Controller {
 							int variation = Integer.parseInt(input);
 							if (variation == 1) {
 
-								this.rules = new ClassicChess();
+								game.rules = new ClassicChess();
 							}
 							else {
 								input = null;
@@ -51,19 +57,11 @@ public class Controller {
 					}
 					
 				}
+				game.board = game.rules.SetStartingPositions(this.game.white, this.game.black);
 			}
 			
-			if (game == null) {
-				//start new game
-				this.game = new Game();
-				this.rules.SetStartingPositions(this.game.white, this.game.black);
-				
-				//TODO: move this output to the view
-				System.out.println("New game of chess started!");
-				
-			}
-			else {
-				view.DisplayBoard(rules.board);
+			if (game != null) {
+				view.DisplayBoard(game.board);
 				game.NextTurn();
 				
 				//TODO: move this output to view

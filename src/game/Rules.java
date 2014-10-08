@@ -3,15 +3,15 @@
 public class Rules {
 
 	
-	public Board board = null;
+	//public Board board = null;
 
 		
 	public Rules() {
 		
 	}
 	
-	public void SetStartingPositions(Player white, Player black) {
-		
+	public Board SetStartingPositions(Player white, Player black) {
+		return null;
 	}
 	
 	
