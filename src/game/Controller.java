@@ -82,8 +82,8 @@ public class Controller {
 						try {
 							Move move = new Move(game.activePlayer, input, game.board);
 							
-							if (game.rules.ValidateMove(move)) {
-								CompleteMove(move);
+							if (move.IsValid() && game.rules.ValidateMove(move)) {
+								game.CompleteMove(move);
 							}
 							else {
 								input = null;
@@ -105,7 +105,4 @@ public class Controller {
 		
 	}
 	
-	public void CompleteMove(Move move) {
-		//TODO: move specified piece to specified position then check boardstate
-	}
 }

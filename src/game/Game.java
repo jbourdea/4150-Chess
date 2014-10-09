@@ -36,6 +36,15 @@ public class Game {
 		//TODO: update view with new turn information
 	}
 	
+	public void CompleteMove(Move move) {
+		//TODO: move specified piece to specified position then check boardstate
+		
+		Piece piece = move.piece;
+		
+		move.startPosition.piece = null;
+		move.endPosition.piece = piece;
+	}
+	
 	public static void main(String[] args) {
 	    
 		Controller controller = new Controller(new View());
