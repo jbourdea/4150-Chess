@@ -14,6 +14,11 @@ public class Rules {
 		return null;
 	}
 	
+	public boolean ValidateMove(Move move)
+	{
+		return false;
+	}
+	
 	
 	
 }

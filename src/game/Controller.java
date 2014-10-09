@@ -65,7 +65,7 @@ public class Controller {
 				game.NextTurn();
 				
 				//TODO: move this output to view
-				System.out.println("It is " + game.activePlayer.color + "'s turn.");
+				System.out.println("Turn #" + game.turnNumber + ": It's " + game.activePlayer.color + "'s turn.");
 				System.out.println("Enter a move. (eg: a2-a3)");
 				
 				BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -80,9 +80,9 @@ public class Controller {
 					
 					if (input != null) {
 						try {
-							Move move = new Move(game.activePlayer, input);
+							Move move = new Move(game.activePlayer, input, game.board);
 							
-							if (move.IsValid()) {
+							if (game.rules.ValidateMove(move)) {
 								CompleteMove(move);
 							}
 							else {

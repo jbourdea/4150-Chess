@@ -32,4 +32,13 @@ public class ClassicChess extends Rules {
 		
 		return board;
 	}
+	
+	public boolean ValidateMove(Move move)
+	{
+		//TODO:	- ensure that the moving piece can legally get to the move end point.
+		// 		- ensure that the requested move does not put the active player in check
+		//		- return true if the move is valid, false otherwise
+		
+		return true;
+	}
 }
