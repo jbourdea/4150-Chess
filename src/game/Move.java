@@ -33,6 +33,8 @@ public class Move {
 		{
 			piece = tile.piece;
 			startPosition = tile;
+			tile.xCord = startX;
+			tile.yCord = startY;
 		}
 		
 		int endX = 0;
@@ -50,6 +52,8 @@ public class Move {
 		endX = (end.charAt(0) == 'j') ? 9 : endX;
 		
 		endPosition = board.tiles[endX][endY];
+		endPosition.xCord = endX;
+		endPosition.yCord = endY;
 	}
 	
 	public boolean IsValid()

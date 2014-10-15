@@ -2,7 +2,7 @@ package game;
 
 public class Tile {
 	public Piece piece;
-	public char xCord = 'z';
+	public int xCord = -1;
 	public int yCord = -1;
 	
 	public Tile() {
