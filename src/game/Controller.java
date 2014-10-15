@@ -94,7 +94,7 @@ public class Controller {
 							
 							Move move = new Move(game.activePlayer, input, game.board);
 							
-							if (move.IsValid() && game.rules.ValidateMove(move)) {
+							if (move.IsValid() && game.rules.ValidateMove(move, game.board)) {
 								game.CompleteMove(move);
 							}
 							else {

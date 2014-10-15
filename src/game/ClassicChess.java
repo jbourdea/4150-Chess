@@ -33,7 +33,7 @@ public class ClassicChess extends Rules {
 		return board;
 	}
 	
-	public boolean ValidateMove(Move move)
+	public boolean ValidateMove(Move move, Board board)
 	{
 		//TODO:	- ensure that the moving piece can legally get to the move end point.
 		// 		- ensure that the requested move does not put the active player in check
@@ -75,7 +75,8 @@ public class ClassicChess extends Rules {
 			}
 			else if(move.piece.hasMoved == false && yDifference == direction * 2) {
 				// double jump for first move
-				if(move.endPosition.piece == null) {
+				//checking that the final position is empty (does not contain a piece) and that the space in between is also empty.
+				if(move.endPosition.piece == null && board.tiles[move.startPosition.xCord][move.startPosition.yCord - direction].piece == null) {
 					return true;
 				}
 				else {

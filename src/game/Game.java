@@ -43,6 +43,7 @@ public class Game {
 		
 		move.startPosition.piece = null;
 		move.endPosition.piece = piece;
+		piece.hasMoved = true;
 	}
 	
 	public static void main(String[] args) {

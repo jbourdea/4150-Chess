@@ -14,7 +14,7 @@ public class Rules {
 		return null;
 	}
 	
-	public boolean ValidateMove(Move move)
+	public boolean ValidateMove(Move move, Board board)
 	{
 		return false;
 	}
