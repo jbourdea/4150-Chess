@@ -22,10 +22,8 @@ public class Controller {
 			
 			if (game.rules == null) {
 				//request rules
-				//TODO: move this output to view
-				System.out.println("What variation of Chess do you want to play?");
-				System.out.println("1. Classic Chess");
-				System.out.println("Enter the index of the variation.");
+				// TODO: pass rules to display menu
+				view.DisplayMenu();
 				
 				BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 				String input = null;
@@ -39,6 +37,11 @@ public class Controller {
 					
 					if (input != null) {
 						try {
+							if(input.equalsIgnoreCase("exit")) {
+								view.DisplayExitMessage();
+								System.exit(0);
+							}
+							
 							int variation = Integer.parseInt(input);
 							if (variation == 1) {
 
@@ -63,10 +66,7 @@ public class Controller {
 			if (game != null) {
 				view.DisplayBoard(game.board);
 				game.NextTurn();
-				
-				//TODO: move this output to view
-				System.out.println("Turn #" + game.turnNumber + ": It's " + game.activePlayer.color + "'s turn.");
-				System.out.println("Enter a move. (eg: a2-a3)");
+				view.DisplayTurnNotification(game.turnNumber, game.activePlayer.color);
 				
 				BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 				String input = null;
@@ -80,6 +80,18 @@ public class Controller {
 					
 					if (input != null) {
 						try {
+							
+							if(input.equalsIgnoreCase("q") || input.equalsIgnoreCase("quit")) {
+								view.DisplaySurrenderMessage(game.activePlayer.color);
+								game = null;
+								break;
+							}
+							
+							if(input.equalsIgnoreCase("exit")) {
+								view.DisplayExitMessage();
+								System.exit(0);
+							}
+							
 							Move move = new Move(game.activePlayer, input, game.board);
 							
 							if (move.IsValid() && game.rules.ValidateMove(move)) {
