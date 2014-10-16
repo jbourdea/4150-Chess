@@ -65,10 +65,20 @@ public class ClassicChess extends Rules {
 				else if(xDifference == 1) {
 					// can't move diagonal without a piece
 					if(move.endPosition.piece == null) {
+						//checking if the piece adjacent to the pawn moving was a pawn and had done a double jump the last turn (checking condition for En Passant)
+						if(board.tiles[move.endPosition.xCord][move.startPosition.yCord].piece != null){
+							if(board.tiles[move.endPosition.xCord][move.startPosition.yCord].piece.getClass() == Pawn.class){
+								Pawn p = (Pawn)board.tiles[move.endPosition.xCord][move.startPosition.yCord].piece;
+								if(p.lastMoveJump == true && p.owner != move.activePlayer){
+									board.tiles[move.endPosition.xCord][move.startPosition.yCord].piece = null;
+									return true;
+								}
+							}
+						}
 						return false;
 					}
 					// can only move diagonal if the piece is owned by the other player
-					else if(!move.endPosition.piece.owner.color.equals(move.activePlayer.color)) {
+					else if(move.endPosition.piece.owner != move.activePlayer) {
 						return true;
 					}
 				}
@@ -87,5 +97,26 @@ public class ClassicChess extends Rules {
 		
 		
 		return false;
+	}
+	
+	public void setLastMoveJump(Player activePlayer, Board board){
+		for(int y = 0; y < board.height; y++) {
+			for(int x = 0; x < board.width; x++) {
+				if (board.tiles[x][y].piece != null) {
+					if(board.tiles[x][y].piece.getClass() == Pawn.class && board.tiles[x][y].piece.owner == activePlayer){
+						Pawn p = (Pawn)board.tiles[x][y].piece;
+						p.lastMoveJump = false;
+					}
+				}
+			}
+		}
+	}
+	
+	public void ruleCompleteMove(Player activePlayer, Board board, Move move){
+		setLastMoveJump(activePlayer, board);
+		if(move.piece.getClass() == Pawn.class && Math.abs(move.startPosition.yCord - move.endPosition.yCord) == 2) {
+			Pawn p = (Pawn)move.piece;
+			p.lastMoveJump = true;
+		}
 	}
 }

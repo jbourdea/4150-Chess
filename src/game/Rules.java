@@ -19,6 +19,9 @@ public class Rules {
 		return false;
 	}
 	
+	public void ruleCompleteMove(Player activePlayer, Board board, Move move){
+		
+	}
 	
 	
 }

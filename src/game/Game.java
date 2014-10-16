@@ -44,6 +44,7 @@ public class Game {
 		move.startPosition.piece = null;
 		move.endPosition.piece = piece;
 		piece.hasMoved = true;
+		rules.ruleCompleteMove(activePlayer, board, move);
 	}
 	
 	public static void main(String[] args) {
