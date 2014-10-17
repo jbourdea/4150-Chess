@@ -20,7 +20,11 @@ public class ClassicChess extends Rules {
 		board.tiles[5][1].addPiece(new Pawn(white));
 		board.tiles[6][1].addPiece(new Pawn(white));
 		board.tiles[7][1].addPiece(new Pawn(white));
+		board.tiles[0][0].addPiece(new Rook(white));
+		board.tiles[1][0].addPiece(new Bishop(white));
 		board.tiles[3][0].addPiece(new Queen(white));
+		board.tiles[6][0].addPiece(new Bishop(white));
+		board.tiles[7][0].addPiece(new Rook(white));
 		
 		board.tiles[0][6].addPiece(new Pawn(black));
 		board.tiles[1][6].addPiece(new Pawn(black));
@@ -30,7 +34,11 @@ public class ClassicChess extends Rules {
 		board.tiles[5][6].addPiece(new Pawn(black));
 		board.tiles[6][6].addPiece(new Pawn(black));
 		board.tiles[7][6].addPiece(new Pawn(black));
+		board.tiles[0][7].addPiece(new Rook(black));
+		board.tiles[1][7].addPiece(new Bishop(black));
 		board.tiles[3][7].addPiece(new Queen(black));
+		board.tiles[6][7].addPiece(new Bishop(black));
+		board.tiles[7][7].addPiece(new Rook(black));
 		
 		return board;
 	}
@@ -153,6 +161,79 @@ public class ClassicChess extends Rules {
 		return false;
 	}
 	
+	// return true if it's a valid move, false if invalid
+	public boolean validateBishopMove(Move move, Board board)
+	{
+		// check what the move way is, horizontal or diagonal
+		int xDiff = Math.abs(move.startPosition.xCord - move.endPosition.xCord);
+		int yDiff = Math.abs(move.startPosition.yCord - move.endPosition.yCord);
+		
+		// if it attacks the same team
+		if(move.endPosition.piece != null && move.endPosition.piece.owner == move.activePlayer) {
+			return false;
+		}
+		
+		// diagonal movement
+		if(xDiff == yDiff) {
+			int xDir = 1;
+			int yDir = 1;
+			
+			// moving left
+			if(move.startPosition.xCord - move.endPosition.xCord > 0) {
+				xDir = -1;
+			}
+			// moving up
+			if(move.startPosition.yCord - move.endPosition.yCord > 0) {
+				yDir = -1;
+			}
+			
+			for(int i=1; i < yDiff; i++ ) {
+				Tile t = board.tiles[move.startPosition.xCord + (xDir * i)][move.startPosition.yCord + (yDir * i)];
+				if(t.piece != null) {
+					return false;
+				}
+			}
+			return true;
+		}
+		
+		return false;
+	}
+	
+	// return true if it's a valid move, false if invalid
+		public boolean validateRookMove(Move move, Board board)
+		{
+			// check what the move way is, horizontal or diagonal
+			int xDiff = Math.abs(move.startPosition.xCord - move.endPosition.xCord);
+			int yDiff = Math.abs(move.startPosition.yCord - move.endPosition.yCord);
+			
+			// if it attacks the same team
+			if(move.endPosition.piece != null && move.endPosition.piece.owner == move.activePlayer) {
+				return false;
+			}
+			
+			// horizontal movement
+			if(xDiff == 0) {
+				for(int i=1; i < xDiff; i++ ) {
+					Tile t = board.tiles[move.startPosition.xCord + i][move.startPosition.yCord];
+					if(t.piece != null) {
+						return false;
+					}
+				}
+				return true;
+			}
+			// vertical movement
+			else if(yDiff == 0) {
+				for(int i=1; i < yDiff; i++ ) {
+					Tile t = board.tiles[move.startPosition.xCord][move.startPosition.yCord + i];
+					if(t.piece != null) {
+						return false;
+					}
+				}
+				return true;
+			}
+			
+			return false;
+		}
 	
 	
 	public boolean ValidateMove(Move move, Board board)
@@ -164,10 +245,15 @@ public class ClassicChess extends Rules {
 		if(move.piece.getClass() == Pawn.class) {
 			return validatePawnMove(move, board);
 		}
+		else if(move.piece.getClass() == Bishop.class) {
+			return validateBishopMove(move, board);
+		}
 		else if(move.piece.getClass() == Queen.class) {
 			return validateQueenMove(move, board);
 		}
-		
+		else if(move.piece.getClass() == Rook.class) {
+			return validateRookMove(move, board);
+		}
 		
 		return false;
 	}

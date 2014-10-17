@@ -1,15 +1,15 @@
 package game;
 
-public class Queen extends Piece {
-	public Queen (Player owner) {
+public class Bishop extends Piece {
+	public Bishop (Player owner) {
 		super(owner);
 	}
 
 	public String toString() {
 		if (owner.color.equals("White")) {
-			return "Q";
+			return "B";
 		}
-		return "q";
+		return "b";
 		
 	}
 }

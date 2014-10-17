@@ -6,15 +6,6 @@ public class Pawn extends Piece {
 		super(owner);
 	}
 	
-	private void updateValidMoves(){
-		if (owner.color.equals("White") ) {
-			
-		}
-		else {
-			
-		}
-	}
-
 	public String toString() {
 		if (owner.color.equals("White")) {
 			return "P";
