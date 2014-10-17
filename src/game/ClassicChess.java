@@ -280,6 +280,44 @@ public class ClassicChess extends Rules {
 			if(yDiff <= 1 && xDiff <= 1) {
 				return true;
 			}
+			// the king is attempting to castle
+			else if(xDiff == 2) {
+				// can't castle if the king has moved
+				if(move.piece.hasMoved == true) {
+					return false;
+				}
+				int startXCord = move.startPosition.xCord;
+				int startYCord = move.startPosition.yCord;
+				
+				// check right rook
+				if(move.startPosition.xCord < move.endPosition.xCord) {
+					// if a piece isn't there, if it has moved, or if it isn't a rook, it doesn't pass
+					 if(board.tiles[7][startYCord].piece == null || board.tiles[7][startYCord].piece.hasMoved == true || board.tiles[7][startYCord].piece.getClass() != Rook.class) {
+						 return false;
+					 }
+					 
+					 // if there are no pieces inbetween
+					 if(board.tiles[startXCord + 1][startYCord].piece == null && board.tiles[startXCord + 2][startYCord].piece == null) {
+						 board.tiles[startXCord + 1][startYCord].piece = board.tiles[7][startYCord].piece;
+						 board.tiles[7][startYCord].piece = null;
+						 return true;
+					 }
+				}
+				// check left rook
+				else {
+					// if a piece isn't there, if it has moved, or if it isn't a rook, it doesn't pass
+					 if(board.tiles[0][startYCord].piece == null || board.tiles[0][startYCord].piece.hasMoved == true || board.tiles[0][startYCord].piece.getClass() != Rook.class) {
+						 return false;
+					 }
+					 
+					 // if there are no pieces inbetween
+					 if(board.tiles[startXCord - 1][startYCord].piece == null && board.tiles[startXCord - 2][startYCord].piece == null && board.tiles[startXCord - 3][startYCord].piece == null) {
+						 board.tiles[startXCord - 1][startYCord].piece = board.tiles[0][startYCord].piece;
+						 board.tiles[0][startYCord].piece = null;
+						 return true;
+					 }
+				}
+			}
 
 			return false;
 		}
