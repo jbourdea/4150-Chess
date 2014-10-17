@@ -1,4 +1,5 @@
 package game;
+import java.io.*;
 
 public class ClassicChess extends Rules {
 
@@ -15,19 +16,19 @@ public class ClassicChess extends Rules {
 		board.tiles[0][1].addPiece(new Pawn(white));
 		board.tiles[1][1].addPiece(new Pawn(white));
 		board.tiles[2][1].addPiece(new Pawn(white));
-		board.tiles[3][1].addPiece(new Pawn(white));
-		board.tiles[4][1].addPiece(new Pawn(white));
-		board.tiles[5][1].addPiece(new Pawn(white));
-		board.tiles[6][1].addPiece(new Pawn(white));
-		board.tiles[7][1].addPiece(new Pawn(white));
-		board.tiles[0][0].addPiece(new Rook(white));
-		board.tiles[1][0].addPiece(new Bishop(white));
-		board.tiles[2][0].addPiece(new Knight(white));
-		board.tiles[3][0].addPiece(new Queen(white));
-		board.tiles[4][0].addPiece(new King(white));
-		board.tiles[5][0].addPiece(new Knight(white));
-		board.tiles[6][0].addPiece(new Bishop(white));
-		board.tiles[7][0].addPiece(new Rook(white));
+//		board.tiles[3][1].addPiece(new Pawn(white));
+//		board.tiles[4][1].addPiece(new Pawn(white));
+//		board.tiles[5][1].addPiece(new Pawn(white));
+//		board.tiles[6][1].addPiece(new Pawn(white));
+//		board.tiles[7][1].addPiece(new Pawn(white));
+//		board.tiles[0][0].addPiece(new Rook(white));
+//		board.tiles[1][0].addPiece(new Bishop(white));
+//		board.tiles[2][0].addPiece(new Knight(white));
+//		board.tiles[3][0].addPiece(new Queen(white));
+//		board.tiles[4][0].addPiece(new King(white));
+//		board.tiles[5][0].addPiece(new Knight(white));
+//		board.tiles[6][0].addPiece(new Bishop(white));
+//		board.tiles[7][0].addPiece(new Rook(white));
 		
 		board.tiles[0][6].addPiece(new Pawn(black));
 		board.tiles[1][6].addPiece(new Pawn(black));
@@ -369,6 +370,49 @@ public class ClassicChess extends Rules {
 		if(move.piece.getClass() == Pawn.class && Math.abs(move.startPosition.yCord - move.endPosition.yCord) == 2) {
 			Pawn p = (Pawn)move.piece;
 			p.lastMoveJump = true;
+		}else if(move.piece.getClass() == Pawn.class && move.endPosition.yCord == 7 && move.piece.owner.color.equals("White")) {
+			getPawnPromotionInput(board, move);
+		}else if(move.piece.getClass() == Pawn.class && move.endPosition.yCord == 0 && move.piece.owner.color.equals("Black")) {
+			getPawnPromotionInput(board, move);
+		}
+	}
+	
+	public void getPawnPromotionInput(Board board, Move move){
+		System.out.println("Please enter a valid input for Pawn Promotion. Choose between Q (Queen), R (Rook), N (Knight), and B (Bishop).");
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String input = null;
+		while (input == null) {
+			try {
+				 input = br.readLine();
+			} catch (IOException e) {
+				input = null;
+				System.out.println("Input Error: Unable to read input.");
+			}
+			if (input != null) {
+				try {
+					if(input.equalsIgnoreCase("q") || input.equalsIgnoreCase("queen")) {
+						board.tiles[move.endPosition.xCord][move.endPosition.yCord].addPiece(new Queen(move.activePlayer));
+					}
+					else if(input.equalsIgnoreCase("r") || input.equalsIgnoreCase("rook")) {
+						board.tiles[move.endPosition.xCord][move.endPosition.yCord].addPiece(new Rook(move.activePlayer));
+					}
+					else if(input.equalsIgnoreCase("n") || input.equalsIgnoreCase("knight")) {
+						board.tiles[move.endPosition.xCord][move.endPosition.yCord].addPiece(new Knight(move.activePlayer));
+					}
+					else if(input.equalsIgnoreCase("b") || input.equalsIgnoreCase("bishop")) {
+						board.tiles[move.endPosition.xCord][move.endPosition.yCord].addPiece(new Bishop(move.activePlayer));
+					}
+					else{
+						input = null;
+						System.out.println("Please choose a valid input between Q (Queen), R (Rook), N (Knight), and B (Bishop).");
+					}
+				}
+				catch (Exception e)
+				{
+					input = null;
+					System.out.println("Please choose a valid input between Q (Queen), R (Rook), N (Knight), and B (Bishop).");
+				}
+			}
 		}
 	}
 }
