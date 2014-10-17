@@ -22,7 +22,9 @@ public class ClassicChess extends Rules {
 		board.tiles[7][1].addPiece(new Pawn(white));
 		board.tiles[0][0].addPiece(new Rook(white));
 		board.tiles[1][0].addPiece(new Bishop(white));
+		board.tiles[2][0].addPiece(new Knight(white));
 		board.tiles[3][0].addPiece(new Queen(white));
+		board.tiles[5][0].addPiece(new Knight(white));
 		board.tiles[6][0].addPiece(new Bishop(white));
 		board.tiles[7][0].addPiece(new Rook(white));
 		
@@ -36,7 +38,9 @@ public class ClassicChess extends Rules {
 		board.tiles[7][6].addPiece(new Pawn(black));
 		board.tiles[0][7].addPiece(new Rook(black));
 		board.tiles[1][7].addPiece(new Bishop(black));
+		board.tiles[2][7].addPiece(new Knight(black));
 		board.tiles[3][7].addPiece(new Queen(black));
+		board.tiles[5][7].addPiece(new Knight(black));
 		board.tiles[6][7].addPiece(new Bishop(black));
 		board.tiles[7][7].addPiece(new Rook(black));
 		
@@ -235,6 +239,29 @@ public class ClassicChess extends Rules {
 			return false;
 		}
 	
+		// return true if it's a valid move, false if invalid
+		public boolean validateKnightMove(Move move, Board board)
+		{
+			// if it attacks the same team
+			if(move.endPosition.piece != null && move.endPosition.piece.owner == move.activePlayer) {
+				return false;
+			}
+			
+			// check what the move way is, horizontal or diagonal
+			int xDiff = Math.abs(move.startPosition.xCord - move.endPosition.xCord);
+			int yDiff = Math.abs(move.startPosition.yCord - move.endPosition.yCord);
+			
+			
+			if(yDiff == 2 && xDiff == 1) {
+				return true;
+			}
+			else if(yDiff == 1 && xDiff == 2) {
+				return true;
+			}
+
+			return false;
+		}
+		
 	
 	public boolean ValidateMove(Move move, Board board)
 	{
@@ -253,6 +280,9 @@ public class ClassicChess extends Rules {
 		}
 		else if(move.piece.getClass() == Rook.class) {
 			return validateRookMove(move, board);
+		}
+		else if(move.piece.getClass() == Knight.class) {
+			return validateKnightMove(move, board);
 		}
 		
 		return false;
