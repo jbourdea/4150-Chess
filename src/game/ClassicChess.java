@@ -13,39 +13,39 @@ public class ClassicChess extends Rules {
 		
 		Board board = new Board(8,8);
 		
-		board.tiles[0][1].addPiece(new Pawn(white));
-		board.tiles[1][1].addPiece(new Pawn(white));
-		board.tiles[2][1].addPiece(new Pawn(white));
+		board.AddPiece(new Pawn(white), 0, 1);
+//		board.AddPiece(new Pawn(white), 1, 1);
+//		board.AddPiece(new Pawn(white), 2, 1);
 //		board.tiles[3][1].addPiece(new Pawn(white));
 //		board.tiles[4][1].addPiece(new Pawn(white));
 //		board.tiles[5][1].addPiece(new Pawn(white));
 //		board.tiles[6][1].addPiece(new Pawn(white));
 //		board.tiles[7][1].addPiece(new Pawn(white));
-//		board.tiles[0][0].addPiece(new Rook(white));
+		board.tiles[0][0].addPiece(new Rook(white));
 //		board.tiles[1][0].addPiece(new Bishop(white));
 //		board.tiles[2][0].addPiece(new Knight(white));
 //		board.tiles[3][0].addPiece(new Queen(white));
-//		board.tiles[4][0].addPiece(new King(white));
+		board.tiles[4][0].addPiece(new King(white));
 //		board.tiles[5][0].addPiece(new Knight(white));
 //		board.tiles[6][0].addPiece(new Bishop(white));
 //		board.tiles[7][0].addPiece(new Rook(white));
 		
-		board.tiles[0][6].addPiece(new Pawn(black));
-		board.tiles[1][6].addPiece(new Pawn(black));
-		board.tiles[2][6].addPiece(new Pawn(black));
-		board.tiles[3][6].addPiece(new Pawn(black));
-		board.tiles[4][6].addPiece(new Pawn(black));
-		board.tiles[5][6].addPiece(new Pawn(black));
-		board.tiles[6][6].addPiece(new Pawn(black));
-		board.tiles[7][6].addPiece(new Pawn(black));
-		board.tiles[0][7].addPiece(new Rook(black));
-		board.tiles[1][7].addPiece(new Bishop(black));
-		board.tiles[2][7].addPiece(new Knight(black));
-		board.tiles[3][7].addPiece(new Queen(black));
-		board.tiles[4][7].addPiece(new King(black));
-		board.tiles[5][7].addPiece(new Knight(black));
-		board.tiles[6][7].addPiece(new Bishop(black));
-		board.tiles[7][7].addPiece(new Rook(black));
+//		board.AddPiece(new Pawn(black), 0, 6);
+//		board.AddPiece(new Pawn(black), 1, 6);
+//		board.AddPiece(new Pawn(black), 2, 6);
+//		board.AddPiece(new Pawn(black), 3, 6);
+//		board.AddPiece(new Pawn(black), 4, 6);
+//		board.AddPiece(new Pawn(black), 5, 6);
+//		board.AddPiece(new Pawn(black), 6, 6);
+//		board.AddPiece(new Pawn(black), 7, 6);
+//		board.AddPiece(new Rook(black), 0, 7);
+//		board.AddPiece(new Bishop(black), 1, 7);
+//		board.AddPiece(new Knight(black), 2, 7);
+//		board.AddPiece(new Queen(black), 3, 7);
+		board.AddPiece(new King(black), 4, 7);
+//		board.AddPiece(new Knight(black), 5, 7);
+//		board.AddPiece(new Bishop(black), 6, 7);
+		board.AddPiece(new Rook(black), 7, 7);
 		
 		return board;
 	}
@@ -330,26 +330,104 @@ public class ClassicChess extends Rules {
 		// 		- ensure that the requested move does not put the active player in check
 		//		- return true if the move is valid, false otherwise
 		
+		boolean isValid = false;
+		
 		if(move.piece.getClass() == Pawn.class) {
-			return validatePawnMove(move, board);
+			isValid = validatePawnMove(move, board);
 		}
 		else if(move.piece.getClass() == Bishop.class) {
-			return validateBishopMove(move, board);
+			isValid = validateBishopMove(move, board);
 		}
 		else if(move.piece.getClass() == Queen.class) {
-			return validateQueenMove(move, board);
+			isValid = validateQueenMove(move, board);
 		}
 		else if(move.piece.getClass() == Rook.class) {
-			return validateRookMove(move, board);
+			isValid = validateRookMove(move, board);
 		}
 		else if(move.piece.getClass() == Knight.class) {
-			return validateKnightMove(move, board);
+			isValid = validateKnightMove(move, board);
 		}
 		else if(move.piece.getClass() == King.class) {
-			return validateKingMove(move, board);
+			isValid = validateKingMove(move, board);
 		}
 		
-		return false;
+		isValid = validateBoardState(move, board) ? isValid : false;
+		
+		return isValid;
+	}
+	
+	private boolean validateBoardState(Move move, Board board) {
+		
+		//create deep copies of move and board
+		Board newBoard = new Board(board);
+		Move newMove = new Move(move);
+		
+		for (Tile tile: newBoard.listOfTiles) {
+			if (newMove.startPosition.xCord == tile.xCord && 
+					newMove.startPosition.yCord == tile.yCord) {
+				newMove.startPosition = tile;
+			}
+			else if (newMove.endPosition.xCord == tile.xCord && 
+					newMove.endPosition.yCord == tile.yCord) {
+				newMove.endPosition = tile;
+			}
+		}
+		
+		newMove.startPosition.piece = null;
+		newMove.endPosition.piece = newMove.piece;
+		
+		Tile kingPosition = null;
+		Tile enemyKing = null;
+		for (Tile tile: newBoard.listOfTiles) {
+			if (tile.piece != null) {
+				if (tile.piece.getClass() == King.class && tile.piece.owner == newMove.activePlayer) {
+					kingPosition = tile;
+				}
+				else if (tile.piece.getClass() == King.class && tile.piece.owner != newMove.activePlayer) {
+					enemyKing = tile;
+				}
+			}
+		}
+		if (kingPosition == null) { return false; }
+		if (enemyKing == null) { return true; }
+		
+		for (Tile tile : newBoard.listOfTiles) {
+			if (tile.piece != null) {
+				if (tile.piece.owner != newMove.activePlayer) {
+					//try to kill the king
+					Move regicide = new Move();
+					regicide.activePlayer = tile.piece.owner;
+					regicide.startPosition = tile;
+					regicide.endPosition = kingPosition;
+					regicide.piece = tile.piece;
+					
+					boolean isValid = false;
+					if(regicide.piece.getClass() == Pawn.class) {
+						isValid = validatePawnMove(regicide, newBoard);
+					}
+					else if(regicide.piece.getClass() == Bishop.class) {
+						isValid = validateBishopMove(regicide, newBoard);
+					}
+					else if(regicide.piece.getClass() == Queen.class) {
+						isValid = validateQueenMove(regicide, newBoard);
+					}
+					else if(regicide.piece.getClass() == Rook.class) {
+						isValid = validateRookMove(regicide, newBoard);
+					}
+					else if(regicide.piece.getClass() == Knight.class) {
+						isValid = validateKnightMove(regicide, newBoard);
+					}
+					else if(regicide.piece.getClass() == King.class) {
+						isValid = validateKingMove(regicide, newBoard);
+					}
+					if (isValid) {
+						return false;
+					}
+				}
+			}
+		}
+		
+		return true;
 	}
 	
 	public void setLastMoveJump(Player activePlayer, Board board){

@@ -7,6 +7,15 @@ public class Move {
 	public Tile endPosition = null;
 	public Tile startPosition = null;
 	
+	public Move() {}
+	
+	public Move(Move move) {
+		this.activePlayer = move.activePlayer;
+		this.startPosition = move.startPosition;
+		this.endPosition = move.endPosition;
+		this.piece = move.piece;
+	}
+	
 	public Move(Player activePlayer, String move, Board board) {
 		this.activePlayer = activePlayer;
 
