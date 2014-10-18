@@ -373,9 +373,11 @@ public class ClassicChess extends Rules {
 			}
 		}
 		
+		//make the suggested move on the fake board
 		newMove.startPosition.piece = null;
 		newMove.endPosition.piece = newMove.piece;
 		
+		//locate the friendly and enemy kings
 		Tile kingPosition = null;
 		Tile enemyKing = null;
 		for (Tile tile: newBoard.listOfTiles) {
@@ -391,6 +393,8 @@ public class ClassicChess extends Rules {
 		if (kingPosition == null) { return false; }
 		if (enemyKing == null) { return true; }
 		
+		//iterate through the enemy pieces and tell them to try and kill the friendly king
+		//if they can (legally) then the active player has put themself in check
 		for (Tile tile : newBoard.listOfTiles) {
 			if (tile.piece != null) {
 				if (tile.piece.owner != newMove.activePlayer) {
