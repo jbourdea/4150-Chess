@@ -23,4 +23,16 @@ public class Tile {
 		return this.piece;
 	}
 	
+	public String toString() {
+		if(this.piece != null) {
+			return "xCord => " + this.xCord
+					+ " yCord => " + this.yCord
+					+ " piece => " + this.piece.toString();
+		} else {
+			return "xCord => " + this.xCord
+					+ " yCord => " + this.yCord
+					+ " piece => N/A";
+		}
+	}
+	
 }

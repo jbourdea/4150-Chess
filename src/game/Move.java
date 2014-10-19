@@ -79,5 +79,13 @@ public class Move {
 			return true;
 		return false;
 	}
+	
+	public String toString() {
+		return "<= Move => \n Player => " + this.activePlayer.toString()
+				+ "\n Piece => " + this.piece.toString() 
+				+ "\n Start Position => " + this.startPosition.toString() 
+				+ "\n End Position => " + this.endPosition.toString();
+	
+	}
 
 }

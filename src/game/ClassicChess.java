@@ -146,7 +146,7 @@ public class ClassicChess extends Rules {
 		}
 		// horizontal movement
 		else if(xDiff == 0) {
-			for(int i=1; i < xDiff; i++ ) {
+			for(int i=1; i < yDiff; i++ ) {
 				Tile t = board.tiles[move.startPosition.xCord + i][move.startPosition.yCord];
 				if(t.piece != null) {
 					return false;
@@ -156,7 +156,7 @@ public class ClassicChess extends Rules {
 		}
 		// vertical movement
 		else if(yDiff == 0) {
-			for(int i=1; i < yDiff; i++ ) {
+			for(int i=1; i < xDiff; i++ ) {
 				Tile t = board.tiles[move.startPosition.xCord][move.startPosition.yCord + i];
 				if(t.piece != null) {
 					return false;
@@ -220,7 +220,7 @@ public class ClassicChess extends Rules {
 			
 			// horizontal movement
 			if(xDiff == 0) {
-				for(int i=1; i < xDiff; i++ ) {
+				for(int i=1; i < yDiff; i++ ) {
 					Tile t = board.tiles[move.startPosition.xCord + i][move.startPosition.yCord];
 					if(t.piece != null) {
 						return false;
@@ -230,7 +230,7 @@ public class ClassicChess extends Rules {
 			}
 			// vertical movement
 			else if(yDiff == 0) {
-				for(int i=1; i < yDiff; i++ ) {
+				for(int i=1; i < xDiff; i++ ) {
 					Tile t = board.tiles[move.startPosition.xCord][move.startPosition.yCord + i];
 					if(t.piece != null) {
 						return false;

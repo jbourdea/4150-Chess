@@ -147,7 +147,7 @@ public class TakeAllChess extends Rules {
 			return true;
 		}
 		// horizontal movement
-		else if(xDiff == 0) {
+		else if(yDiff == 0) {
 			for(int i=1; i < xDiff; i++ ) {
 				Tile t = board.tiles[move.startPosition.xCord + i][move.startPosition.yCord];
 				if(t.piece != null) {
@@ -157,7 +157,7 @@ public class TakeAllChess extends Rules {
 			return true;
 		}
 		// vertical movement
-		else if(yDiff == 0) {
+		else if(xDiff == 0) {
 			for(int i=1; i < yDiff; i++ ) {
 				Tile t = board.tiles[move.startPosition.xCord][move.startPosition.yCord + i];
 				if(t.piece != null) {
@@ -209,121 +209,122 @@ public class TakeAllChess extends Rules {
 	}
 	
 	// return true if it's a valid move, false if invalid
-		public boolean validateRookMove(Move move, Board board)
-		{
-			// check what the move way is, horizontal or diagonal
-			int xDiff = Math.abs(move.startPosition.xCord - move.endPosition.xCord);
-			int yDiff = Math.abs(move.startPosition.yCord - move.endPosition.yCord);
-			
-			// if it attacks the same team
-			if(move.endPosition.piece != null && move.endPosition.piece.owner == move.activePlayer) {
-				return false;
-			}
-			
-			// horizontal movement
-			if(xDiff == 0) {
-				for(int i=1; i < xDiff; i++ ) {
-					Tile t = board.tiles[move.startPosition.xCord + i][move.startPosition.yCord];
-					if(t.piece != null) {
-						return false;
-					}
-				}
-				return true;
-			}
-			// vertical movement
-			else if(yDiff == 0) {
-				for(int i=1; i < yDiff; i++ ) {
-					Tile t = board.tiles[move.startPosition.xCord][move.startPosition.yCord + i];
-					if(t.piece != null) {
-						return false;
-					}
-				}
-				return true;
-			}
-			
+	public boolean validateRookMove(Move move, Board board)
+	{
+		// check what the move way is, horizontal or diagonal
+		int xDiff = Math.abs(move.startPosition.xCord - move.endPosition.xCord);
+		int yDiff = Math.abs(move.startPosition.yCord - move.endPosition.yCord);
+		
+		// if it attacks the same team
+		if(move.endPosition.piece != null && move.endPosition.piece.owner == move.activePlayer) {
 			return false;
 		}
-	
-		// return true if it's a valid move, false if invalid
-		public boolean validateKnightMove(Move move, Board board)
-		{
-			// if it attacks the same team
-			if(move.endPosition.piece != null && move.endPosition.piece.owner == move.activePlayer) {
-				return false;
+				
+		// vertical movement
+		if(xDiff == 0) {
+			for(int i=1; i < yDiff; i++ ) {
+				
+				Tile t = board.tiles[move.startPosition.xCord][move.startPosition.yCord + i];
+				if(t.piece != null) {
+					return false;
+				}
 			}
-			
-			// check what the move way is, horizontal or diagonal
-			int xDiff = Math.abs(move.startPosition.xCord - move.endPosition.xCord);
-			int yDiff = Math.abs(move.startPosition.yCord - move.endPosition.yCord);
-			
-			
-			if(yDiff == 2 && xDiff == 1) {
-				return true;
+			return true;
+		}
+		// horizontal movement
+		else if(yDiff == 0) {
+			for(int i=1; i < xDiff; i++ ) {
+				Tile t = board.tiles[move.startPosition.xCord + i][move.startPosition.yCord];
+				if(t.piece != null) {
+					return false;
+				}
 			}
-			else if(yDiff == 1 && xDiff == 2) {
-				return true;
-			}
+			return true;
+		}
+		
+		return false;
+	}
 
+	// return true if it's a valid move, false if invalid
+	public boolean validateKnightMove(Move move, Board board)
+	{
+		// if it attacks the same team
+		if(move.endPosition.piece != null && move.endPosition.piece.owner == move.activePlayer) {
 			return false;
 		}
 		
-		// return true if it's a valid move, false if invalid
-		public boolean validateKingMove(Move move, Board board)
-		{
-			// if it attacks the same team
-			if(move.endPosition.piece != null && move.endPosition.piece.owner == move.activePlayer) {
-				return false;
-			}
-			
-			// check what the move way is, horizontal or diagonal
-			int xDiff = Math.abs(move.startPosition.xCord - move.endPosition.xCord);
-			int yDiff = Math.abs(move.startPosition.yCord - move.endPosition.yCord);
-			
-			
-			if(yDiff <= 1 && xDiff <= 1) {
-				return true;
-			}
-			// the king is attempting to castle
-			else if(xDiff == 2) {
-				// can't castle if the king has moved
-				if(move.piece.hasMoved == true) {
-					return false;
-				}
-				int startXCord = move.startPosition.xCord;
-				int startYCord = move.startPosition.yCord;
-				
-				// check right rook
-				if(move.startPosition.xCord < move.endPosition.xCord) {
-					// if a piece isn't there, if it has moved, or if it isn't a rook, it doesn't pass
-					 if(board.tiles[7][startYCord].piece == null || board.tiles[7][startYCord].piece.hasMoved == true || board.tiles[7][startYCord].piece.getClass() != Rook.class) {
-						 return false;
-					 }
-					 
-					 // if there are no pieces inbetween
-					 if(board.tiles[startXCord + 1][startYCord].piece == null && board.tiles[startXCord + 2][startYCord].piece == null) {
-						 board.tiles[startXCord + 1][startYCord].piece = board.tiles[7][startYCord].piece;
-						 board.tiles[7][startYCord].piece = null;
-						 return true;
-					 }
-				}
-				// check left rook
-				else {
-					// if a piece isn't there, if it has moved, or if it isn't a rook, it doesn't pass
-					 if(board.tiles[0][startYCord].piece == null || board.tiles[0][startYCord].piece.hasMoved == true || board.tiles[0][startYCord].piece.getClass() != Rook.class) {
-						 return false;
-					 }
-					 
-					 // if there are no pieces inbetween
-					 if(board.tiles[startXCord - 1][startYCord].piece == null && board.tiles[startXCord - 2][startYCord].piece == null && board.tiles[startXCord - 3][startYCord].piece == null) {
-						 board.tiles[startXCord - 1][startYCord].piece = board.tiles[0][startYCord].piece;
-						 board.tiles[0][startYCord].piece = null;
-						 return true;
-					 }
-				}
-			}
+		// check what the move way is, horizontal or diagonal
+		int xDiff = Math.abs(move.startPosition.xCord - move.endPosition.xCord);
+		int yDiff = Math.abs(move.startPosition.yCord - move.endPosition.yCord);
+		
+		
+		if(yDiff == 2 && xDiff == 1) {
+			return true;
+		}
+		else if(yDiff == 1 && xDiff == 2) {
+			return true;
+		}
 
+		return false;
+	}
+	
+	// return true if it's a valid move, false if invalid
+	public boolean validateKingMove(Move move, Board board)
+	{
+		// if it attacks the same team
+		if(move.endPosition.piece != null && move.endPosition.piece.owner == move.activePlayer) {
 			return false;
 		}
+		
+		// check what the move way is, horizontal or diagonal
+		int xDiff = Math.abs(move.startPosition.xCord - move.endPosition.xCord);
+		int yDiff = Math.abs(move.startPosition.yCord - move.endPosition.yCord);
+		
+		
+		if(yDiff <= 1 && xDiff <= 1) {
+			return true;
+		}
+		// the king is attempting to castle
+		else if(xDiff == 2) {
+			// can't castle if the king has moved
+			if(move.piece.hasMoved == true) {
+				return false;
+			}
+			int startXCord = move.startPosition.xCord;
+			int startYCord = move.startPosition.yCord;
+			
+			// check right rook
+			if(move.startPosition.xCord < move.endPosition.xCord) {
+				// if a piece isn't there, if it has moved, or if it isn't a rook, it doesn't pass
+				 if(board.tiles[7][startYCord].piece == null || board.tiles[7][startYCord].piece.hasMoved == true || board.tiles[7][startYCord].piece.getClass() != Rook.class) {
+					 return false;
+				 }
+				 
+				 // if there are no pieces inbetween
+				 if(board.tiles[startXCord + 1][startYCord].piece == null && board.tiles[startXCord + 2][startYCord].piece == null) {
+					 board.tiles[startXCord + 1][startYCord].piece = board.tiles[7][startYCord].piece;
+					 board.tiles[7][startYCord].piece = null;
+					 return true;
+				 }
+			}
+			// check left rook
+			else {
+				// if a piece isn't there, if it has moved, or if it isn't a rook, it doesn't pass
+				 if(board.tiles[0][startYCord].piece == null || board.tiles[0][startYCord].piece.hasMoved == true || board.tiles[0][startYCord].piece.getClass() != Rook.class) {
+					 return false;
+				 }
+				 
+				 // if there are no pieces inbetween
+				 if(board.tiles[startXCord - 1][startYCord].piece == null && board.tiles[startXCord - 2][startYCord].piece == null && board.tiles[startXCord - 3][startYCord].piece == null) {
+					 board.tiles[startXCord - 1][startYCord].piece = board.tiles[0][startYCord].piece;
+					 board.tiles[0][startYCord].piece = null;
+					 return true;
+				 }
+			}
+		}
+
+		return false;
+	}
 		
 	
 	public boolean ValidateMove(Move move, Board board)
@@ -364,7 +365,8 @@ public class TakeAllChess extends Rules {
 			System.out.println("Kill Possible but not done");
 			return false;
 		}
-		
+		//isValidMove = validateBoardState(move, board) ? isValidMove : false;
+
 		return true;
 		//return isValidMove;
 	}
@@ -444,21 +446,51 @@ public class TakeAllChess extends Rules {
 	* Returns false otherwise
 	*/
 	private boolean checkIfKillIsPossible(Player activePlayer, Board board) {
-		Move exMove = null;
-		for(int y = 0; y < board.height; y++) {
-			for(int x = 0; x < board.width; x++) {
-				if (board.tiles[x][y].piece != null && board.tiles[x][y].piece.owner == activePlayer) {
-					for(int z = 0; z < board.height; z++) {
-						for(int q = 0; q < board.width; q++) {
-							//Make a fake move for every tile on the board
-							exMove = new Move(activePlayer, board.tiles[x][y], board.tiles[z][q]);
-							
-							//Check to see if that fake move gives a kill shot, if it does return
-							if(movementIsAllowed(exMove, board) && board.tiles[z][q].piece != null && board.tiles[z][q].piece.owner != activePlayer) {
-								return true;
+		
+		//iterate through the enemy pieces and tell them to try and kill the friendly king
+		//if they can (legally) then the active player has put themself in check
+		for (Tile tile : board.listOfTiles) {
+			if (tile.piece != null) {
+				if (tile.piece.owner == activePlayer) {
+					//try to make a kill
+					Move exMove = new Move();
+					exMove.activePlayer = tile.piece.owner;
+					exMove.startPosition = tile;
+					exMove.piece = tile.piece;
+					
+					for (Tile endTile : board.listOfTiles) {
+						if (endTile.piece != null) {
+							if (endTile.piece.owner != activePlayer) {
+
+								exMove.endPosition = endTile;
+								boolean isValid = false;
+								if(exMove.piece.getClass() == Pawn.class) {
+									isValid = validatePawnMove(exMove, board);
+								}
+								else if(exMove.piece.getClass() == Bishop.class) {
+									isValid = validateBishopMove(exMove, board);
+								}
+								else if(exMove.piece.getClass() == Queen.class) {
+									isValid = validateQueenMove(exMove, board);
+								}
+								else if(exMove.piece.getClass() == Rook.class) {
+									isValid = validateRookMove(exMove, board);
+								}
+								else if(exMove.piece.getClass() == Knight.class) {
+									isValid = validateKnightMove(exMove, board);
+								}
+								else if(exMove.piece.getClass() == King.class) {
+									isValid = validateKingMove(exMove, board);
+								}
+								if (isValid) {
+									System.out.println(exMove.toString());
+									return true;
+								}
+					
 							}
 						}
 					}
+					
 				}
 			}
 		}

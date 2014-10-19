@@ -5,8 +5,6 @@ public class PeasantsRevoltChess extends Rules {
 
 	public PeasantsRevoltChess() {
 		super();
-		
-		
 	}
 	
 	public Board SetStartingPositions(Player white, Player black) {

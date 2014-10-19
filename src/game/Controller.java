@@ -105,7 +105,8 @@ public class Controller {
 						catch (Exception e)
 						{
 							input = null;
-							System.out.println("Input Error: Unable to parse input.");
+							System.out.println("Input Error: Unable to parse input. =>" + e.toString());
+							 e.printStackTrace();
 						}
 					}
 					
