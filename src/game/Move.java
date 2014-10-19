@@ -21,7 +21,6 @@ public class Move {
 		this.startPosition = startTile;
 		this.piece = startTile.piece;
 		this.endPosition = endTile;
-	
 	}
 	
 	public Move(Player activePlayer, String move, Board board) {
@@ -30,8 +29,8 @@ public class Move {
 		String start = move.substring(0, move.indexOf('-')).toLowerCase();
 		String end = move.substring(move.indexOf('-')+1).toLowerCase();
 
-		int startX = 0;
-		int startY = Character.getNumericValue(start.charAt(1));
+		int startX = -1;
+		int startY = Integer.valueOf(start.substring(1)); //Character.getNumericValue(start.charAt(1));
 		
 		startX = (start.charAt(0) == 'a') ? 0 : startX;
 		startX = (start.charAt(0) == 'b') ? 1 : startX;
@@ -43,19 +42,20 @@ public class Move {
 		startX = (start.charAt(0) == 'h') ? 7 : startX;
 		startX = (start.charAt(0) == 'i') ? 8 : startX;
 		startX = (start.charAt(0) == 'j') ? 9 : startX;
-
-		Tile tile = board.tiles[startX][startY];
-		
-		if (tile.piece != null)
-		{
-			piece = tile.piece;
-			startPosition = tile;
-			tile.xCord = startX;
-			tile.yCord = startY;
+				
+		if(startX != -1 && startY < board.height && startY > -1) {
+			Tile tile = board.tiles[startX][startY];
+			if (tile.piece != null)
+			{
+				piece = tile.piece;
+				startPosition = tile;
+				tile.xCord = startX;
+				tile.yCord = startY;
+			}
 		}
 		
-		int endX = 0;
-		int endY = Character.getNumericValue(end.charAt(1));
+		int endX = -1;
+		int endY = Integer.valueOf(end.substring(1));;
 		
 		endX = (end.charAt(0) == 'a') ? 0 : endX;
 		endX = (end.charAt(0) == 'b') ? 1 : endX;
@@ -68,15 +68,24 @@ public class Move {
 		endX = (end.charAt(0) == 'i') ? 8 : endX;
 		endX = (end.charAt(0) == 'j') ? 9 : endX;
 		
-		endPosition = board.tiles[endX][endY];
-		endPosition.xCord = endX;
-		endPosition.yCord = endY;
+		if(endX != -1 && endY < board.height && endY > -1) {
+			endPosition = board.tiles[endX][endY];
+			endPosition.xCord = endX;
+			endPosition.yCord = endY;
+		}
 	}
 	
 	public boolean IsValid()
 	{
 		if (piece != null && startPosition != null && endPosition != null && activePlayer != null && piece.owner == activePlayer)
 			return true;
+		
+		if(piece == null) { View.setErrorMessage("Move not possible, piece doesn't exist on specified tile."); }
+		if(endPosition == null) { View.setErrorMessage("Move not possible, tile specified for end position doesn't exist."); }
+		if(startPosition == null) { View.setErrorMessage("Move not possible, tile specified for start position doesn't exist."); }
+		if(activePlayer == null) { View.setErrorMessage("System error, no active player."); }
+		if(piece != null && piece.owner != activePlayer) { View.setErrorMessage("Move not possible, active player doesn't own the piece specified to move."); }
+		
 		return false;
 	}
 	

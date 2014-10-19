@@ -305,34 +305,34 @@ public class PeasantsRevoltChess extends Rules {
 		}
 		
 	
-	public boolean ValidateMove(Move move, Board board)
+	public int ValidateMove(Move move, Board board)
 	{
 		//TODO:	- ensure that the moving piece can legally get to the move end point.
 		// 		- ensure that the requested move does not put the active player in check
 		//		- return true if the move is valid, false otherwise
 		
-		boolean isValid = false;
+		int isValid = 1;
 		
 		if(move.piece.getClass() == Pawn.class) {
-			isValid = validatePawnMove(move, board);
+			isValid = (validatePawnMove(move, board) == true) ? 0 : 1;
 		}
 		else if(move.piece.getClass() == Bishop.class) {
-			isValid = validateBishopMove(move, board);
+			isValid = (validateBishopMove(move, board) == true) ? 0 : 1;
 		}
 		else if(move.piece.getClass() == Queen.class) {
-			isValid = validateQueenMove(move, board);
+			isValid = (validateQueenMove(move, board) == true) ? 0 : 1;
 		}
 		else if(move.piece.getClass() == Rook.class) {
-			isValid = validateRookMove(move, board);
+			isValid = (validateRookMove(move, board) == true) ? 0 : 1;
 		}
 		else if(move.piece.getClass() == Knight.class) {
-			isValid = validateKnightMove(move, board);
+			isValid = (validateKnightMove(move, board) == true) ? 0 : 1;
 		}
 		else if(move.piece.getClass() == King.class) {
-			isValid = validateKingMove(move, board);
+			isValid = (validateKingMove(move, board) == true) ? 0 : 1;
 		}
 		
-		isValid = validateBoardState(move, board) ? isValid : false;
+		isValid = validateBoardState(move, board) ? isValid : 2;
 		
 		return isValid;
 	}

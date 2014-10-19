@@ -66,16 +66,18 @@ public class Controller {
 			if (game != null) {
 				view.DisplayBoard(game.board);
 				game.NextTurn();
-				view.DisplayTurnNotification(game.turnNumber, game.activePlayer.color);
+				
 				
 				BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 				String input = null;
 				while (input == null) {
+					view.DisplayTurnNotification(game.turnNumber, game.activePlayer.color);
 					try {
 						 input = br.readLine();
 					} catch (IOException e) {
 						input = null;
-						System.out.println("Input Error: Unable to read input.");
+						View.setErrorMessage("Input Error: Unable to read input.");
+						view.DisplayErrorMessage();
 					}
 					
 					if (input != null) {
@@ -93,20 +95,20 @@ public class Controller {
 							}
 							
 							Move move = new Move(game.activePlayer, input, game.board);
-							
-							if (move.IsValid() && game.rules.ValidateMove(move, game.board)) {
+					
+							if (move.IsValid() && game.rules.ValidateMove(move, game.board) == 0) {
 								game.CompleteMove(move);
 							}
 							else {
 								input = null;
-								System.out.println("Input Error: Not a valid move.");
+								view.DisplayErrorMessage();
 							}
 						}
 						catch (Exception e)
 						{
 							input = null;
-							System.out.println("Input Error: Unable to parse input. =>" + e.toString());
-							 e.printStackTrace();
+							System.out.println("Input Error: Unable to parse input.");
+							//e.printStackTrace();
 						}
 					}
 					

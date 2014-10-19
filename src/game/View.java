@@ -1,7 +1,7 @@
 package game;
 
 public class View {
-	
+	private static String errorMessage;
 	
 	public void DisplayMenu() {
 		System.out.println("What variation of Chess do you want to play?");
@@ -35,7 +35,17 @@ public class View {
 	
 	public void DisplayTurnNotification(int turnNumber, String color) {
 		System.out.println("Turn #" + turnNumber + ": It's " + color + "'s turn.");
-		System.out.println("Enter a move. (eg: a2-a3)");
+		System.out.println("Please enter a move. (eg: a2-a3)");
+	}
+	
+	public void DisplayErrorMessage() {
+		System.out.println("!Error => " + View.getErrorMessage());
+		View.setErrorMessage("");
+	}
+	
+	public void DisplayErrorMessage(String errorMessage) {
+		View.setErrorMessage(errorMessage);
+		DisplayErrorMessage();
 	}
 	
 	public void DisplaySurrenderMessage(String surrenderingColor) {
@@ -48,5 +58,13 @@ public class View {
 	
 	public void DisplayExitMessage() {
 		System.out.println("Thanks for playing!");
+	}
+
+	public static String getErrorMessage() {
+		return errorMessage;
+	}
+
+	public static void setErrorMessage(String errorMessage) {
+		View.errorMessage = errorMessage;
 	}
 }

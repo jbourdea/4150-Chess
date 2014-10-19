@@ -124,20 +124,20 @@ public class TakeAllChess extends Rules {
 			return false;
 		}
 		
+		int xDir = 1;
+		int yDir = 1;
+		
+		// moving left
+		if(move.startPosition.xCord - move.endPosition.xCord > 0) {
+			xDir = -1;
+		}
+		// moving up
+		if(move.startPosition.yCord - move.endPosition.yCord > 0) {
+			yDir = -1;
+		}
+		
 		// diagonal movement
 		if(xDiff == yDiff) {
-			int xDir = 1;
-			int yDir = 1;
-			
-			// moving left
-			if(move.startPosition.xCord - move.endPosition.xCord > 0) {
-				xDir = -1;
-			}
-			// moving up
-			if(move.startPosition.yCord - move.endPosition.yCord > 0) {
-				yDir = -1;
-			}
-			
 			for(int i=1; i < yDiff; i++ ) {
 				Tile t = board.tiles[move.startPosition.xCord + (xDir * i)][move.startPosition.yCord + (yDir * i)];
 				if(t.piece != null) {
@@ -149,7 +149,7 @@ public class TakeAllChess extends Rules {
 		// horizontal movement
 		else if(yDiff == 0) {
 			for(int i=1; i < xDiff; i++ ) {
-				Tile t = board.tiles[move.startPosition.xCord + i][move.startPosition.yCord];
+				Tile t = board.tiles[move.startPosition.xCord + (xDir * i)][move.startPosition.yCord];
 				if(t.piece != null) {
 					return false;
 				}
@@ -159,7 +159,7 @@ public class TakeAllChess extends Rules {
 		// vertical movement
 		else if(xDiff == 0) {
 			for(int i=1; i < yDiff; i++ ) {
-				Tile t = board.tiles[move.startPosition.xCord][move.startPosition.yCord + i];
+				Tile t = board.tiles[move.startPosition.xCord][move.startPosition.yCord + (yDir * i)];
 				if(t.piece != null) {
 					return false;
 				}
@@ -219,12 +219,24 @@ public class TakeAllChess extends Rules {
 		if(move.endPosition.piece != null && move.endPosition.piece.owner == move.activePlayer) {
 			return false;
 		}
+		
+		int xDir = 1;
+		int yDir = 1;
+		
+		// moving left
+		if(move.startPosition.xCord - move.endPosition.xCord > 0) {
+			xDir = -1;
+		}
+		// moving up
+		if(move.startPosition.yCord - move.endPosition.yCord > 0) {
+			yDir = -1;
+		}
 				
 		// vertical movement
 		if(xDiff == 0) {
 			for(int i=1; i < yDiff; i++ ) {
 				
-				Tile t = board.tiles[move.startPosition.xCord][move.startPosition.yCord + i];
+				Tile t = board.tiles[move.startPosition.xCord][move.startPosition.yCord + (yDir * i)];
 				if(t.piece != null) {
 					return false;
 				}
@@ -234,7 +246,7 @@ public class TakeAllChess extends Rules {
 		// horizontal movement
 		else if(yDiff == 0) {
 			for(int i=1; i < xDiff; i++ ) {
-				Tile t = board.tiles[move.startPosition.xCord + i][move.startPosition.yCord];
+				Tile t = board.tiles[move.startPosition.xCord + (xDir * i)][move.startPosition.yCord];
 				if(t.piece != null) {
 					return false;
 				}
@@ -327,47 +339,53 @@ public class TakeAllChess extends Rules {
 	}
 		
 	
-	public boolean ValidateMove(Move move, Board board)
+	/*
+	 * 
+	 * (non-Javadoc)
+	 * @see game.Rules#ValidateMove(game.Move, game.Board)
+	 */
+	
+	public int ValidateMove(Move move, Board board)
 	{
 		//TODO:	- ensure that the moving piece can legally get to the move end point.
 		// 		- ensure that the requested move does not put the active player in check
 		//		- return true if the move is valid, false otherwise
-		boolean isValidMove = false;
+		int isValidMove = -1;
 		
 		if(move.piece.getClass() == Pawn.class) {
-			isValidMove = validatePawnMove(move, board);
+			isValidMove = (validatePawnMove(move, board) == true) ? 0 : 1;
 		}
 		else if(move.piece.getClass() == Bishop.class) {
-			isValidMove = validateBishopMove(move, board);
+			isValidMove = (validateBishopMove(move, board) == true) ? 0 : 1;
 		}
 		else if(move.piece.getClass() == Queen.class) {
-			isValidMove = validateQueenMove(move, board);
+			isValidMove = (validateQueenMove(move, board) == true) ? 0 : 1;
 		}
 		else if(move.piece.getClass() == Rook.class) {
-			isValidMove = validateRookMove(move, board);
+			isValidMove = (validateRookMove(move, board) == true) ? 0 : 1;
 		}
 		else if(move.piece.getClass() == Knight.class) {
-			isValidMove = validateKnightMove(move, board);
+			isValidMove = (validateKnightMove(move, board) == true) ? 0 : 1;
 		}
 		else if(move.piece.getClass() == King.class) {
-			isValidMove = validateKingMove(move, board);
+			isValidMove = (validateKingMove(move, board) == true) ? 0 : 1;
 		}
 		
-		if(isValidMove == false) {
-			return false;
+		if(isValidMove == 1) {
+			View.setErrorMessage("Illigally inputted move, piece can't move in the specified manor.");
+			return 1;
 		}
 		
 		if(move.endPosition.piece != null && move.endPosition.piece.owner != move.activePlayer) { //Player is killing the opponents piece, no need to check if they have a potential kill move
-			return true;
+			return 0;
 		}
 		
 		if(checkIfKillIsPossible(move.activePlayer, board) == true) {
-			System.out.println("Kill Possible but not done");
-			return false;
+			return 3;
 		}
 		//isValidMove = validateBoardState(move, board) ? isValidMove : false;
 
-		return true;
+		return 0;
 		//return isValidMove;
 	}
 	
@@ -483,7 +501,7 @@ public class TakeAllChess extends Rules {
 									isValid = validateKingMove(exMove, board);
 								}
 								if (isValid) {
-									System.out.println(exMove.toString());
+									View.setErrorMessage(exMove.toString());
 									return true;
 								}
 					
@@ -494,29 +512,6 @@ public class TakeAllChess extends Rules {
 				}
 			}
 		}
-		return false;
-	}
-	
-	private boolean movementIsAllowed(Move move, Board board) {
-		if(move.piece.getClass() == Pawn.class) {
-			return validatePawnMove(move, board);
-		}
-		else if(move.piece.getClass() == Bishop.class) {
-			return validateBishopMove(move, board);
-		}
-		else if(move.piece.getClass() == Queen.class) {
-			return validateQueenMove(move, board);
-		}
-		else if(move.piece.getClass() == Rook.class) {
-			return validateRookMove(move, board);
-		}
-		else if(move.piece.getClass() == Knight.class) {
-			return validateKnightMove(move, board);
-		}
-		else if(move.piece.getClass() == King.class) {
-			return validateKingMove(move, board);
-		}
-		
 		return false;
 	}
 }
