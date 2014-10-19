@@ -1,11 +1,9 @@
 package game;
+import java.io.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+public class PeasantsRevoltChess extends Rules {
 
-public class TakeAllChess extends Rules {
-	public TakeAllChess() {
+	public PeasantsRevoltChess() {
 		super();
 		
 		
@@ -23,31 +21,14 @@ public class TakeAllChess extends Rules {
 		board.AddPiece(new Pawn(white), 5, 1);
 		board.AddPiece(new Pawn(white), 6, 1);
 		board.AddPiece(new Pawn(white), 7, 1);
-		board.AddPiece(new Rook(white), 0, 0);
-		board.AddPiece(new Knight(white), 1, 0);
-		board.AddPiece(new Bishop(white), 2, 0);
-		board.AddPiece(new Queen(white), 3, 0);
 		board.AddPiece(new King(white), 4, 0);
-		board.AddPiece(new Bishop(white), 5, 0);
-		board.AddPiece(new Knight(white), 6, 0);
-		board.AddPiece(new Rook(white), 7, 0);
 		
-		board.AddPiece(new Pawn(black), 0, 6);
-		board.AddPiece(new Pawn(black), 1, 6);
-		board.AddPiece(new Pawn(black), 2, 6);
-		board.AddPiece(new Pawn(black), 3, 6);
 		board.AddPiece(new Pawn(black), 4, 6);
-		board.AddPiece(new Pawn(black), 5, 6);
-		board.AddPiece(new Pawn(black), 6, 6);
-		board.AddPiece(new Pawn(black), 7, 6);
-		board.AddPiece(new Rook(black), 0, 7);
 		board.AddPiece(new Knight(black), 1, 7);
-		board.AddPiece(new Bishop(black), 2, 7);
-		board.AddPiece(new Queen(black), 3, 7);
+		board.AddPiece(new Knight(black), 2, 7);
 		board.AddPiece(new King(black), 4, 7);
-		board.AddPiece(new Bishop(black), 5, 7);
+		board.AddPiece(new Knight(black), 5, 7);
 		board.AddPiece(new Knight(black), 6, 7);
-		board.AddPiece(new Rook(black), 7, 7);
 		
 		return board;
 	}
@@ -331,45 +312,111 @@ public class TakeAllChess extends Rules {
 		//TODO:	- ensure that the moving piece can legally get to the move end point.
 		// 		- ensure that the requested move does not put the active player in check
 		//		- return true if the move is valid, false otherwise
-		boolean isValidMove = false;
+		
+		boolean isValid = false;
 		
 		if(move.piece.getClass() == Pawn.class) {
-			isValidMove = validatePawnMove(move, board);
+			isValid = validatePawnMove(move, board);
 		}
 		else if(move.piece.getClass() == Bishop.class) {
-			isValidMove = validateBishopMove(move, board);
+			isValid = validateBishopMove(move, board);
 		}
 		else if(move.piece.getClass() == Queen.class) {
-			isValidMove = validateQueenMove(move, board);
+			isValid = validateQueenMove(move, board);
 		}
 		else if(move.piece.getClass() == Rook.class) {
-			isValidMove = validateRookMove(move, board);
+			isValid = validateRookMove(move, board);
 		}
 		else if(move.piece.getClass() == Knight.class) {
-			isValidMove = validateKnightMove(move, board);
+			isValid = validateKnightMove(move, board);
 		}
 		else if(move.piece.getClass() == King.class) {
-			isValidMove = validateKingMove(move, board);
+			isValid = validateKingMove(move, board);
 		}
 		
-		if(isValidMove == false) {
-			return false;
+		isValid = validateBoardState(move, board) ? isValid : false;
+		
+		return isValid;
+	}
+	
+	private boolean validateBoardState(Move move, Board board) {
+		
+		//create deep copies of move and board
+		Board newBoard = new Board(board);
+		Move newMove = new Move(move);
+		
+		for (Tile tile: newBoard.listOfTiles) {
+			if (newMove.startPosition.xCord == tile.xCord && 
+					newMove.startPosition.yCord == tile.yCord) {
+				newMove.startPosition = tile;
+			}
+			else if (newMove.endPosition.xCord == tile.xCord && 
+					newMove.endPosition.yCord == tile.yCord) {
+				newMove.endPosition = tile;
+			}
 		}
 		
-		if(move.endPosition.piece != null && move.endPosition.piece.owner != move.activePlayer) { //Player is killing the opponents piece, no need to check if they have a potential kill move
-			return true;
-		}
+		//make the suggested move on the fake board
+		newMove.startPosition.piece = null;
+		newMove.endPosition.piece = newMove.piece;
 		
-		if(checkIfKillIsPossible(move.activePlayer, board) == true) {
-			System.out.println("Kill Possible but not done");
-			return false;
+		//locate the friendly and enemy kings
+		Tile kingPosition = null;
+		Tile enemyKing = null;
+		for (Tile tile: newBoard.listOfTiles) {
+			if (tile.piece != null) {
+				if (tile.piece.getClass() == King.class && tile.piece.owner == newMove.activePlayer) {
+					kingPosition = tile;
+				}
+				else if (tile.piece.getClass() == King.class && tile.piece.owner != newMove.activePlayer) {
+					enemyKing = tile;
+				}
+			}
+		}
+		if (kingPosition == null) { return false; }
+		if (enemyKing == null) { return true; }
+		
+		//iterate through the enemy pieces and tell them to try and kill the friendly king
+		//if they can (legally) then the active player has put themself in check
+		for (Tile tile : newBoard.listOfTiles) {
+			if (tile.piece != null) {
+				if (tile.piece.owner != newMove.activePlayer) {
+					//try to kill the king
+					Move regicide = new Move();
+					regicide.activePlayer = tile.piece.owner;
+					regicide.startPosition = tile;
+					regicide.endPosition = kingPosition;
+					regicide.piece = tile.piece;
+					
+					boolean isValid = false;
+					if(regicide.piece.getClass() == Pawn.class) {
+						isValid = validatePawnMove(regicide, newBoard);
+					}
+					else if(regicide.piece.getClass() == Bishop.class) {
+						isValid = validateBishopMove(regicide, newBoard);
+					}
+					else if(regicide.piece.getClass() == Queen.class) {
+						isValid = validateQueenMove(regicide, newBoard);
+					}
+					else if(regicide.piece.getClass() == Rook.class) {
+						isValid = validateRookMove(regicide, newBoard);
+					}
+					else if(regicide.piece.getClass() == Knight.class) {
+						isValid = validateKnightMove(regicide, newBoard);
+					}
+					else if(regicide.piece.getClass() == King.class) {
+						isValid = validateKingMove(regicide, newBoard);
+					}
+					if (isValid) {
+						return false;
+					}
+				}
+			}
 		}
 		
 		return true;
-		//return isValidMove;
 	}
 	
-	//Pretty sure this function sets last jumped to 0 for everything, has to do with En Passant
 	public void setLastMoveJump(Player activePlayer, Board board){
 		for(int y = 0; y < board.height; y++) {
 			for(int x = 0; x < board.width; x++) {
@@ -383,7 +430,6 @@ public class TakeAllChess extends Rules {
 		}
 	}
 	
-	//Move has been validated, performing the move
 	public void ruleCompleteMove(Player activePlayer, Board board, Move move){
 		setLastMoveJump(activePlayer, board);
 		if(move.piece.getClass() == Pawn.class && Math.abs(move.startPosition.yCord - move.endPosition.yCord) == 2) {
@@ -394,7 +440,6 @@ public class TakeAllChess extends Rules {
 		}else if(move.piece.getClass() == Pawn.class && move.endPosition.yCord == 0 && move.piece.owner.color.equals("Black")) {
 			getPawnPromotionInput(board, move);
 		}
-		//TODO CHECK FOR WIN
 	}
 	
 	public void getPawnPromotionInput(Board board, Move move){
@@ -410,10 +455,7 @@ public class TakeAllChess extends Rules {
 			}
 			if (input != null) {
 				try {
-					if(input.equalsIgnoreCase("k") || input.equalsIgnoreCase("king")) {
-						board.tiles[move.endPosition.xCord][move.endPosition.yCord].addPiece(new King(move.activePlayer));
-					}
-					else if(input.equalsIgnoreCase("q") || input.equalsIgnoreCase("queen")) {
+					if(input.equalsIgnoreCase("q") || input.equalsIgnoreCase("queen")) {
 						board.tiles[move.endPosition.xCord][move.endPosition.yCord].addPiece(new Queen(move.activePlayer));
 					}
 					else if(input.equalsIgnoreCase("r") || input.equalsIgnoreCase("rook")) {
@@ -427,64 +469,15 @@ public class TakeAllChess extends Rules {
 					}
 					else{
 						input = null;
-						System.out.println("Please choose a valid input between K (King), Q (Queen), R (Rook), N (Knight), and B (Bishop).");
+						System.out.println("Please choose a valid input between Q (Queen), R (Rook), N (Knight), and B (Bishop).");
 					}
 				}
 				catch (Exception e)
 				{
 					input = null;
-					System.out.println("Please choose a valid input between K (King), Q (Queen), R (Rook), N (Knight), and B (Bishop).");
+					System.out.println("Please choose a valid input between Q (Queen), R (Rook), N (Knight), and B (Bishop).");
 				}
 			}
 		}
-	}
-	
-	/* Ran after every move is validated if the player isn't killing someone. 
-	* Returns true if that player could have killed someone but didn't
-	* Returns false otherwise
-	*/
-	private boolean checkIfKillIsPossible(Player activePlayer, Board board) {
-		Move exMove = null;
-		for(int y = 0; y < board.height; y++) {
-			for(int x = 0; x < board.width; x++) {
-				if (board.tiles[x][y].piece != null && board.tiles[x][y].piece.owner == activePlayer) {
-					for(int z = 0; z < board.height; z++) {
-						for(int q = 0; q < board.width; q++) {
-							//Make a fake move for every tile on the board
-							exMove = new Move(activePlayer, board.tiles[x][y], board.tiles[z][q]);
-							
-							//Check to see if that fake move gives a kill shot, if it does return
-							if(movementIsAllowed(exMove, board) && board.tiles[z][q].piece != null && board.tiles[z][q].piece.owner != activePlayer) {
-								return true;
-							}
-						}
-					}
-				}
-			}
-		}
-		return false;
-	}
-	
-	private boolean movementIsAllowed(Move move, Board board) {
-		if(move.piece.getClass() == Pawn.class) {
-			return validatePawnMove(move, board);
-		}
-		else if(move.piece.getClass() == Bishop.class) {
-			return validateBishopMove(move, board);
-		}
-		else if(move.piece.getClass() == Queen.class) {
-			return validateQueenMove(move, board);
-		}
-		else if(move.piece.getClass() == Rook.class) {
-			return validateRookMove(move, board);
-		}
-		else if(move.piece.getClass() == Knight.class) {
-			return validateKnightMove(move, board);
-		}
-		else if(move.piece.getClass() == King.class) {
-			return validateKingMove(move, board);
-		}
-		
-		return false;
 	}
 }

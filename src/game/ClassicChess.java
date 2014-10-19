@@ -22,12 +22,12 @@ public class ClassicChess extends Rules {
 		board.AddPiece(new Pawn(white), 6, 1);
 		board.AddPiece(new Pawn(white), 7, 1);
 		board.AddPiece(new Rook(white), 0, 0);
-		board.AddPiece(new Bishop(white), 1, 0);
-		board.AddPiece(new Knight(white), 2, 0);
+		board.AddPiece(new Knight(white), 1, 0);
+		board.AddPiece(new Bishop(white), 2, 0);
 		board.AddPiece(new Queen(white), 3, 0);
 		board.AddPiece(new King(white), 4, 0);
-		board.AddPiece(new Knight(white), 5, 0);
-		board.AddPiece(new Bishop(white), 6, 0);
+		board.AddPiece(new Bishop(white), 5, 0);
+		board.AddPiece(new Knight(white), 6, 0);
 		board.AddPiece(new Rook(white), 7, 0);
 		
 		board.AddPiece(new Pawn(black), 0, 6);
@@ -39,12 +39,12 @@ public class ClassicChess extends Rules {
 		board.AddPiece(new Pawn(black), 6, 6);
 		board.AddPiece(new Pawn(black), 7, 6);
 		board.AddPiece(new Rook(black), 0, 7);
-		board.AddPiece(new Bishop(black), 1, 7);
-		board.AddPiece(new Knight(black), 2, 7);
+		board.AddPiece(new Knight(black), 1, 7);
+		board.AddPiece(new Bishop(black), 2, 7);
 		board.AddPiece(new Queen(black), 3, 7);
 		board.AddPiece(new King(black), 4, 7);
-		board.AddPiece(new Knight(black), 5, 7);
-		board.AddPiece(new Bishop(black), 6, 7);
+		board.AddPiece(new Bishop(black), 5, 7);
+		board.AddPiece(new Knight(black), 6, 7);
 		board.AddPiece(new Rook(black), 7, 7);
 		
 		return board;
