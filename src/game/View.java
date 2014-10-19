@@ -4,7 +4,6 @@ public class View {
 	
 	
 	public void DisplayMenu() {
-		//TODO: get the rules to know which ones to display
 		System.out.println("What variation of Chess do you want to play?");
 		System.out.println("1. Classic Chess");
 		System.out.println("2. Peasants Revolt Chess");

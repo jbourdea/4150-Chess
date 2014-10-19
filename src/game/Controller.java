@@ -21,8 +21,7 @@ public class Controller {
 			}
 			
 			if (game.rules == null) {
-				//request rules
-				// TODO: pass rules to display menu
+				// select a game mode
 				view.DisplayMenu();
 				
 				BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
