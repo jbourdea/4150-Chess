@@ -363,6 +363,7 @@ public class ClassicChess extends Rules {
 		return isValid;
 	}
 	
+	//checks if activePlayer currently has their opponent in check on board
 	public boolean CheckForCheck(Player activePlayer, Board board) {
 		
 		Board newBoard = new Board(board);
@@ -430,16 +431,7 @@ public class ClassicChess extends Rules {
 		Board newBoard = new Board(board);
 		Move newMove = new Move(move);
 		
-		for (Tile tile: newBoard.listOfTiles) {
-			if (newMove.startPosition.xCord == tile.xCord && 
-					newMove.startPosition.yCord == tile.yCord) {
-				newMove.startPosition = tile;
-			}
-			else if (newMove.endPosition.xCord == tile.xCord && 
-					newMove.endPosition.yCord == tile.yCord) {
-				newMove.endPosition = tile;
-			}
-		}
+		newMove.ConvertToDifferentBoard(newBoard);
 		
 		//make the suggested move on the fake board
 		newMove.startPosition.piece = null;
@@ -485,6 +477,65 @@ public class ClassicChess extends Rules {
 		}
 		
 		if (CheckForCheck(activePlayer, board)) {
+			
+			boolean checkmate = true;
+			Board newBoard = new Board(board);
+			Move savingMove = null;
+			
+			System.out.println(newBoard.listOfTiles.size());
+			
+			for (Tile tile: newBoard.listOfTiles) {
+				if (checkmate && tile.piece != null && tile.piece.owner == activePlayer.opponent) {
+					
+					for (Tile endPosition: newBoard.listOfTiles) {
+						savingMove = new Move();
+						savingMove.activePlayer = activePlayer.opponent;
+						savingMove.piece = tile.piece;
+						savingMove.startPosition = tile;
+						savingMove.endPosition = endPosition;
+						//System.out.println("New saving move attempt: " + savingMove.piece + " " + savingMove.startPosition.xCord + "," + savingMove.startPosition.yCord + "-" + savingMove.endPosition.xCord + "," + savingMove.endPosition.yCord);
+						
+						boolean isValid = false;
+						if(savingMove.piece.getClass() == Pawn.class) {
+							isValid = validatePawnMove(savingMove, newBoard);
+						}
+						else if(savingMove.piece.getClass() == Bishop.class) {
+							isValid = validateBishopMove(savingMove, newBoard);
+						}
+						else if(savingMove.piece.getClass() == Queen.class) {
+							isValid = validateQueenMove(savingMove, newBoard);
+						}
+						else if(savingMove.piece.getClass() == Rook.class) {
+							isValid = validateRookMove(savingMove, newBoard);
+						}
+						else if(savingMove.piece.getClass() == Knight.class) {
+							isValid = validateKnightMove(savingMove, newBoard);
+						}
+						else if(savingMove.piece.getClass() == King.class) {
+							isValid = validateKingMove(savingMove, newBoard);
+						}
+						//System.out.println("valid? " + isValid);
+						if (isValid) {
+							Board tempBoard = new Board(newBoard);
+							savingMove.ConvertToDifferentBoard(tempBoard);
+							
+							//do the move
+							savingMove.startPosition.piece = null;
+							savingMove.endPosition.piece = savingMove.piece;
+							
+							//System.out.println("but does it get us out of check? " + !CheckForCheck(activePlayer, tempBoard));
+							if (!CheckForCheck(activePlayer, tempBoard)) {
+								checkmate = false;
+							}
+						}
+					}
+				}
+			}
+			
+			if (checkmate) {
+				System.out.println(activePlayer + " has put " + activePlayer.opponent + " into checkmate!");
+			}
+			
 			System.out.println(activePlayer + " has put " + activePlayer.opponent + " into check.");
 		}
 		return 0;
