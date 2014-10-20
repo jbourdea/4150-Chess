@@ -415,10 +415,10 @@ public class ClassicChess extends Rules {
 	}
 
 	/**
-	 * This method is used to check if the player is going to be placed into check by making the move.
-	 * @param activePlayer - what player you want to check if has their opponent in check
-	 * @param board - the board you want to check for check on.
-	 * @return true if the active player is in check, false if they are not.
+	 * This method is used to check if the player has their opponent in check on the given board
+	 * @param activePlayer - the player who has established check
+	 * @param board - the board you want to check for check on
+	 * @return true if the active player has their opponent in check, false otherwise
 	 */
 	public boolean CheckForCheck(Player activePlayer, Board board) {
 
@@ -438,8 +438,8 @@ public class ClassicChess extends Rules {
 		//if (kingPosition == null) { return false; }
 		if (enemyKing == null) { return false; }
 
-		//iterate through the active players pieces and tell them to try and kill the friendly king
-		//if they can (legally) then the active player is in check
+		//iterate through the active players pieces and tell them to try and kill the enemy king
+		//if they can (legally) then the active player has their opponent in check
 		for (Tile tile : board.listOfTiles) {
 			if (tile.piece != null) {
 				if (tile.piece.owner == activePlayer) {
@@ -480,10 +480,10 @@ public class ClassicChess extends Rules {
 	}
 
 	/**
-	 * Checks if a player put themselves into check
+	 * Checks if a player would put themselves into check by doing the specified move
 	 * @param move The suggested move inputed by the player
 	 * @param board The board in its current state
-	 * @return false if the move put the active player in check, true if they didn't
+	 * @return true if the move will not put the active (moving) player in check, false otherwise
 	 */
 	private boolean validateBoardState(Move move, Board board) {
 
@@ -522,7 +522,7 @@ public class ClassicChess extends Rules {
 
 	/**
 	 * Checks for special conditions, such as checkmate.
-	 * @param activePlayer the current player.
+	 * @param activePlayer the current (moving) player.
 	 * @param board The current board.
 	 * @param move The move that just occurred.
 	 * @return MoveCompleteResult The result of the move occurring.
@@ -538,6 +538,7 @@ public class ClassicChess extends Rules {
 			getPawnPromotionInput(board, move);
 		}
 
+		//this move has put the opponent in (at least) check
 		if (CheckForCheck(activePlayer, board)) {
 
 			boolean checkmate = true;
