@@ -1,6 +1,6 @@
 package game;
 
-/*
+/**
  * The Game class is essentially the starting point for the game. It creates the controller that holds the functionality of playing, and instantiates the game.
  */
 public class Game {
@@ -28,8 +28,8 @@ public class Game {
 		activePlayer = black;
 	}
 	
-	/*
-	 * Called after a move has been inputted and the rules have checked the board for a win/tie condition. Changes the active player
+	/**
+	 * Called after a move has been inputed and the rules have checked the board for a win/tie condition. Changes the active player
 	 */
 	public void NextTurn() {
 		turnNumber++;
@@ -44,8 +44,8 @@ public class Game {
 	
 	
 	/**
-	 * 
-	 * @param move
+	 * This method is called when the move is finally validated and is used to move the piece and call the rule specific 
+	 * @param move The validated move inputed by the player.
 	 * @return 	MoveCompleteResult;
 	 */
 	public MoveCompleteResult CompleteMove(Move move) {
@@ -58,8 +58,9 @@ public class Game {
 		return gameResult;
 	}
 	
-	/*
+	/**
 	 * Main class, creates a game controller and initiates a play.
+	 * @param args Any arguments passed into the program.
 	 */
 	public static void main(String[] args) {
 	    
