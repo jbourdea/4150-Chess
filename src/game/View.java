@@ -1,5 +1,9 @@
 package game;
 
+/**
+ * View contains the messages sent to the user and the way the board will be displayed to the user.
+ * 
+ */
 public class View {
 	private static String errorMessage;
 	
