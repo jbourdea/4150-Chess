@@ -1,6 +1,7 @@
  package game;
 
 public class Rules {
+	public String stalemateMessage;
 		
 	public Rules() {
 		
@@ -56,4 +57,19 @@ public class Rules {
 		
 	}
 	
+	/*
+	 * Called before every move, checks for stalemate and ends the game accordingly.
+	 */
+	public boolean checkForStalemate(Player activePlayer, Board board) {
+		return false;
+	}
+	
+	/*
+	 * Gives the stalemate message based on which player was put into stalemate.
+	 * @param activePlayer - The player who's turn it currently is.
+	 * @return true if the current player was just put into stalemate, false if they weren't
+	 */
+	public String getStalemateMessage(Player activePlayer) {
+		return this.stalemateMessage;
+	}
 }

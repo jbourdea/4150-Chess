@@ -48,6 +48,10 @@ public class View {
 		DisplayErrorMessage();
 	}
 	
+	public void DisplayStalemateMessage(String stalematedColor) {
+		System.out.println("The game resulted in a stalemate");
+	}
+	
 	public void DisplaySurrenderMessage(String surrenderingColor) {
 		String winningColor = "White";
 		if(surrenderingColor.equals("White")) {

@@ -71,6 +71,12 @@ public class Controller {
 				BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 				String input = null;
 				while (input == null) {
+					if(game.rules.checkForStalemate(game.activePlayer, game.board)) {
+						view.DisplayStalemateMessage(game.rules.getStalemateMessage(game.activePlayer));
+						game = null;
+						break;
+					}
+					
 					view.DisplayTurnNotification(game.turnNumber, game.activePlayer.color);
 					try {
 						 input = br.readLine();
@@ -94,6 +100,8 @@ public class Controller {
 								System.exit(0);
 							}
 							
+							
+							
 							Move move = new Move(game.activePlayer, input, game.board);
 					
 							if (move.IsValid() && game.rules.ValidateMove(move, game.board) == 0) {
@@ -114,7 +122,7 @@ public class Controller {
 						{
 							input = null;
 							System.out.println("Input Error: Unable to parse input.");
-							//e.printStackTrace();
+							e.printStackTrace();
 						}
 					}
 					
