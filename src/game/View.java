@@ -68,14 +68,6 @@ public class View {
 			System.out.println(winningPlayer.color + " is the winner.");
 		}
 	}
-
-	public void DisplayBlackWinsMessage() {
-		System.out.println("Black is the winner.");
-	}
-	
-	public void DisplayStalemateMessage() {
-		System.out.println("Stalemate. Game Over.");
-	}
 	
 	public void DisplayExitMessage() {
 		System.out.println("Thanks for playing!");
