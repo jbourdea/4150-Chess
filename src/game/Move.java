@@ -1,5 +1,8 @@
 package game;
 
+/**
+ *  Class to hold a move a piece can make, their start/end positions, and their player
+ */
 public class Move {
 	
 	public Player activePlayer = null;
@@ -73,6 +76,10 @@ public class Move {
 		}
 	}
 	
+	/**
+	 * Determines if a move is valid. If it is invalid it sets an error message for the view to display later.
+	 * @return True if valid. False if invalid.
+	 */
 	public boolean IsValid()
 	{
 		if (piece != null && startPosition != null && endPosition != null && activePlayer != null && piece.owner == activePlayer)
