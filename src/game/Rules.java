@@ -37,8 +37,8 @@ public class Rules {
 	 * 			2 - black wins, game ends
 	 * 			3 - stalemate, game ends
 	 */
-	public int ruleCompleteMove(Player activePlayer, Board board, Move move){
-		return 0;
+	public MoveCompleteResult ruleCompleteMove(Player activePlayer, Board board, Move move){
+		return new MoveCompleteResult(false);
 	}
 	
 	/*

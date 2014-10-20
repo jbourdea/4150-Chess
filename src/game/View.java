@@ -56,8 +56,13 @@ public class View {
 		System.out.println(surrenderingColor + " surrendered. " + winningColor + " is the winner.");
 	}
 	
-	public void DisplayWhiteWinsMessage() {
-		System.out.println("White is the winner.");
+	public void DisplayWinMessage(Player winningPlayer) {
+		if(winningPlayer == null) {
+			System.out.println("Stalement. Game Over");
+		}
+		else {
+			System.out.println(winningPlayer.color + " is the winner.");
+		}
 	}
 
 	public void DisplayBlackWinsMessage() {

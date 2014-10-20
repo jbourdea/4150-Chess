@@ -46,18 +46,15 @@ public class Game {
 	/**
 	 * 
 	 * @param move
-	 * @return 	0 - normal move was made, not a game ending condition
-	 * 			1 - white wins, game ends
-	 * 			2 - black wins, game ends
-	 * 			3 - stalemate, game ends
+	 * @return 	MoveCompleteResult;
 	 */
-	public int CompleteMove(Move move) {
+	public MoveCompleteResult CompleteMove(Move move) {
 		Piece piece = move.piece;
 		
 		move.startPosition.piece = null;
 		move.endPosition.piece = piece;
 		piece.hasMoved = true;
-		int gameResult = rules.ruleCompleteMove(activePlayer, board, move);
+		MoveCompleteResult gameResult = rules.ruleCompleteMove(activePlayer, board, move);
 		return gameResult;
 	}
 	

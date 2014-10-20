@@ -97,23 +97,10 @@ public class Controller {
 							Move move = new Move(game.activePlayer, input, game.board);
 					
 							if (move.IsValid() && game.rules.ValidateMove(move, game.board) == 0) {
-								int moveResult = game.CompleteMove(move);
+								MoveCompleteResult moveResult = game.CompleteMove(move);
 								// check for game ending condition
-								// white wins
-								if(moveResult == 1) {
-									view.DisplayWhiteWinsMessage();
-									game = null;
-									break;
-								}
-								// black wins
-								else if(moveResult == 2) {
-									view.DisplayBlackWinsMessage();
-									game = null;
-									break;
-								}
-								// stalemate
-								else if(moveResult == 3) {
-									view.DisplayStalemateMessage();
+								if(moveResult.gameOver) {
+									view.DisplayWinMessage(moveResult.winner);
 									game = null;
 									break;
 								}

@@ -466,12 +466,9 @@ public class PeasantsRevoltChess extends Rules {
 	 * @param activePlayer
 	 * @param board
 	 * @param move
-	 * @return 	0 - normal move was made, not a game ending condition
-	 * 			1 - white wins, game ends
-	 * 			2 - black wins, game ends
-	 * 			3 - stalemate, game ends
+	 * @return MoveCompleteResult
 	 */
-	public int ruleCompleteMove(Player activePlayer, Board board, Move move){
+	public MoveCompleteResult ruleCompleteMove(Player activePlayer, Board board, Move move){
 		setLastMoveJump(activePlayer, board);
 		if(move.piece.getClass() == Pawn.class && Math.abs(move.startPosition.yCord - move.endPosition.yCord) == 2) {
 			Pawn p = (Pawn)move.piece;
@@ -481,7 +478,7 @@ public class PeasantsRevoltChess extends Rules {
 		}else if(move.piece.getClass() == Pawn.class && move.endPosition.yCord == 0 && move.piece.owner.color.equals("Black")) {
 			getPawnPromotionInput(board, move);
 		}
-		return 0;
+		return new MoveCompleteResult(false);
 	}
 	
 	public void getPawnPromotionInput(Board board, Move move) {
