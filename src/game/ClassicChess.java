@@ -41,8 +41,8 @@ public class ClassicChess extends Rules {
 		board.AddPiece(new Rook(black), 0, 7);
 		board.AddPiece(new Knight(black), 1, 7);
 		board.AddPiece(new Bishop(black), 2, 7);
-		board.AddPiece(new Queen(black), 3, 7);
-		board.AddPiece(new King(black), 4, 7);
+		board.AddPiece(new King(black), 3, 7);
+		board.AddPiece(new Queen(black), 4, 7);
 		board.AddPiece(new Bishop(black), 5, 7);
 		board.AddPiece(new Knight(black), 6, 7);
 		board.AddPiece(new Rook(black), 7, 7);
@@ -356,36 +356,19 @@ public class ClassicChess extends Rules {
 		return isValid;
 	}
 	
-	private boolean validateBoardState(Move move, Board board) {
+	public boolean CheckForCheck(Player activePlayer, Board board) {
 		
-		//create deep copies of move and board
 		Board newBoard = new Board(board);
-		Move newMove = new Move(move);
-		
-		for (Tile tile: newBoard.listOfTiles) {
-			if (newMove.startPosition.xCord == tile.xCord && 
-					newMove.startPosition.yCord == tile.yCord) {
-				newMove.startPosition = tile;
-			}
-			else if (newMove.endPosition.xCord == tile.xCord && 
-					newMove.endPosition.yCord == tile.yCord) {
-				newMove.endPosition = tile;
-			}
-		}
-		
-		//make the suggested move on the fake board
-		newMove.startPosition.piece = null;
-		newMove.endPosition.piece = newMove.piece;
 		
 		//locate the friendly and enemy kings
 		Tile kingPosition = null;
 		Tile enemyKing = null;
 		for (Tile tile: newBoard.listOfTiles) {
 			if (tile.piece != null) {
-				if (tile.piece.getClass() == King.class && tile.piece.owner == newMove.activePlayer) {
+				if (tile.piece.getClass() == King.class && tile.piece.owner == activePlayer) {
 					kingPosition = tile;
 				}
-				else if (tile.piece.getClass() == King.class && tile.piece.owner != newMove.activePlayer) {
+				else if (tile.piece.getClass() == King.class && tile.piece.owner != activePlayer) {
 					enemyKing = tile;
 				}
 			}
@@ -397,12 +380,12 @@ public class ClassicChess extends Rules {
 		//if they can (legally) then the active player has put themself in check
 		for (Tile tile : newBoard.listOfTiles) {
 			if (tile.piece != null) {
-				if (tile.piece.owner != newMove.activePlayer) {
+				if (tile.piece.owner == activePlayer) {
 					//try to kill the king
 					Move regicide = new Move();
 					regicide.activePlayer = tile.piece.owner;
 					regicide.startPosition = tile;
-					regicide.endPosition = kingPosition;
+					regicide.endPosition = enemyKing;
 					regicide.piece = tile.piece;
 					
 					boolean isValid = false;
@@ -425,13 +408,38 @@ public class ClassicChess extends Rules {
 						isValid = validateKingMove(regicide, newBoard);
 					}
 					if (isValid) {
-						return false;
+						return true;
 					}
 				}
 			}
 		}
+	
+		return false;
+	}
+	
+	private boolean validateBoardState(Move move, Board board) {
 		
-		return true;
+		//create deep copies of move and board
+		Board newBoard = new Board(board);
+		Move newMove = new Move(move);
+		
+		for (Tile tile: newBoard.listOfTiles) {
+			if (newMove.startPosition.xCord == tile.xCord && 
+					newMove.startPosition.yCord == tile.yCord) {
+				newMove.startPosition = tile;
+			}
+			else if (newMove.endPosition.xCord == tile.xCord && 
+					newMove.endPosition.yCord == tile.yCord) {
+				newMove.endPosition = tile;
+			}
+		}
+		
+		//make the suggested move on the fake board
+		newMove.startPosition.piece = null;
+		newMove.endPosition.piece = newMove.piece;
+		
+		return !CheckForCheck(newMove.activePlayer.opponent, newBoard);
+		
 	}
 	
 	public void setLastMoveJump(Player activePlayer, Board board){
@@ -456,6 +464,11 @@ public class ClassicChess extends Rules {
 			getPawnPromotionInput(board, move);
 		}else if(move.piece.getClass() == Pawn.class && move.endPosition.yCord == 0 && move.piece.owner.color.equals("Black")) {
 			getPawnPromotionInput(board, move);
+		}
+		
+		if (CheckForCheck(activePlayer, board)) {
+			
+			System.out.println(activePlayer + " has put " + activePlayer.opponent + " into check.");
 		}
 	}
 	

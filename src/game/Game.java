@@ -19,6 +19,9 @@ public class Game {
 		white.color = "White";
 		black.color = "Black";
 		
+		white.opponent = black;
+		black.opponent = white;
+		
 		turnNumber = 0;
 		activePlayer = black;
 	}
@@ -37,7 +40,7 @@ public class Game {
 	}
 	
 	public void CompleteMove(Move move) {
-		//TODO: move specified piece to specified position then check boardstate
+		
 		
 		Piece piece = move.piece;
 		
