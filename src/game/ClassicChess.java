@@ -501,8 +501,6 @@ public class ClassicChess extends Rules {
 			Board newBoard = new Board(board);
 			Move savingMove = null;
 			
-			System.out.println(newBoard.listOfTiles.size());
-			
 			for (Tile tile: newBoard.listOfTiles) {
 				if (checkmate && tile.piece != null && tile.piece.owner == activePlayer.opponent) {
 					
