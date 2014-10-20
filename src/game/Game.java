@@ -21,6 +21,9 @@ public class Game {
 		white.color = "White";
 		black.color = "Black";
 		
+		white.opponent = black;
+		black.opponent = white;
+		
 		turnNumber = 0;
 		activePlayer = black;
 	}
@@ -43,7 +46,6 @@ public class Game {
 	 * Performs a move. Called after validation and before checks for win condition
 	 */
 	public void CompleteMove(Move move) {
-		
 		Piece piece = move.piece;
 		
 		move.startPosition.piece = null;
