@@ -36,15 +36,23 @@ public class Game {
 		//TODO: update view with new turn information
 	}
 	
-	public void CompleteMove(Move move) {
-		//TODO: move specified piece to specified position then check boardstate
-		
+	
+	/**
+	 * 
+	 * @param move
+	 * @return 	0 - normal move was made, not a game ending condition
+	 * 			1 - white wins, game ends
+	 * 			2 - black wins, game ends
+	 * 			3 - stalemate, game ends
+	 */
+	public int CompleteMove(Move move) {
 		Piece piece = move.piece;
 		
 		move.startPosition.piece = null;
 		move.endPosition.piece = piece;
 		piece.hasMoved = true;
-		rules.ruleCompleteMove(activePlayer, board, move);
+		int gameResult = rules.ruleCompleteMove(activePlayer, board, move);
+		return gameResult;
 	}
 	
 	public static void main(String[] args) {

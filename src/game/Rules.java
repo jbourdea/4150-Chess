@@ -23,8 +23,19 @@ public class Rules {
 		return 1;
 	}
 	
-	public void ruleCompleteMove(Player activePlayer, Board board, Move move){
-		
+	
+	/**
+	 * 
+	 * @param activePlayer
+	 * @param board
+	 * @param move
+	 * @return 	0 - normal move was made, not a game ending condition
+	 * 			1 - white wins, game ends
+	 * 			2 - black wins, game ends
+	 * 			3 - stalemate, game ends
+	 */
+	public int ruleCompleteMove(Player activePlayer, Board board, Move move){
+		return 0;
 	}
 	
 	
