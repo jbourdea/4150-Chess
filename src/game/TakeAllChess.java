@@ -4,13 +4,19 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+/*
+ * Take all chess variant rules class.
+ */
 public class TakeAllChess extends Rules {
+	
 	public TakeAllChess() {
 		super();
-		
-		
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see game.Rules#SetStartingPositions(game.Player, game.Player)
+	 */
 	public Board SetStartingPositions(Player white, Player black) {
 		
 		Board board = new Board(8,8);
@@ -53,7 +59,9 @@ public class TakeAllChess extends Rules {
 	}
 	
 	
-	// return true if it's a valid move, false if invalid
+	/* 
+	 * @return true if it's a valid move, false if invalid
+	 */
 	public boolean validatePawnMove(Move move, Board board)
 	{
 		// get direction it can go in
@@ -112,7 +120,9 @@ public class TakeAllChess extends Rules {
 		return false;
 	}
 	
-	// return true if it's a valid move, false if invalid
+	/* 
+	 * @return true if it's a valid move, false if invalid
+	 */
 	public boolean validateQueenMove(Move move, Board board)
 	{
 		// check what the move way is, horizontal or diagonal
@@ -170,7 +180,9 @@ public class TakeAllChess extends Rules {
 		return false;
 	}
 	
-	// return true if it's a valid move, false if invalid
+	/* 
+	 * @return true if it's a valid move, false if invalid
+	 */
 	public boolean validateBishopMove(Move move, Board board)
 	{
 		// check what the move way is, horizontal or diagonal
@@ -208,7 +220,9 @@ public class TakeAllChess extends Rules {
 		return false;
 	}
 	
-	// return true if it's a valid move, false if invalid
+	/* 
+	 * @return true if it's a valid move, false if invalid
+	 */
 	public boolean validateRookMove(Move move, Board board)
 	{
 		// check what the move way is, horizontal or diagonal
@@ -257,7 +271,9 @@ public class TakeAllChess extends Rules {
 		return false;
 	}
 
-	// return true if it's a valid move, false if invalid
+	/* 
+	 * @return true if it's a valid move, false if invalid
+	 */
 	public boolean validateKnightMove(Move move, Board board)
 	{
 		// if it attacks the same team
@@ -280,7 +296,9 @@ public class TakeAllChess extends Rules {
 		return false;
 	}
 	
-	// return true if it's a valid move, false if invalid
+	/* 
+	 * @return true if it's a valid move, false if invalid
+	 */
 	public boolean validateKingMove(Move move, Board board)
 	{
 		// if it attacks the same team
@@ -308,9 +326,6 @@ public class TakeAllChess extends Rules {
 	
 	public int ValidateMove(Move move, Board board)
 	{
-		//TODO:	- ensure that the moving piece can legally get to the move end point.
-		// 		- ensure that the requested move does not put the active player in check
-		//		- return true if the move is valid, false otherwise
 		int isValidMove = -1;
 		
 		if(move.piece.getClass() == Pawn.class) {
@@ -507,5 +522,147 @@ public class TakeAllChess extends Rules {
 			}
 		}
 		return false;
+	}
+	
+	/*
+	 * @param activePlayer - what player you want to check if has their opponent in check
+	 * @param board - the board you want to check for check on.
+	 * @return true if the active player is in check, false if they are not.
+	 */
+	public boolean CheckForCheck(Player activePlayer, Board board) {
+				
+		//locate the friendly and enemy kings
+		Tile enemyKing = null;
+		for (Tile tile: board.listOfTiles) {
+			if (tile.piece != null) {
+				if (tile.piece.getClass() == King.class && tile.piece.owner != activePlayer) {
+					enemyKing = tile;
+				}
+			}
+		}
+		
+		//if (kingPosition == null) { return false; }
+		if (enemyKing == null) { return false; }
+		
+		//iterate through the active players pieces and tell them to try and kill the friendly king
+		//if they can (legally) then the active player is in check
+		for (Tile tile : board.listOfTiles) {
+			if (tile.piece != null) {
+				if (tile.piece.owner == activePlayer) {
+					//try to kill the king
+					Move regicide = new Move();
+					regicide.activePlayer = tile.piece.owner;
+					regicide.startPosition = tile;
+					regicide.endPosition = enemyKing;
+					regicide.piece = tile.piece;
+					
+					boolean isValid = false;
+					if(regicide.piece.getClass() == Pawn.class) {
+						isValid = validatePawnMove(regicide, board);
+					}
+					else if(regicide.piece.getClass() == Bishop.class) {
+						isValid = validateBishopMove(regicide, board);
+					}
+					else if(regicide.piece.getClass() == Queen.class) {
+						isValid = validateQueenMove(regicide, board);
+					}
+					else if(regicide.piece.getClass() == Rook.class) {
+						isValid = validateRookMove(regicide, board);
+					}
+					else if(regicide.piece.getClass() == Knight.class) {
+						isValid = validateKnightMove(regicide, board);
+					}
+					else if(regicide.piece.getClass() == King.class) {
+						isValid = validateKingMove(regicide, board);
+					}
+					if (isValid) {
+						return true;
+					}
+				}
+			}
+		}
+	
+		return false;
+	}
+	
+	/*
+	 * Called before every move, checks for stalemate and ends the game accordingly.
+	 */
+	public boolean checkForStalemate(Player activePlayer, Board board) {
+		//Check all pieces for a valid move, to start with the player doesn't need to move his King.
+		Tile kingTile = null;
+		
+		for (Tile tile : board.listOfTiles) {
+			if (tile.piece != null) {
+				if (tile.piece.owner == activePlayer) {
+					Move exMove = new Move();
+					exMove.activePlayer = tile.piece.owner;
+					exMove.startPosition = tile;
+					exMove.piece = tile.piece;
+					if(tile.piece.getClass() == King.class) {
+						kingTile = tile;
+					}
+					for (Tile endTile : board.listOfTiles) {
+						exMove.endPosition = endTile;
+						boolean isValid = false;
+						if(exMove.piece.getClass() == Pawn.class) {
+							isValid = validatePawnMove(exMove, board);
+						}
+						else if(exMove.piece.getClass() == Bishop.class) {
+							isValid = validateBishopMove(exMove, board);
+						}
+						else if(exMove.piece.getClass() == Queen.class) {
+							isValid = validateQueenMove(exMove, board);
+						}
+						else if(exMove.piece.getClass() == Rook.class) {
+							isValid = validateRookMove(exMove, board);
+						}
+						else if(exMove.piece.getClass() == Knight.class) {
+							isValid = validateKnightMove(exMove, board);
+						}
+						if (isValid) {
+							return false;
+						}
+					}
+				}
+			}
+		}
+		
+		//Has no valid moves other than potentially the king.
+		if(kingTile == null) { //player has no king, can't be in stalemate with no king.
+			return false;
+		}
+		
+		//Loop through all the potential moved for the king, and check if the player is in check for each of them.
+		Move exMove = new Move();
+		exMove.activePlayer = activePlayer;
+		exMove.startPosition = kingTile;
+		exMove.piece = kingTile.piece;
+		
+		for (Tile endTile : board.listOfTiles) {
+			exMove.endPosition = endTile;
+			if(!validateKingMove(exMove, board)) {
+				continue;
+			}
+			//is a valid move for the king. Perform the move on a fake board and check for check.
+			Board newBoard = new Board(board);	
+			newBoard.tiles[endTile.xCord][endTile.yCord].piece = new King(activePlayer);
+			newBoard.tiles[kingTile.xCord][kingTile.yCord].piece = null;
+			
+			if(!CheckForCheck(activePlayer.opponent, newBoard)) { //opponent doesn't have them in check after the move
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	/*
+	 * Gives the stalemate message based on which player was put into stalemate.
+	 * @param activePlayer - The player who's turn it currently is.
+	 * @return true if the current player was just put into stalemate, false if they weren't
+	 */
+	public String getStalemateMessage(Player activePlayer) {
+		return this.stalemateMessage;
 	}
 }

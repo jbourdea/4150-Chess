@@ -6,7 +6,7 @@ public class ClassicChess extends Rules {
 	public ClassicChess() {
 		super();
 		
-		
+		this.stalemateMessage = "No valid moves available, game ends in a stalemate.";
 	}
 	
 	public Board SetStartingPositions(Player white, Player black) {
@@ -206,41 +206,56 @@ public class ClassicChess extends Rules {
 		return false;
 	}
 	
-	// return true if it's a valid move, false if invalid
-		public boolean validateRookMove(Move move, Board board)
-		{
-			// check what the move way is, horizontal or diagonal
-			int xDiff = Math.abs(move.startPosition.xCord - move.endPosition.xCord);
-			int yDiff = Math.abs(move.startPosition.yCord - move.endPosition.yCord);
-			
-			// if it attacks the same team
-			if(move.endPosition.piece != null && move.endPosition.piece.owner == move.activePlayer) {
-				return false;
-			}
-			
-			// horizontal movement
-			if(xDiff == 0) {
-				for(int i=1; i < yDiff; i++ ) {
-					Tile t = board.tiles[move.startPosition.xCord + i][move.startPosition.yCord];
-					if(t.piece != null) {
-						return false;
-					}
-				}
-				return true;
-			}
-			// vertical movement
-			else if(yDiff == 0) {
-				for(int i=1; i < xDiff; i++ ) {
-					Tile t = board.tiles[move.startPosition.xCord][move.startPosition.yCord + i];
-					if(t.piece != null) {
-						return false;
-					}
-				}
-				return true;
-			}
-			
+	/* 
+	 * @return true if it's a valid move, false if invalid
+	 */
+	public boolean validateRookMove(Move move, Board board)
+	{
+		// check what the move way is, horizontal or diagonal
+		int xDiff = Math.abs(move.startPosition.xCord - move.endPosition.xCord);
+		int yDiff = Math.abs(move.startPosition.yCord - move.endPosition.yCord);
+		
+		// if it attacks the same team
+		if(move.endPosition.piece != null && move.endPosition.piece.owner == move.activePlayer) {
 			return false;
 		}
+		
+		int xDir = 1;
+		int yDir = 1;
+		
+		// moving left
+		if(move.startPosition.xCord - move.endPosition.xCord > 0) {
+			xDir = -1;
+		}
+		// moving up
+		if(move.startPosition.yCord - move.endPosition.yCord > 0) {
+			yDir = -1;
+		}
+				
+		// vertical movement
+		if(xDiff == 0) {
+			for(int i=1; i < yDiff; i++ ) {
+				
+				Tile t = board.tiles[move.startPosition.xCord][move.startPosition.yCord + (yDir * i)];
+				if(t.piece != null) {
+					return false;
+				}
+			}
+			return true;
+		}
+		// horizontal movement
+		else if(yDiff == 0) {
+			for(int i=1; i < xDiff; i++ ) {
+				Tile t = board.tiles[move.startPosition.xCord + (xDir * i)][move.startPosition.yCord];
+				if(t.piece != null) {
+					return false;
+				}
+			}
+			return true;
+		}
+		
+		return false;
+	}
 	
 		// return true if it's a valid move, false if invalid
 		public boolean validateKnightMove(Move move, Board board)
@@ -363,14 +378,17 @@ public class ClassicChess extends Rules {
 		return isValid;
 	}
 	
+	/*
+	 * @param activePlayer - what player you want to check if has their opponent in check
+	 * @param board - the board you want to check for check on.
+	 * @return true if the active player is in check, false if they are not.
+	 */
 	public boolean CheckForCheck(Player activePlayer, Board board) {
-		
-		Board newBoard = new Board(board);
-		
+				
 		//locate the friendly and enemy kings
 		Tile kingPosition = null;
 		Tile enemyKing = null;
-		for (Tile tile: newBoard.listOfTiles) {
+		for (Tile tile: board.listOfTiles) {
 			if (tile.piece != null) {
 				if (tile.piece.getClass() == King.class && tile.piece.owner == activePlayer) {
 					kingPosition = tile;
@@ -380,12 +398,12 @@ public class ClassicChess extends Rules {
 				}
 			}
 		}
-		if (kingPosition == null) { return false; }
-		if (enemyKing == null) { return true; }
+		//if (kingPosition == null) { return false; }
+		if (enemyKing == null) { return false; }
 		
-		//iterate through the enemy pieces and tell them to try and kill the friendly king
-		//if they can (legally) then the active player has put themself in check
-		for (Tile tile : newBoard.listOfTiles) {
+		//iterate through the active players pieces and tell them to try and kill the friendly king
+		//if they can (legally) then the active player is in check
+		for (Tile tile : board.listOfTiles) {
 			if (tile.piece != null) {
 				if (tile.piece.owner == activePlayer) {
 					//try to kill the king
@@ -397,22 +415,22 @@ public class ClassicChess extends Rules {
 					
 					boolean isValid = false;
 					if(regicide.piece.getClass() == Pawn.class) {
-						isValid = validatePawnMove(regicide, newBoard);
+						isValid = validatePawnMove(regicide, board);
 					}
 					else if(regicide.piece.getClass() == Bishop.class) {
-						isValid = validateBishopMove(regicide, newBoard);
+						isValid = validateBishopMove(regicide, board);
 					}
 					else if(regicide.piece.getClass() == Queen.class) {
-						isValid = validateQueenMove(regicide, newBoard);
+						isValid = validateQueenMove(regicide, board);
 					}
 					else if(regicide.piece.getClass() == Rook.class) {
-						isValid = validateRookMove(regicide, newBoard);
+						isValid = validateRookMove(regicide, board);
 					}
 					else if(regicide.piece.getClass() == Knight.class) {
-						isValid = validateKnightMove(regicide, newBoard);
+						isValid = validateKnightMove(regicide, board);
 					}
 					else if(regicide.piece.getClass() == King.class) {
-						isValid = validateKingMove(regicide, newBoard);
+						isValid = validateKingMove(regicide, board);
 					}
 					if (isValid) {
 						return true;
@@ -531,5 +549,86 @@ public class ClassicChess extends Rules {
 				}
 			}
 		}
+	}
+	
+	/*
+	 * Called before every move, checks for stalemate and ends the game accordingly.
+	 */
+	public boolean checkForStalemate(Player activePlayer, Board board) {
+		//Check all pieces for a valid move, to start with the player doesn't need to move his King.
+		Tile kingTile = null;
+		
+		for (Tile tile : board.listOfTiles) {
+			if (tile.piece != null) {
+				if (tile.piece.owner == activePlayer) {
+					Move exMove = new Move();
+					exMove.activePlayer = tile.piece.owner;
+					exMove.startPosition = tile;
+					exMove.piece = tile.piece;
+					if(tile.piece.getClass() == King.class) {
+						kingTile = tile;
+					}
+					for (Tile endTile : board.listOfTiles) {
+						exMove.endPosition = endTile;
+						boolean isValid = false;
+						if(exMove.piece.getClass() == Pawn.class) {
+							isValid = validatePawnMove(exMove, board);
+						}
+						else if(exMove.piece.getClass() == Bishop.class) {
+							isValid = validateBishopMove(exMove, board);
+						}
+						else if(exMove.piece.getClass() == Queen.class) {
+							isValid = validateQueenMove(exMove, board);
+						}
+						else if(exMove.piece.getClass() == Rook.class) {
+							isValid = validateRookMove(exMove, board);
+						}
+						else if(exMove.piece.getClass() == Knight.class) {
+							isValid = validateKnightMove(exMove, board);
+						}
+						if (isValid) {
+							return false;
+						}
+					}
+				}
+			}
+		}
+		
+		//Has no valid moves other than potentially the king.
+		if(kingTile == null) { //player has no king, can't be in stalemate with no king.
+			return false;
+		}
+		
+		//Loop through all the potential moved for the king, and check if the player is in check for each of them.
+		Move exMove = new Move();
+		exMove.activePlayer = activePlayer;
+		exMove.startPosition = kingTile;
+		exMove.piece = kingTile.piece;
+		
+		for (Tile endTile : board.listOfTiles) {
+			exMove.endPosition = endTile;
+			if(!validateKingMove(exMove, board)) {
+				continue;
+			}
+			//is a valid move for the king. Perform the move on a fake board and check for check.
+			Board newBoard = new Board(board);	
+			newBoard.tiles[endTile.xCord][endTile.yCord].piece = new King(activePlayer);
+			newBoard.tiles[kingTile.xCord][kingTile.yCord].piece = null;
+			
+			if(!CheckForCheck(activePlayer.opponent, newBoard)) { //opponent doesn't have them in check after the move
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	/*
+	 * Gives the stalemate message based on which player was put into stalemate.
+	 * @param activePlayer - The player who's turn it currently is.
+	 * @return true if the current player was just put into stalemate, false if they weren't
+	 */
+	public String getStalemateMessage(Player activePlayer) {
+		return this.stalemateMessage;
 	}
 }
