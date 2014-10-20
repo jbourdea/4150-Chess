@@ -122,20 +122,20 @@ public class ClassicChess extends Rules {
 			return false;
 		}
 		
+		int xDir = 1;
+		int yDir = 1;
+		
+		// moving left
+		if(move.startPosition.xCord - move.endPosition.xCord > 0) {
+			xDir = -1;
+		}
+		// moving up
+		if(move.startPosition.yCord - move.endPosition.yCord > 0) {
+			yDir = -1;
+		}
+		
 		// diagonal movement
 		if(xDiff == yDiff) {
-			int xDir = 1;
-			int yDir = 1;
-			
-			// moving left
-			if(move.startPosition.xCord - move.endPosition.xCord > 0) {
-				xDir = -1;
-			}
-			// moving up
-			if(move.startPosition.yCord - move.endPosition.yCord > 0) {
-				yDir = -1;
-			}
-			
 			for(int i=1; i < yDiff; i++ ) {
 				Tile t = board.tiles[move.startPosition.xCord + (xDir * i)][move.startPosition.yCord + (yDir * i)];
 				if(t.piece != null) {
@@ -145,9 +145,9 @@ public class ClassicChess extends Rules {
 			return true;
 		}
 		// horizontal movement
-		else if(xDiff == 0) {
-			for(int i=1; i < yDiff; i++ ) {
-				Tile t = board.tiles[move.startPosition.xCord + i][move.startPosition.yCord];
+		else if(yDiff == 0) {
+			for(int i=1; i < xDiff; i++ ) {
+				Tile t = board.tiles[move.startPosition.xCord + (xDir * i)][move.startPosition.yCord];
 				if(t.piece != null) {
 					return false;
 				}
@@ -155,9 +155,9 @@ public class ClassicChess extends Rules {
 			return true;
 		}
 		// vertical movement
-		else if(yDiff == 0) {
-			for(int i=1; i < xDiff; i++ ) {
-				Tile t = board.tiles[move.startPosition.xCord][move.startPosition.yCord + i];
+		else if(xDiff == 0) {
+			for(int i=1; i < yDiff; i++ ) {
+				Tile t = board.tiles[move.startPosition.xCord][move.startPosition.yCord + (yDir * i)];
 				if(t.piece != null) {
 					return false;
 				}
@@ -207,40 +207,53 @@ public class ClassicChess extends Rules {
 	}
 	
 	// return true if it's a valid move, false if invalid
-		public boolean validateRookMove(Move move, Board board)
-		{
-			// check what the move way is, horizontal or diagonal
-			int xDiff = Math.abs(move.startPosition.xCord - move.endPosition.xCord);
-			int yDiff = Math.abs(move.startPosition.yCord - move.endPosition.yCord);
-			
-			// if it attacks the same team
-			if(move.endPosition.piece != null && move.endPosition.piece.owner == move.activePlayer) {
-				return false;
-			}
-			
-			// horizontal movement
-			if(xDiff == 0) {
-				for(int i=1; i < yDiff; i++ ) {
-					Tile t = board.tiles[move.startPosition.xCord + i][move.startPosition.yCord];
-					if(t.piece != null) {
-						return false;
-					}
-				}
-				return true;
-			}
-			// vertical movement
-			else if(yDiff == 0) {
-				for(int i=1; i < xDiff; i++ ) {
-					Tile t = board.tiles[move.startPosition.xCord][move.startPosition.yCord + i];
-					if(t.piece != null) {
-						return false;
-					}
-				}
-				return true;
-			}
-			
+	public boolean validateRookMove(Move move, Board board)
+	{
+		// check what the move way is, horizontal or diagonal
+		int xDiff = Math.abs(move.startPosition.xCord - move.endPosition.xCord);
+		int yDiff = Math.abs(move.startPosition.yCord - move.endPosition.yCord);
+		
+		// if it attacks the same team
+		if(move.endPosition.piece != null && move.endPosition.piece.owner == move.activePlayer) {
 			return false;
 		}
+		
+		int xDir = 1;
+		int yDir = 1;
+		
+		// moving left
+		if(move.startPosition.xCord - move.endPosition.xCord > 0) {
+			xDir = -1;
+		}
+		// moving up
+		if(move.startPosition.yCord - move.endPosition.yCord > 0) {
+			yDir = -1;
+		}
+				
+		// vertical movement
+		if(xDiff == 0) {
+			for(int i=1; i < yDiff; i++ ) {
+				
+				Tile t = board.tiles[move.startPosition.xCord][move.startPosition.yCord + (yDir * i)];
+				if(t.piece != null) {
+					return false;
+				}
+			}
+			return true;
+		}
+		// horizontal movement
+		else if(yDiff == 0) {
+			for(int i=1; i < xDiff; i++ ) {
+				Tile t = board.tiles[move.startPosition.xCord + (xDir * i)][move.startPosition.yCord];
+				if(t.piece != null) {
+					return false;
+				}
+			}
+			return true;
+		}
+		
+		return false;
+	}
 	
 		// return true if it's a valid move, false if invalid
 		public boolean validateKnightMove(Move move, Board board)
