@@ -1,18 +1,26 @@
 package game;
 import java.io.*;
 
+/**
+ * 
+ * This is the class that represents the game mode of Classic Chess. The class contains the rules for validating moves and checking boardstate (e.g. check, checkmate, etc.).
+ *
+ */
 public class ClassicChess extends Rules {
 
 	public ClassicChess() {
 		super();
-		
+
 		this.stalemateMessage = "No valid moves available, game ends in a stalemate.";
 	}
-	
+
+	/**
+	 * 
+	 */
 	public Board SetStartingPositions(Player white, Player black) {
-		
+
 		Board board = new Board(8,8);
-		
+
 		board.AddPiece(new Pawn(white), 0, 1);
 		board.AddPiece(new Pawn(white), 1, 1);
 		board.AddPiece(new Pawn(white), 2, 1);
@@ -29,7 +37,7 @@ public class ClassicChess extends Rules {
 		board.AddPiece(new Bishop(white), 5, 0);
 		board.AddPiece(new Knight(white), 6, 0);
 		board.AddPiece(new Rook(white), 7, 0);
-		
+
 		board.AddPiece(new Pawn(black), 0, 6);
 		board.AddPiece(new Pawn(black), 1, 6);
 		board.AddPiece(new Pawn(black), 2, 6);
@@ -46,22 +54,26 @@ public class ClassicChess extends Rules {
 		board.AddPiece(new Bishop(black), 5, 7);
 		board.AddPiece(new Knight(black), 6, 7);
 		board.AddPiece(new Rook(black), 7, 7);
-		
+
 		return board;
 	}
-	
-	
-	// return true if it's a valid move, false if invalid
+
+	/**
+	 * This method verifies the move is valid for the specified piece.
+	 * @param move The suggested move inputed by the player.
+	 * @param board The board in its current state
+	 * @return true if it's a valid move, false if invalid
+	 */
 	public boolean validatePawnMove(Move move, Board board)
 	{
 		// get direction it can go in
 		int direction = -1;
-		
+
 		// white on top
 		if(move.activePlayer.color.equals("White")) {
 			direction = 1;
 		}
-		
+
 		int yDifference = move.endPosition.yCord - move.startPosition.yCord;
 		int xDifference = Math.abs(move.endPosition.xCord - move.startPosition.xCord);
 		if(yDifference == direction) {
@@ -109,22 +121,27 @@ public class ClassicChess extends Rules {
 		}
 		return false;
 	}
-	
-	// return true if it's a valid move, false if invalid
+
+	/**
+	 * This method verifies the move is valid for the specified piece.
+	 * @param move The suggested move inputed by the player.
+	 * @param board The board in its current state
+	 * @return true if it's a valid move, false if invalid
+	 */
 	public boolean validateQueenMove(Move move, Board board)
 	{
 		// check what the move way is, horizontal or diagonal
 		int xDiff = Math.abs(move.startPosition.xCord - move.endPosition.xCord);
 		int yDiff = Math.abs(move.startPosition.yCord - move.endPosition.yCord);
-		
+
 		// if it attacks the same team
 		if(move.endPosition.piece != null && move.endPosition.piece.owner == move.activePlayer) {
 			return false;
 		}
-		
+
 		int xDir = 1;
 		int yDir = 1;
-		
+
 		// moving left
 		if(move.startPosition.xCord - move.endPosition.xCord > 0) {
 			xDir = -1;
@@ -133,7 +150,7 @@ public class ClassicChess extends Rules {
 		if(move.startPosition.yCord - move.endPosition.yCord > 0) {
 			yDir = -1;
 		}
-		
+
 		// diagonal movement
 		if(xDiff == yDiff) {
 			for(int i=1; i < yDiff; i++ ) {
@@ -164,27 +181,32 @@ public class ClassicChess extends Rules {
 			}
 			return true;
 		}
-		
+
 		return false;
 	}
-	
-	// return true if it's a valid move, false if invalid
+
+	/**
+	 * This method verifies the move is valid for the specified piece.
+	 * @param move The suggested move inputed by the player.
+	 * @param board The board in its current state
+	 * @return true if it's a valid move, false if invalid
+	 */
 	public boolean validateBishopMove(Move move, Board board)
 	{
 		// check what the move way is, horizontal or diagonal
 		int xDiff = Math.abs(move.startPosition.xCord - move.endPosition.xCord);
 		int yDiff = Math.abs(move.startPosition.yCord - move.endPosition.yCord);
-		
+
 		// if it attacks the same team
 		if(move.endPosition.piece != null && move.endPosition.piece.owner == move.activePlayer) {
 			return false;
 		}
-		
+
 		// diagonal movement
 		if(xDiff == yDiff) {
 			int xDir = 1;
 			int yDir = 1;
-			
+
 			// moving left
 			if(move.startPosition.xCord - move.endPosition.xCord > 0) {
 				xDir = -1;
@@ -193,7 +215,7 @@ public class ClassicChess extends Rules {
 			if(move.startPosition.yCord - move.endPosition.yCord > 0) {
 				yDir = -1;
 			}
-			
+
 			for(int i=1; i < yDiff; i++ ) {
 				Tile t = board.tiles[move.startPosition.xCord + (xDir * i)][move.startPosition.yCord + (yDir * i)];
 				if(t.piece != null) {
@@ -202,28 +224,30 @@ public class ClassicChess extends Rules {
 			}
 			return true;
 		}
-		
+
 		return false;
 	}
-	
-	/* 
+
+	/**
+	 * This method verifies the move is valid for the specified piece.
+	 * @param move The suggested move inputed by the player.
+	 * @param board The board in its current state
 	 * @return true if it's a valid move, false if invalid
 	 */
-
 	public boolean validateRookMove(Move move, Board board)
 	{
 		// check what the move way is, horizontal or diagonal
 		int xDiff = Math.abs(move.startPosition.xCord - move.endPosition.xCord);
 		int yDiff = Math.abs(move.startPosition.yCord - move.endPosition.yCord);
-		
+
 		// if it attacks the same team
 		if(move.endPosition.piece != null && move.endPosition.piece.owner == move.activePlayer) {
 			return false;
 		}
-		
+
 		int xDir = 1;
 		int yDir = 1;
-		
+
 		// moving left
 		if(move.startPosition.xCord - move.endPosition.xCord > 0) {
 			xDir = -1;
@@ -232,11 +256,11 @@ public class ClassicChess extends Rules {
 		if(move.startPosition.yCord - move.endPosition.yCord > 0) {
 			yDir = -1;
 		}
-				
+
 		// vertical movement
 		if(xDiff == 0) {
 			for(int i=1; i < yDiff; i++ ) {
-				
+
 				Tile t = board.tiles[move.startPosition.xCord][move.startPosition.yCord + (yDir * i)];
 				if(t.piece != null) {
 					return false;
@@ -254,100 +278,111 @@ public class ClassicChess extends Rules {
 			}
 			return true;
 		}
-		
+
 		return false;
 	}
-	
-		// return true if it's a valid move, false if invalid
-		public boolean validateKnightMove(Move move, Board board)
-		{
-			// if it attacks the same team
-			if(move.endPosition.piece != null && move.endPosition.piece.owner == move.activePlayer) {
-				return false;
-			}
-			
-			// check what the move way is, horizontal or diagonal
-			int xDiff = Math.abs(move.startPosition.xCord - move.endPosition.xCord);
-			int yDiff = Math.abs(move.startPosition.yCord - move.endPosition.yCord);
-			
-			
-			if(yDiff == 2 && xDiff == 1) {
-				return true;
-			}
-			else if(yDiff == 1 && xDiff == 2) {
-				return true;
-			}
 
+	/**
+	 * This method verifies the move is valid for the specified piece.
+	 * @param move The suggested move inputed by the player.
+	 * @param board The board in its current state
+	 * @return true if it's a valid move, false if invalid
+	 */
+	public boolean validateKnightMove(Move move, Board board)
+	{
+		// if it attacks the same team
+		if(move.endPosition.piece != null && move.endPosition.piece.owner == move.activePlayer) {
 			return false;
 		}
-		
-		// return true if it's a valid move, false if invalid
-		public boolean validateKingMove(Move move, Board board)
-		{
-			// if it attacks the same team
-			if(move.endPosition.piece != null && move.endPosition.piece.owner == move.activePlayer) {
+
+		// check what the move way is, horizontal or diagonal
+		int xDiff = Math.abs(move.startPosition.xCord - move.endPosition.xCord);
+		int yDiff = Math.abs(move.startPosition.yCord - move.endPosition.yCord);
+
+
+		if(yDiff == 2 && xDiff == 1) {
+			return true;
+		}
+		else if(yDiff == 1 && xDiff == 2) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * This method verifies the move is valid for the specified piece.
+	 * @param move The suggested move inputed by the player.
+	 * @param board The board in its current state
+	 * @return true if it's a valid move, false if invalid
+	 */
+	public boolean validateKingMove(Move move, Board board)
+	{
+		// if it attacks the same team
+		if(move.endPosition.piece != null && move.endPosition.piece.owner == move.activePlayer) {
+			return false;
+		}
+
+		// check what the move way is, horizontal or diagonal
+		int xDiff = Math.abs(move.startPosition.xCord - move.endPosition.xCord);
+		int yDiff = Math.abs(move.startPosition.yCord - move.endPosition.yCord);
+
+
+		if(yDiff <= 1 && xDiff <= 1) {
+			return true;
+		}
+		// the king is attempting to castle
+		else if(xDiff == 2) {
+			// can't castle if the king has moved
+			if(move.piece.hasMoved == true) {
 				return false;
 			}
-			
-			// check what the move way is, horizontal or diagonal
-			int xDiff = Math.abs(move.startPosition.xCord - move.endPosition.xCord);
-			int yDiff = Math.abs(move.startPosition.yCord - move.endPosition.yCord);
-			
-			
-			if(yDiff <= 1 && xDiff <= 1) {
-				return true;
-			}
-			// the king is attempting to castle
-			else if(xDiff == 2) {
-				// can't castle if the king has moved
-				if(move.piece.hasMoved == true) {
+			int startXCord = move.startPosition.xCord;
+			int startYCord = move.startPosition.yCord;
+
+			// check right rook
+			if(move.startPosition.xCord < move.endPosition.xCord) {
+				// if a piece isn't there, if it has moved, or if it isn't a rook, it doesn't pass
+				if(board.tiles[7][startYCord].piece == null || board.tiles[7][startYCord].piece.hasMoved == true || board.tiles[7][startYCord].piece.getClass() != Rook.class) {
 					return false;
 				}
-				int startXCord = move.startPosition.xCord;
-				int startYCord = move.startPosition.yCord;
-				
-				// check right rook
-				if(move.startPosition.xCord < move.endPosition.xCord) {
-					// if a piece isn't there, if it has moved, or if it isn't a rook, it doesn't pass
-					 if(board.tiles[7][startYCord].piece == null || board.tiles[7][startYCord].piece.hasMoved == true || board.tiles[7][startYCord].piece.getClass() != Rook.class) {
-						 return false;
-					 }
-					 
-					 // if there are no pieces inbetween
-					 if(board.tiles[startXCord + 1][startYCord].piece == null && board.tiles[startXCord + 2][startYCord].piece == null) {
-						 board.tiles[startXCord + 1][startYCord].piece = board.tiles[7][startYCord].piece;
-						 board.tiles[7][startYCord].piece = null;
-						 return true;
-					 }
-				}
-				// check left rook
-				else {
-					// if a piece isn't there, if it has moved, or if it isn't a rook, it doesn't pass
-					 if(board.tiles[0][startYCord].piece == null || board.tiles[0][startYCord].piece.hasMoved == true || board.tiles[0][startYCord].piece.getClass() != Rook.class) {
-						 return false;
-					 }
-					 
-					 // if there are no pieces inbetween
-					 if(board.tiles[startXCord - 1][startYCord].piece == null && board.tiles[startXCord - 2][startYCord].piece == null && board.tiles[startXCord - 3][startYCord].piece == null) {
-						 board.tiles[startXCord - 1][startYCord].piece = board.tiles[0][startYCord].piece;
-						 board.tiles[0][startYCord].piece = null;
-						 return true;
-					 }
+
+				// if there are no pieces inbetween
+				if(board.tiles[startXCord + 1][startYCord].piece == null && board.tiles[startXCord + 2][startYCord].piece == null) {
+					board.tiles[startXCord + 1][startYCord].piece = board.tiles[7][startYCord].piece;
+					board.tiles[7][startYCord].piece = null;
+					return true;
 				}
 			}
+			// check left rook
+			else {
+				// if a piece isn't there, if it has moved, or if it isn't a rook, it doesn't pass
+				if(board.tiles[0][startYCord].piece == null || board.tiles[0][startYCord].piece.hasMoved == true || board.tiles[0][startYCord].piece.getClass() != Rook.class) {
+					return false;
+				}
 
-			return false;
+				// if there are no pieces inbetween
+				if(board.tiles[startXCord - 1][startYCord].piece == null && board.tiles[startXCord - 2][startYCord].piece == null && board.tiles[startXCord - 3][startYCord].piece == null) {
+					board.tiles[startXCord - 1][startYCord].piece = board.tiles[0][startYCord].piece;
+					board.tiles[0][startYCord].piece = null;
+					return true;
+				}
+			}
 		}
-		
-	
+
+		return false;
+	}
+
+	/**
+	 * This method verifies the move is valid for all pieces. It does this by calling the specific method for each piece, as well as calling the method to check for boardstate.
+	 * @param move The suggested move inputed by the player.
+	 * @param board The board in its current state
+	 * @return true if it's a valid move, false if invalid
+	 */
 	public int ValidateMove(Move move, Board board)
 	{
-		//TODO:	- ensure that the moving piece can legally get to the move end point.
-		// 		- ensure that the requested move does not put the active player in check
-		//		- return true if the move is valid, false otherwise
-		
 		int isValid = 1;
-		
+
 		if(move.piece.getClass() == Pawn.class) {
 			isValid = (validatePawnMove(move, board) == true) ? 0 : 1;
 		}
@@ -366,26 +401,27 @@ public class ClassicChess extends Rules {
 		else if(move.piece.getClass() == King.class) {
 			isValid = (validateKingMove(move, board) == true) ? 0 : 1;
 		}
-		
+
 		if(isValid == 1) {
 			View.setErrorMessage("Illigally inputted move, piece can't move in the specified manor.");
 		}
-		
+
 		isValid = validateBoardState(move, board) ? isValid : 2;
 		if(isValid == 2) {
 			View.setErrorMessage("Move puts the King in check");
 		}
-		
+
 		return isValid;
 	}
-	
-	/*
+
+	/**
+	 * This method is used to check if the player is going to be placed into check by making the move.
 	 * @param activePlayer - what player you want to check if has their opponent in check
 	 * @param board - the board you want to check for check on.
 	 * @return true if the active player is in check, false if they are not.
 	 */
 	public boolean CheckForCheck(Player activePlayer, Board board) {
-				
+
 		//locate the friendly and enemy kings
 		Tile kingPosition = null;
 		Tile enemyKing = null;
@@ -401,7 +437,7 @@ public class ClassicChess extends Rules {
 		}
 		//if (kingPosition == null) { return false; }
 		if (enemyKing == null) { return false; }
-		
+
 		//iterate through the active players pieces and tell them to try and kill the friendly king
 		//if they can (legally) then the active player is in check
 		for (Tile tile : board.listOfTiles) {
@@ -413,7 +449,7 @@ public class ClassicChess extends Rules {
 					regicide.startPosition = tile;
 					regicide.endPosition = enemyKing;
 					regicide.piece = tile.piece;
-					
+
 					boolean isValid = false;
 					if(regicide.piece.getClass() == Pawn.class) {
 						isValid = validatePawnMove(regicide, board);
@@ -439,30 +475,37 @@ public class ClassicChess extends Rules {
 				}
 			}
 		}
-	
+
 		return false;
 	}
-	
-	/*
-	 * Checks if a player put themself into check
+
+	/**
+	 * Checks if a player put themselves into check
+	 * @param move The suggested move inputed by the player
+	 * @param board The board in its current state
 	 * @return false if the move put the active player in check, true if they didn't
 	 */
 	private boolean validateBoardState(Move move, Board board) {
-		
+
 		//create deep copies of move and board
 		Board newBoard = new Board(board);
 		Move newMove = new Move(move);
-		
+
 		newMove.ConvertToDifferentBoard(newBoard);
-		
+
 		//make the suggested move on the fake board
 		newMove.startPosition.piece = null;
 		newMove.endPosition.piece = newMove.piece;
-		
+
 		return !CheckForCheck(newMove.activePlayer.opponent, newBoard);
-		
+
 	}
-	
+
+	/**
+	 * Sets the boolean value for last move jump to false every move that occurs.
+	 * @param activePlayer The current player.
+	 * @param board The current board.
+	 */
 	public void setLastMoveJump(Player activePlayer, Board board){
 		for(int y = 0; y < board.height; y++) {
 			for(int x = 0; x < board.width; x++) {
@@ -475,14 +518,14 @@ public class ClassicChess extends Rules {
 			}
 		}
 	}
-	
-	
+
+
 	/**
-	 * 
-	 * @param activePlayer
-	 * @param board
-	 * @param move
-	 * @return MoveCompleteResult
+	 * Checks for special conditions, such as checkmate.
+	 * @param activePlayer the current player.
+	 * @param board The current board.
+	 * @param move The move that just occurred.
+	 * @return MoveCompleteResult The result of the move occurring.
 	 */
 	public MoveCompleteResult ruleCompleteMove(Player activePlayer, Board board, Move move){
 		setLastMoveJump(activePlayer, board);
@@ -494,16 +537,16 @@ public class ClassicChess extends Rules {
 		}else if(move.piece.getClass() == Pawn.class && move.endPosition.yCord == 0 && move.piece.owner.color.equals("Black")) {
 			getPawnPromotionInput(board, move);
 		}
-		
+
 		if (CheckForCheck(activePlayer, board)) {
-			
+
 			boolean checkmate = true;
 			Board newBoard = new Board(board);
 			Move savingMove = null;
-			
+
 			for (Tile tile: newBoard.listOfTiles) {
 				if (checkmate && tile.piece != null && tile.piece.owner == activePlayer.opponent) {
-					
+
 					for (Tile endPosition: newBoard.listOfTiles) {
 						savingMove = new Move();
 						savingMove.activePlayer = activePlayer.opponent;
@@ -511,7 +554,7 @@ public class ClassicChess extends Rules {
 						savingMove.startPosition = tile;
 						savingMove.endPosition = endPosition;
 						//System.out.println("New saving move attempt: " + savingMove.piece + " " + savingMove.startPosition.xCord + "," + savingMove.startPosition.yCord + "-" + savingMove.endPosition.xCord + "," + savingMove.endPosition.yCord);
-						
+
 						boolean isValid = false;
 						if(savingMove.piece.getClass() == Pawn.class) {
 							isValid = validatePawnMove(savingMove, newBoard);
@@ -535,11 +578,11 @@ public class ClassicChess extends Rules {
 						if (isValid) {
 							Board tempBoard = new Board(newBoard);
 							savingMove.ConvertToDifferentBoard(tempBoard);
-							
+
 							//do the move
 							savingMove.startPosition.piece = null;
 							savingMove.endPosition.piece = savingMove.piece;
-							
+
 							//System.out.println("but does it get us out of check? " + !CheckForCheck(activePlayer, tempBoard));
 							if (!CheckForCheck(activePlayer, tempBoard)) {
 								checkmate = false;
@@ -548,26 +591,29 @@ public class ClassicChess extends Rules {
 					}
 				}
 			}
-			
+
 			if (checkmate) {
 				System.out.println(activePlayer + " has put " + activePlayer.opponent + " into checkmate!");
 				MoveCompleteResult moveResult = new MoveCompleteResult(true);
 				moveResult.winner = activePlayer;
 				return moveResult;
 			}
-			
+
 			System.out.println(activePlayer + " has put " + activePlayer.opponent + " into check.");
 		}
 		return new MoveCompleteResult(false);
 	}
-	
+
+	/**
+	 * Gets input for doing the Pawn Promotion
+	 */
 	public void getPawnPromotionInput(Board board, Move move){
 		System.out.println("Please enter a valid input for Pawn Promotion. Choose between Q (Queen), R (Rook), N (Knight), and B (Bishop).");
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String input = null;
 		while (input == null) {
 			try {
-				 input = br.readLine();
+				input = br.readLine();
 			} catch (IOException e) {
 				input = null;
 				System.out.println("Input Error: Unable to read input.");
@@ -599,14 +645,14 @@ public class ClassicChess extends Rules {
 			}
 		}
 	}
-	
-	/*
+
+	/**
 	 * Called before every move, checks for stalemate and ends the game accordingly.
 	 */
 	public boolean checkForStalemate(Player activePlayer, Board board) {
 		//Check all pieces for a valid move, to start with the player doesn't need to move his King.
 		Tile kingTile = null;
-		
+
 		for (Tile tile : board.listOfTiles) {
 			if (tile.piece != null) {
 				if (tile.piece.owner == activePlayer) {
@@ -642,18 +688,18 @@ public class ClassicChess extends Rules {
 				}
 			}
 		}
-		
+
 		//Has no valid moves other than potentially the king.
 		if(kingTile == null) { //player has no king, can't be in stalemate with no king.
 			return false;
 		}
-		
+
 		//Loop through all the potential moved for the king, and check if the player is in check for each of them.
 		Move exMove = new Move();
 		exMove.activePlayer = activePlayer;
 		exMove.startPosition = kingTile;
 		exMove.piece = kingTile.piece;
-		
+
 		for (Tile endTile : board.listOfTiles) {
 			exMove.endPosition = endTile;
 			if(!validateKingMove(exMove, board)) {
@@ -663,16 +709,16 @@ public class ClassicChess extends Rules {
 			Board newBoard = new Board(board);	
 			newBoard.tiles[endTile.xCord][endTile.yCord].piece = new King(activePlayer);
 			newBoard.tiles[kingTile.xCord][kingTile.yCord].piece = null;
-			
+
 			if(!CheckForCheck(activePlayer.opponent, newBoard)) { //opponent doesn't have them in check after the move
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
-	
-	/*
+
+	/**
 	 * Gives the stalemate message based on which player was put into stalemate.
 	 * @param activePlayer - The player who's turn it currently is.
 	 * @return true if the current player was just put into stalemate, false if they weren't

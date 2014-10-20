@@ -4,23 +4,22 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-/*
+/**
  * Take all chess variant rules class.
  */
 public class TakeAllChess extends Rules {
-	
+
 	public TakeAllChess() {
 		super();
 	}
-	
-	/*
-	 * (non-Javadoc)
+
+	/**
 	 * @see game.Rules#SetStartingPositions(game.Player, game.Player)
 	 */
 	public Board SetStartingPositions(Player white, Player black) {
-		
+
 		Board board = new Board(8,8);
-		
+
 		board.AddPiece(new Pawn(white), 0, 1);
 		board.AddPiece(new Pawn(white), 1, 1);
 		board.AddPiece(new Pawn(white), 2, 1);
@@ -37,7 +36,7 @@ public class TakeAllChess extends Rules {
 		board.AddPiece(new Bishop(white), 5, 0);
 		board.AddPiece(new Knight(white), 6, 0);
 		board.AddPiece(new Rook(white), 7, 0);
-		
+
 		board.AddPiece(new Pawn(black), 0, 6);
 		board.AddPiece(new Pawn(black), 1, 6);
 		board.AddPiece(new Pawn(black), 2, 6);
@@ -54,24 +53,24 @@ public class TakeAllChess extends Rules {
 		board.AddPiece(new Bishop(black), 5, 7);
 		board.AddPiece(new Knight(black), 6, 7);
 		board.AddPiece(new Rook(black), 7, 7);
-		
+
 		return board;
 	}
-	
-	
-	/* 
+
+
+	/**
 	 * @return true if it's a valid move, false if invalid
 	 */
 	public boolean validatePawnMove(Move move, Board board)
 	{
 		// get direction it can go in
 		int direction = -1;
-		
+
 		// white on top
 		if(move.activePlayer.color.equals("White")) {
 			direction = 1;
 		}
-		
+
 		int yDifference = move.endPosition.yCord - move.startPosition.yCord;
 		int xDifference = Math.abs(move.endPosition.xCord - move.startPosition.xCord);
 		if(yDifference == direction) {
@@ -119,8 +118,8 @@ public class TakeAllChess extends Rules {
 		}
 		return false;
 	}
-	
-	/* 
+
+	/**
 	 * @return true if it's a valid move, false if invalid
 	 */
 	public boolean validateQueenMove(Move move, Board board)
@@ -128,15 +127,15 @@ public class TakeAllChess extends Rules {
 		// check what the move way is, horizontal or diagonal
 		int xDiff = Math.abs(move.startPosition.xCord - move.endPosition.xCord);
 		int yDiff = Math.abs(move.startPosition.yCord - move.endPosition.yCord);
-		
+
 		// if it attacks the same team
 		if(move.endPosition.piece != null && move.endPosition.piece.owner == move.activePlayer) {
 			return false;
 		}
-		
+
 		int xDir = 1;
 		int yDir = 1;
-		
+
 		// moving left
 		if(move.startPosition.xCord - move.endPosition.xCord > 0) {
 			xDir = -1;
@@ -145,7 +144,7 @@ public class TakeAllChess extends Rules {
 		if(move.startPosition.yCord - move.endPosition.yCord > 0) {
 			yDir = -1;
 		}
-		
+
 		// diagonal movement
 		if(xDiff == yDiff) {
 			for(int i=1; i < yDiff; i++ ) {
@@ -176,11 +175,11 @@ public class TakeAllChess extends Rules {
 			}
 			return true;
 		}
-		
+
 		return false;
 	}
-	
-	/* 
+
+	/**
 	 * @return true if it's a valid move, false if invalid
 	 */
 	public boolean validateBishopMove(Move move, Board board)
@@ -188,17 +187,17 @@ public class TakeAllChess extends Rules {
 		// check what the move way is, horizontal or diagonal
 		int xDiff = Math.abs(move.startPosition.xCord - move.endPosition.xCord);
 		int yDiff = Math.abs(move.startPosition.yCord - move.endPosition.yCord);
-		
+
 		// if it attacks the same team
 		if(move.endPosition.piece != null && move.endPosition.piece.owner == move.activePlayer) {
 			return false;
 		}
-		
+
 		// diagonal movement
 		if(xDiff == yDiff) {
 			int xDir = 1;
 			int yDir = 1;
-			
+
 			// moving left
 			if(move.startPosition.xCord - move.endPosition.xCord > 0) {
 				xDir = -1;
@@ -207,7 +206,7 @@ public class TakeAllChess extends Rules {
 			if(move.startPosition.yCord - move.endPosition.yCord > 0) {
 				yDir = -1;
 			}
-			
+
 			for(int i=1; i < yDiff; i++ ) {
 				Tile t = board.tiles[move.startPosition.xCord + (xDir * i)][move.startPosition.yCord + (yDir * i)];
 				if(t.piece != null) {
@@ -216,11 +215,11 @@ public class TakeAllChess extends Rules {
 			}
 			return true;
 		}
-		
+
 		return false;
 	}
-	
-	/* 
+
+	/** 
 	 * @return true if it's a valid move, false if invalid
 	 */
 	public boolean validateRookMove(Move move, Board board)
@@ -228,15 +227,15 @@ public class TakeAllChess extends Rules {
 		// check what the move way is, horizontal or diagonal
 		int xDiff = Math.abs(move.startPosition.xCord - move.endPosition.xCord);
 		int yDiff = Math.abs(move.startPosition.yCord - move.endPosition.yCord);
-		
+
 		// if it attacks the same team
 		if(move.endPosition.piece != null && move.endPosition.piece.owner == move.activePlayer) {
 			return false;
 		}
-		
+
 		int xDir = 1;
 		int yDir = 1;
-		
+
 		// moving left
 		if(move.startPosition.xCord - move.endPosition.xCord > 0) {
 			xDir = -1;
@@ -245,11 +244,11 @@ public class TakeAllChess extends Rules {
 		if(move.startPosition.yCord - move.endPosition.yCord > 0) {
 			yDir = -1;
 		}
-				
+
 		// vertical movement
 		if(xDiff == 0) {
 			for(int i=1; i < yDiff; i++ ) {
-				
+
 				Tile t = board.tiles[move.startPosition.xCord][move.startPosition.yCord + (yDir * i)];
 				if(t.piece != null) {
 					return false;
@@ -267,11 +266,11 @@ public class TakeAllChess extends Rules {
 			}
 			return true;
 		}
-		
+
 		return false;
 	}
 
-	/* 
+	/** 
 	 * @return true if it's a valid move, false if invalid
 	 */
 	public boolean validateKnightMove(Move move, Board board)
@@ -280,12 +279,12 @@ public class TakeAllChess extends Rules {
 		if(move.endPosition.piece != null && move.endPosition.piece.owner == move.activePlayer) {
 			return false;
 		}
-		
+
 		// check what the move way is, horizontal or diagonal
 		int xDiff = Math.abs(move.startPosition.xCord - move.endPosition.xCord);
 		int yDiff = Math.abs(move.startPosition.yCord - move.endPosition.yCord);
-		
-		
+
+
 		if(yDiff == 2 && xDiff == 1) {
 			return true;
 		}
@@ -295,8 +294,8 @@ public class TakeAllChess extends Rules {
 
 		return false;
 	}
-	
-	/* 
+
+	/** 
 	 * @return true if it's a valid move, false if invalid
 	 */
 	public boolean validateKingMove(Move move, Board board)
@@ -305,29 +304,27 @@ public class TakeAllChess extends Rules {
 		if(move.endPosition.piece != null && move.endPosition.piece.owner == move.activePlayer) {
 			return false;
 		}
-		
+
 		// check what the move way is, horizontal or diagonal
 		int xDiff = Math.abs(move.startPosition.xCord - move.endPosition.xCord);
 		int yDiff = Math.abs(move.startPosition.yCord - move.endPosition.yCord);
-		
+
 		if(yDiff <= 1 && xDiff <= 1) {
 			return true;
 		}
 
 		return false;
 	}
-		
-	
-	/*
+
+
+	/**
 	 * 
-	 * (non-Javadoc)
 	 * @see game.Rules#ValidateMove(game.Move, game.Board)
 	 */
-	
 	public int ValidateMove(Move move, Board board)
 	{
 		int isValidMove = -1;
-		
+
 		if(move.piece.getClass() == Pawn.class) {
 			isValidMove = (validatePawnMove(move, board) == true) ? 0 : 1;
 		}
@@ -346,16 +343,16 @@ public class TakeAllChess extends Rules {
 		else if(move.piece.getClass() == King.class) {
 			isValidMove = (validateKingMove(move, board) == true) ? 0 : 1;
 		}
-		
+
 		if(isValidMove == 1) {
 			View.setErrorMessage("Illigally inputted move, piece can't move in the specified manor.");
 			return 1;
 		}
-		
+
 		if(move.endPosition.piece != null && move.endPosition.piece.owner != move.activePlayer) { //Player is killing the opponents piece, no need to check if they have a potential kill move
 			return 0;
 		}
-		
+
 		if(checkIfKillIsPossible(move.activePlayer, board) == true) {
 			return 3;
 		}
@@ -364,7 +361,7 @@ public class TakeAllChess extends Rules {
 		return 0;
 		//return isValidMove;
 	}
-	
+
 	//Pretty sure this function sets last jumped to 0 for everything, has to do with En Passant
 	public void setLastMoveJump(Player activePlayer, Board board){
 		for(int y = 0; y < board.height; y++) {
@@ -378,7 +375,7 @@ public class TakeAllChess extends Rules {
 			}
 		}
 	}
-	
+
 	/**
 	 * Move has been validated, performing the move
 	 * @param activePlayer
@@ -396,24 +393,27 @@ public class TakeAllChess extends Rules {
 		}else if(move.piece.getClass() == Pawn.class && move.endPosition.yCord == 0 && move.piece.owner.color.equals("Black")) {
 			getPawnPromotionInput(board, move);
 		}
-		
+
 		boolean victoryStatus = checkWinCondition(activePlayer, board);
 		if(victoryStatus) {
 			MoveCompleteResult moveResult = new MoveCompleteResult(true);
 			moveResult.winner = activePlayer;
 			return moveResult;
 		}
-		
+
 		return new MoveCompleteResult(false);
 	}
-	
+
+	/**
+	 * Gets input for doing the Pawn Promotion
+	 */
 	public void getPawnPromotionInput(Board board, Move move){
 		System.out.println("Please enter a valid input for Pawn Promotion. Choose between Q (Queen), R (Rook), N (Knight), and B (Bishop).");
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String input = null;
 		while (input == null) {
 			try {
-				 input = br.readLine();
+				input = br.readLine();
 			} catch (IOException e) {
 				input = null;
 				System.out.println("Input Error: Unable to read input.");
@@ -448,8 +448,8 @@ public class TakeAllChess extends Rules {
 			}
 		}
 	}
-	
-	/*
+
+	/**
 	 * @return false - no one has won, true - someone wins
 	 * should be called after a move has happened, checks if the active player has won (all the opponents pieces are gone)
 	 */
@@ -461,16 +461,17 @@ public class TakeAllChess extends Rules {
 				}
 			}
 		}
-		
+
 		return true;
 	}
-	
-	/* Ran after every move is validated if the player isn't killing someone. 
-	* Returns true if that player could have killed someone but didn't
-	* Returns false otherwise
-	*/
+
+	/**
+	 * Ran after every move is validated if the player isn't killing someone. 
+	 * Returns true if that player could have killed someone but didn't
+	 * Returns false otherwise
+	 */
 	private boolean checkIfKillIsPossible(Player activePlayer, Board board) {
-		
+
 		//iterate through the enemy pieces and tell them to try and kill the friendly king
 		//if they can (legally) then the active player has put themself in check
 		for (Tile tile : board.listOfTiles) {
@@ -481,7 +482,7 @@ public class TakeAllChess extends Rules {
 					exMove.activePlayer = tile.piece.owner;
 					exMove.startPosition = tile;
 					exMove.piece = tile.piece;
-					
+
 					for (Tile endTile : board.listOfTiles) {
 						if (endTile.piece != null) {
 							if (endTile.piece.owner != activePlayer) {
@@ -510,24 +511,24 @@ public class TakeAllChess extends Rules {
 									View.setErrorMessage("A capturing move is available but the move specified captures nothing. See below for details.\n" + exMove.toString());
 									return true;
 								}
-					
+
 							}
 						}
 					}
-					
+
 				}
 			}
 		}
 		return false;
 	}
-	
-	/*
+
+	/**
 	 * @param activePlayer - what player you want to check if has their opponent in check
 	 * @param board - the board you want to check for check on.
 	 * @return true if the active player is in check, false if they are not.
 	 */
 	public boolean CheckForCheck(Player activePlayer, Board board) {
-				
+
 		//locate the friendly and enemy kings
 		Tile enemyKing = null;
 		for (Tile tile: board.listOfTiles) {
@@ -537,10 +538,10 @@ public class TakeAllChess extends Rules {
 				}
 			}
 		}
-		
+
 		//if (kingPosition == null) { return false; }
 		if (enemyKing == null) { return false; }
-		
+
 		//iterate through the active players pieces and tell them to try and kill the friendly king
 		//if they can (legally) then the active player is in check
 		for (Tile tile : board.listOfTiles) {
@@ -552,7 +553,7 @@ public class TakeAllChess extends Rules {
 					regicide.startPosition = tile;
 					regicide.endPosition = enemyKing;
 					regicide.piece = tile.piece;
-					
+
 					boolean isValid = false;
 					if(regicide.piece.getClass() == Pawn.class) {
 						isValid = validatePawnMove(regicide, board);
@@ -578,17 +579,17 @@ public class TakeAllChess extends Rules {
 				}
 			}
 		}
-	
+
 		return false;
 	}
-	
-	/*
+
+	/**
 	 * Called before every move, checks for stalemate and ends the game accordingly.
 	 */
 	public boolean checkForStalemate(Player activePlayer, Board board) {
 		//Check all pieces for a valid move, to start with the player doesn't need to move his King.
 		Tile kingTile = null;
-		
+
 		for (Tile tile : board.listOfTiles) {
 			if (tile.piece != null) {
 				if (tile.piece.owner == activePlayer) {
@@ -624,18 +625,18 @@ public class TakeAllChess extends Rules {
 				}
 			}
 		}
-		
+
 		//Has no valid moves other than potentially the king.
 		if(kingTile == null) { //player has no king, no king and no valid moves = stalemate.
 			return true;
 		}
-		
+
 		//Loop through all the potential moved for the king, and check if the player is in check for each of them.
 		Move exMove = new Move();
 		exMove.activePlayer = activePlayer;
 		exMove.startPosition = kingTile;
 		exMove.piece = kingTile.piece;
-		
+
 		for (Tile endTile : board.listOfTiles) {
 			exMove.endPosition = endTile;
 			if(!validateKingMove(exMove, board)) {
@@ -645,16 +646,16 @@ public class TakeAllChess extends Rules {
 			Board newBoard = new Board(board);	
 			newBoard.tiles[endTile.xCord][endTile.yCord].piece = new King(activePlayer);
 			newBoard.tiles[kingTile.xCord][kingTile.yCord].piece = null;
-			
+
 			if(!CheckForCheck(activePlayer.opponent, newBoard)) { //opponent doesn't have them in check after the move
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
-	
-	/*
+
+	/**
 	 * Gives the stalemate message based on which player was put into stalemate.
 	 * @param activePlayer - The player who's turn it currently is.
 	 * @return true if the current player was just put into stalemate, false if they weren't
