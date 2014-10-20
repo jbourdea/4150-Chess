@@ -629,8 +629,8 @@ public class TakeAllChess extends Rules {
 		}
 		
 		//Has no valid moves other than potentially the king.
-		if(kingTile == null) { //player has no king, can't be in stalemate with no king.
-			return false;
+		if(kingTile == null) { //player has no king, no king and no valid moves = stalemate.
+			return true;
 		}
 		
 		//Loop through all the potential moved for the king, and check if the player is in check for each of them.
@@ -663,6 +663,6 @@ public class TakeAllChess extends Rules {
 	 * @return true if the current player was just put into stalemate, false if they weren't
 	 */
 	public String getStalemateMessage(Player activePlayer) {
-		return this.stalemateMessage;
+		return this.stalemateMessage + " " + activePlayer.color + " wins";
 	}
 }
