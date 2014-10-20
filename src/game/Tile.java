@@ -1,5 +1,9 @@
 package game;
 
+/**
+ * Tile class is placed on each spot on the board. Holds a reference to the piece on it.
+ * 
+ */
 public class Tile {
 	public Piece piece;
 	public int xCord = -1;
