@@ -1,15 +1,20 @@
 package game;
 import java.io.*;
 
+/**
+ * The way the user interacts with the game.
+ */
 public class Controller {
 	public View view = null;
-	//public Rules rules = null;
 	public Game game = null;
 	
 	public Controller(View view) {
 		this.view = view;
 	}
 	
+	/**
+	 * Handles user input and keeps track of what the user is input towards
+	 */
 	public void play() {
 		
 		while (true) {
