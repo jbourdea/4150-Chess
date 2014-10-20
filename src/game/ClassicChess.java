@@ -462,7 +462,18 @@ public class ClassicChess extends Rules {
 		}
 	}
 	
-	public void ruleCompleteMove(Player activePlayer, Board board, Move move){
+	
+	/**
+	 * 
+	 * @param activePlayer
+	 * @param board
+	 * @param move
+	 * @return 	0 - normal move was made, not a game ending condition
+	 * 			1 - white wins, game ends
+	 * 			2 - black wins, game ends
+	 * 			3 - stalemate, game ends
+	 */
+	public int ruleCompleteMove(Player activePlayer, Board board, Move move){
 		setLastMoveJump(activePlayer, board);
 		if(move.piece.getClass() == Pawn.class && Math.abs(move.startPosition.yCord - move.endPosition.yCord) == 2) {
 			Pawn p = (Pawn)move.piece;
@@ -474,9 +485,9 @@ public class ClassicChess extends Rules {
 		}
 		
 		if (CheckForCheck(activePlayer, board)) {
-			
 			System.out.println(activePlayer + " has put " + activePlayer.opponent + " into check.");
 		}
+		return 0;
 	}
 	
 	public void getPawnPromotionInput(Board board, Move move){

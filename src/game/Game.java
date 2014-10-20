@@ -42,16 +42,23 @@ public class Game {
 		}
 	}
 	
-	/*
-	 * Performs a move. Called after validation and before checks for win condition
+	
+	/**
+	 * 
+	 * @param move
+	 * @return 	0 - normal move was made, not a game ending condition
+	 * 			1 - white wins, game ends
+	 * 			2 - black wins, game ends
+	 * 			3 - stalemate, game ends
 	 */
-	public void CompleteMove(Move move) {
+	public int CompleteMove(Move move) {
 		Piece piece = move.piece;
 		
 		move.startPosition.piece = null;
 		move.endPosition.piece = piece;
 		piece.hasMoved = true;
-		rules.ruleCompleteMove(activePlayer, board, move);
+		int gameResult = rules.ruleCompleteMove(activePlayer, board, move);
+		return gameResult;
 	}
 	
 	/*

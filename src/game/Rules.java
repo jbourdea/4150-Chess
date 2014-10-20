@@ -27,11 +27,18 @@ public class Rules {
 		return 1;
 	}
 	
-	/*
-	 * After the move has been validated. Actually performs the movement
+	/**
+	 * 
+	 * @param activePlayer
+	 * @param board
+	 * @param move
+	 * @return 	0 - normal move was made, not a game ending condition
+	 * 			1 - white wins, game ends
+	 * 			2 - black wins, game ends
+	 * 			3 - stalemate, game ends
 	 */
-	public void ruleCompleteMove(Player activePlayer, Board board, Move move){
-		
+	public int ruleCompleteMove(Player activePlayer, Board board, Move move){
+		return 0;
 	}
 	
 	/*
