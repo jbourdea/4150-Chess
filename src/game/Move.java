@@ -94,4 +94,17 @@ public class Move {
 	
 	}
 
+	public void ConvertToDifferentBoard(Board newBoard) {
+		for (Tile tile: newBoard.listOfTiles) {
+			if (this.startPosition.xCord == tile.xCord && 
+					this.startPosition.yCord == tile.yCord) {
+				this.startPosition = tile;
+			}
+			else if (this.endPosition.xCord == tile.xCord && 
+					this.endPosition.yCord == tile.yCord) {
+				this.endPosition = tile;
+			}
+		}
+	}
+	
 }
