@@ -424,6 +424,10 @@ public class ClassicChess extends Rules {
 		return false;
 	}
 	
+	/*
+	 * Checks if a player put themself into check
+	 * @return false if the move put the active player in check, true if they didn't
+	 */
 	private boolean validateBoardState(Move move, Board board) {
 		
 		//create deep copies of move and board
