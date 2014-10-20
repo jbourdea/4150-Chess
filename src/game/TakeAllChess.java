@@ -292,47 +292,8 @@ public class TakeAllChess extends Rules {
 		int xDiff = Math.abs(move.startPosition.xCord - move.endPosition.xCord);
 		int yDiff = Math.abs(move.startPosition.yCord - move.endPosition.yCord);
 		
-		
 		if(yDiff <= 1 && xDiff <= 1) {
 			return true;
-		}
-		// the king is attempting to castle
-		else if(xDiff == 2) {
-			// can't castle if the king has moved
-			if(move.piece.hasMoved == true) {
-				return false;
-			}
-			int startXCord = move.startPosition.xCord;
-			int startYCord = move.startPosition.yCord;
-			
-			// check right rook
-			if(move.startPosition.xCord < move.endPosition.xCord) {
-				// if a piece isn't there, if it has moved, or if it isn't a rook, it doesn't pass
-				 if(board.tiles[7][startYCord].piece == null || board.tiles[7][startYCord].piece.hasMoved == true || board.tiles[7][startYCord].piece.getClass() != Rook.class) {
-					 return false;
-				 }
-				 
-				 // if there are no pieces inbetween
-				 if(board.tiles[startXCord + 1][startYCord].piece == null && board.tiles[startXCord + 2][startYCord].piece == null) {
-					 board.tiles[startXCord + 1][startYCord].piece = board.tiles[7][startYCord].piece;
-					 board.tiles[7][startYCord].piece = null;
-					 return true;
-				 }
-			}
-			// check left rook
-			else {
-				// if a piece isn't there, if it has moved, or if it isn't a rook, it doesn't pass
-				 if(board.tiles[0][startYCord].piece == null || board.tiles[0][startYCord].piece.hasMoved == true || board.tiles[0][startYCord].piece.getClass() != Rook.class) {
-					 return false;
-				 }
-				 
-				 // if there are no pieces inbetween
-				 if(board.tiles[startXCord - 1][startYCord].piece == null && board.tiles[startXCord - 2][startYCord].piece == null && board.tiles[startXCord - 3][startYCord].piece == null) {
-					 board.tiles[startXCord - 1][startYCord].piece = board.tiles[0][startYCord].piece;
-					 board.tiles[0][startYCord].piece = null;
-					 return true;
-				 }
-			}
 		}
 
 		return false;
@@ -414,7 +375,8 @@ public class TakeAllChess extends Rules {
 		}else if(move.piece.getClass() == Pawn.class && move.endPosition.yCord == 0 && move.piece.owner.color.equals("Black")) {
 			getPawnPromotionInput(board, move);
 		}
-		//TODO CHECK FOR WIN
+		
+		checkWinCondition(activePlayer, board);
 	}
 	
 	public void getPawnPromotionInput(Board board, Move move){
@@ -459,6 +421,22 @@ public class TakeAllChess extends Rules {
 		}
 	}
 	
+	/*
+	 * @return false - no one has won, true - someone wins
+	 * should be called after a move has happened, checks if the active player has won (all the opponents pieces are gone)
+	 */
+	public boolean checkWinCondition(Player activePlayer, Board board) {
+		for (Tile tile : board.listOfTiles) {
+			if (tile.piece != null) {
+				if (tile.piece.owner != activePlayer) {
+					return false;
+				}
+			}
+		}
+		
+		return true;
+	}
+	
 	/* Ran after every move is validated if the player isn't killing someone. 
 	* Returns true if that player could have killed someone but didn't
 	* Returns false otherwise
@@ -501,7 +479,7 @@ public class TakeAllChess extends Rules {
 									isValid = validateKingMove(exMove, board);
 								}
 								if (isValid) {
-									View.setErrorMessage(exMove.toString());
+									View.setErrorMessage("A capturing move is available but the move specified captures nothing. See below for details.\n" + exMove.toString());
 									return true;
 								}
 					

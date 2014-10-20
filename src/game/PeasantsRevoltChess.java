@@ -1,12 +1,19 @@
 package game;
 import java.io.*;
 
+/*
+ * Rule set for peasants revolt chess. Contains validation checks for movements and game states.
+ */
 public class PeasantsRevoltChess extends Rules {
 
 	public PeasantsRevoltChess() {
 		super();
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see game.Rules#SetStartingPositions(game.Player, game.Player)
+	 */
 	public Board SetStartingPositions(Player white, Player black) {
 		
 		Board board = new Board(8,8);
@@ -32,7 +39,9 @@ public class PeasantsRevoltChess extends Rules {
 	}
 	
 	
-	// return true if it's a valid move, false if invalid
+	/*
+	 * @return true if it's a valid move, false if invalid
+	 */
 	public boolean validatePawnMove(Move move, Board board)
 	{
 		// get direction it can go in
@@ -91,7 +100,9 @@ public class PeasantsRevoltChess extends Rules {
 		return false;
 	}
 	
-	// return true if it's a valid move, false if invalid
+	/*
+	 * @return true if it's a valid move, false if invalid
+	 */
 	public boolean validateQueenMove(Move move, Board board)
 	{
 		// check what the move way is, horizontal or diagonal
@@ -149,7 +160,9 @@ public class PeasantsRevoltChess extends Rules {
 		return false;
 	}
 	
-	// return true if it's a valid move, false if invalid
+	/*
+	 * @return true if it's a valid move, false if invalid
+	 */
 	public boolean validateBishopMove(Move move, Board board)
 	{
 		// check what the move way is, horizontal or diagonal
@@ -187,129 +200,135 @@ public class PeasantsRevoltChess extends Rules {
 		return false;
 	}
 	
-	// return true if it's a valid move, false if invalid
-		public boolean validateRookMove(Move move, Board board)
-		{
-			// check what the move way is, horizontal or diagonal
-			int xDiff = Math.abs(move.startPosition.xCord - move.endPosition.xCord);
-			int yDiff = Math.abs(move.startPosition.yCord - move.endPosition.yCord);
-			
-			// if it attacks the same team
-			if(move.endPosition.piece != null && move.endPosition.piece.owner == move.activePlayer) {
-				return false;
-			}
-			
-			// horizontal movement
-			if(xDiff == 0) {
-				for(int i=1; i < xDiff; i++ ) {
-					Tile t = board.tiles[move.startPosition.xCord + i][move.startPosition.yCord];
-					if(t.piece != null) {
-						return false;
-					}
-				}
-				return true;
-			}
-			// vertical movement
-			else if(yDiff == 0) {
-				for(int i=1; i < yDiff; i++ ) {
-					Tile t = board.tiles[move.startPosition.xCord][move.startPosition.yCord + i];
-					if(t.piece != null) {
-						return false;
-					}
-				}
-				return true;
-			}
-			
-			return false;
-		}
-	
-		// return true if it's a valid move, false if invalid
-		public boolean validateKnightMove(Move move, Board board)
-		{
-			// if it attacks the same team
-			if(move.endPosition.piece != null && move.endPosition.piece.owner == move.activePlayer) {
-				return false;
-			}
-			
-			// check what the move way is, horizontal or diagonal
-			int xDiff = Math.abs(move.startPosition.xCord - move.endPosition.xCord);
-			int yDiff = Math.abs(move.startPosition.yCord - move.endPosition.yCord);
-			
-			
-			if(yDiff == 2 && xDiff == 1) {
-				return true;
-			}
-			else if(yDiff == 1 && xDiff == 2) {
-				return true;
-			}
-
+	/*
+	 * @return true if it's a valid move, false if invalid
+	 */
+	public boolean validateRookMove(Move move, Board board)
+	{
+		// check what the move way is, horizontal or diagonal
+		int xDiff = Math.abs(move.startPosition.xCord - move.endPosition.xCord);
+		int yDiff = Math.abs(move.startPosition.yCord - move.endPosition.yCord);
+		
+		// if it attacks the same team
+		if(move.endPosition.piece != null && move.endPosition.piece.owner == move.activePlayer) {
 			return false;
 		}
 		
-		// return true if it's a valid move, false if invalid
-		public boolean validateKingMove(Move move, Board board)
-		{
-			// if it attacks the same team
-			if(move.endPosition.piece != null && move.endPosition.piece.owner == move.activePlayer) {
-				return false;
-			}
-			
-			// check what the move way is, horizontal or diagonal
-			int xDiff = Math.abs(move.startPosition.xCord - move.endPosition.xCord);
-			int yDiff = Math.abs(move.startPosition.yCord - move.endPosition.yCord);
-			
-			
-			if(yDiff <= 1 && xDiff <= 1) {
-				return true;
-			}
-			// the king is attempting to castle
-			else if(xDiff == 2) {
-				// can't castle if the king has moved
-				if(move.piece.hasMoved == true) {
+		// horizontal movement
+		if(xDiff == 0) {
+			for(int i=1; i < xDiff; i++ ) {
+				Tile t = board.tiles[move.startPosition.xCord + i][move.startPosition.yCord];
+				if(t.piece != null) {
 					return false;
 				}
-				int startXCord = move.startPosition.xCord;
-				int startYCord = move.startPosition.yCord;
-				
-				// check right rook
-				if(move.startPosition.xCord < move.endPosition.xCord) {
-					// if a piece isn't there, if it has moved, or if it isn't a rook, it doesn't pass
-					 if(board.tiles[7][startYCord].piece == null || board.tiles[7][startYCord].piece.hasMoved == true || board.tiles[7][startYCord].piece.getClass() != Rook.class) {
-						 return false;
-					 }
-					 
-					 // if there are no pieces inbetween
-					 if(board.tiles[startXCord + 1][startYCord].piece == null && board.tiles[startXCord + 2][startYCord].piece == null) {
-						 board.tiles[startXCord + 1][startYCord].piece = board.tiles[7][startYCord].piece;
-						 board.tiles[7][startYCord].piece = null;
-						 return true;
-					 }
-				}
-				// check left rook
-				else {
-					// if a piece isn't there, if it has moved, or if it isn't a rook, it doesn't pass
-					 if(board.tiles[0][startYCord].piece == null || board.tiles[0][startYCord].piece.hasMoved == true || board.tiles[0][startYCord].piece.getClass() != Rook.class) {
-						 return false;
-					 }
-					 
-					 // if there are no pieces inbetween
-					 if(board.tiles[startXCord - 1][startYCord].piece == null && board.tiles[startXCord - 2][startYCord].piece == null && board.tiles[startXCord - 3][startYCord].piece == null) {
-						 board.tiles[startXCord - 1][startYCord].piece = board.tiles[0][startYCord].piece;
-						 board.tiles[0][startYCord].piece = null;
-						 return true;
-					 }
+			}
+			return true;
+		}
+		// vertical movement
+		else if(yDiff == 0) {
+			for(int i=1; i < yDiff; i++ ) {
+				Tile t = board.tiles[move.startPosition.xCord][move.startPosition.yCord + i];
+				if(t.piece != null) {
+					return false;
 				}
 			}
+			return true;
+		}
+		
+		return false;
+	}
 
+	/*
+	 * @return true if it's a valid move, false if invalid
+	 */
+	public boolean validateKnightMove(Move move, Board board)
+	{
+		// if it attacks the same team
+		if(move.endPosition.piece != null && move.endPosition.piece.owner == move.activePlayer) {
 			return false;
 		}
 		
+		// check what the move way is, horizontal or diagonal
+		int xDiff = Math.abs(move.startPosition.xCord - move.endPosition.xCord);
+		int yDiff = Math.abs(move.startPosition.yCord - move.endPosition.yCord);
+		
+		
+		if(yDiff == 2 && xDiff == 1) {
+			return true;
+		}
+		else if(yDiff == 1 && xDiff == 2) {
+			return true;
+		}
+
+		return false;
+	}
 	
+	/*
+	 * @return true if it's a valid move, false if invalid
+	 */
+	public boolean validateKingMove(Move move, Board board)
+	{
+		// if it attacks the same team
+		if(move.endPosition.piece != null && move.endPosition.piece.owner == move.activePlayer) {
+			return false;
+		}
+		
+		// check what the move way is, horizontal or diagonal
+		int xDiff = Math.abs(move.startPosition.xCord - move.endPosition.xCord);
+		int yDiff = Math.abs(move.startPosition.yCord - move.endPosition.yCord);
+		
+		
+		if(yDiff <= 1 && xDiff <= 1) {
+			return true;
+		}
+		// the king is attempting to castle
+		else if(xDiff == 2) {
+			// can't castle if the king has moved
+			if(move.piece.hasMoved == true) {
+				return false;
+			}
+			int startXCord = move.startPosition.xCord;
+			int startYCord = move.startPosition.yCord;
+			
+			// check right rook
+			if(move.startPosition.xCord < move.endPosition.xCord) {
+				// if a piece isn't there, if it has moved, or if it isn't a rook, it doesn't pass
+				 if(board.tiles[7][startYCord].piece == null || board.tiles[7][startYCord].piece.hasMoved == true || board.tiles[7][startYCord].piece.getClass() != Rook.class) {
+					 return false;
+				 }
+				 
+				 // if there are no pieces inbetween
+				 if(board.tiles[startXCord + 1][startYCord].piece == null && board.tiles[startXCord + 2][startYCord].piece == null) {
+					 board.tiles[startXCord + 1][startYCord].piece = board.tiles[7][startYCord].piece;
+					 board.tiles[7][startYCord].piece = null;
+					 return true;
+				 }
+			}
+			// check left rook
+			else {
+				// if a piece isn't there, if it has moved, or if it isn't a rook, it doesn't pass
+				 if(board.tiles[0][startYCord].piece == null || board.tiles[0][startYCord].piece.hasMoved == true || board.tiles[0][startYCord].piece.getClass() != Rook.class) {
+					 return false;
+				 }
+				 
+				 // if there are no pieces inbetween
+				 if(board.tiles[startXCord - 1][startYCord].piece == null && board.tiles[startXCord - 2][startYCord].piece == null && board.tiles[startXCord - 3][startYCord].piece == null) {
+					 board.tiles[startXCord - 1][startYCord].piece = board.tiles[0][startYCord].piece;
+					 board.tiles[0][startYCord].piece = null;
+					 return true;
+				 }
+			}
+		}
+
+		return false;
+	}
+		
+	/*
+	 * (non-Javadoc)
+	 * @see game.Rules#ValidateMove(game.Move, game.Board)
+	 */
 	public int ValidateMove(Move move, Board board)
 	{
-		//TODO:	- ensure that the moving piece can legally get to the move end point.
-		// 		- ensure that the requested move does not put the active player in check
-		//		- return true if the move is valid, false otherwise
 		
 		int isValid = 1;
 		
@@ -337,6 +356,10 @@ public class PeasantsRevoltChess extends Rules {
 		return isValid;
 	}
 	
+	/* 
+	 * Check if the move given by the active player will put them into check. Called after a move has been validated and before it actually performs the move.
+	 * @return: false - the player has put themself into check, the move is illigal, true - the move is legal, it doesn't put them in check
+	 */
 	private boolean validateBoardState(Move move, Board board) {
 		
 		//create deep copies of move and board
@@ -374,8 +397,8 @@ public class PeasantsRevoltChess extends Rules {
 		if (kingPosition == null) { return false; }
 		if (enemyKing == null) { return true; }
 		
-		//iterate through the enemy pieces and tell them to try and kill the friendly king
-		//if they can (legally) then the active player has put themself in check
+		// Iterate through the enemy pieces and tell them to try and kill the friendly king.
+		// If they can (legally), then the active player has put themself in check
 		for (Tile tile : newBoard.listOfTiles) {
 			if (tile.piece != null) {
 				if (tile.piece.owner != newMove.activePlayer) {
@@ -440,7 +463,7 @@ public class PeasantsRevoltChess extends Rules {
 		}
 	}
 	
-	public void getPawnPromotionInput(Board board, Move move){
+	public void getPawnPromotionInput(Board board, Move move) {
 		System.out.println("Please enter a valid input for Pawn Promotion. Choose between Q (Queen), R (Rook), N (Knight), and B (Bishop).");
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String input = null;

@@ -6,12 +6,16 @@ public class Rules {
 		
 	}
 	
+	/*
+	 * Creates a newly set up board
+	 * @return The game board with pieces in starting positions
+	 */
 	public Board SetStartingPositions(Player white, Player black) {
 		return null;
 	}
 	
 	/*
-	 * Return Values:
+	 * @return:
 	 * 0 - move is valid
 	 * 1 - Move doesn't align with the rules for that piece types allowed movement
 	 * 2 - Movement puts the user in check
@@ -23,9 +27,26 @@ public class Rules {
 		return 1;
 	}
 	
+	/*
+	 * After the move has been validated. Actually performs the movement
+	 */
 	public void ruleCompleteMove(Player activePlayer, Board board, Move move){
 		
 	}
 	
+	/*
+	 * Called after every move in classic and peasants revolt. Checks if the move a player just submitted puts them self into check
+	 * @return false - move given puts the active player in check, true - the move is valid, it doesn't put the active player in check.
+	 */
+	private boolean validateBoardState(Move move, Board board) {
+		return false;
+	}
+	
+	/*
+	 * Called when a pawn gets to the far side of the board. Gets the choice of piece from teh user and changes the piece accordingly.
+	 */
+	public void getPawnPromotionInput(Board board, Move move) {
+		
+	}
 	
 }

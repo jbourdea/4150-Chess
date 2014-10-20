@@ -45,13 +45,11 @@ public class Move {
 				
 		if(startX != -1 && startY < board.height && startY > -1) {
 			Tile tile = board.tiles[startX][startY];
-			if (tile.piece != null)
-			{
-				piece = tile.piece;
-				startPosition = tile;
-				tile.xCord = startX;
-				tile.yCord = startY;
-			}
+
+			piece = tile.piece;
+			startPosition = tile;
+			tile.xCord = startX;
+			tile.yCord = startY;
 		}
 		
 		int endX = -1;
@@ -79,19 +77,18 @@ public class Move {
 	{
 		if (piece != null && startPosition != null && endPosition != null && activePlayer != null && piece.owner == activePlayer)
 			return true;
-		
-		if(piece == null) { View.setErrorMessage("Move not possible, piece doesn't exist on specified tile."); }
+
 		if(endPosition == null) { View.setErrorMessage("Move not possible, tile specified for end position doesn't exist."); }
 		if(startPosition == null) { View.setErrorMessage("Move not possible, tile specified for start position doesn't exist."); }
 		if(activePlayer == null) { View.setErrorMessage("System error, no active player."); }
+		if(piece == null) { View.setErrorMessage("Move not possible, piece doesn't exist on specified tile."); }
 		if(piece != null && piece.owner != activePlayer) { View.setErrorMessage("Move not possible, active player doesn't own the piece specified to move."); }
 		
 		return false;
 	}
 	
 	public String toString() {
-		return "<= Move => \n Player => " + this.activePlayer.toString()
-				+ "\n Piece => " + this.piece.toString() 
+		return "== Move == "
 				+ "\n Start Position => " + this.startPosition.toString() 
 				+ "\n End Position => " + this.endPosition.toString();
 	

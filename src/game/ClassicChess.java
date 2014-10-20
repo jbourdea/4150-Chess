@@ -351,7 +351,14 @@ public class ClassicChess extends Rules {
 			isValid = (validateKingMove(move, board) == true) ? 0 : 1;
 		}
 		
+		if(isValid == 1) {
+			View.setErrorMessage("Illigally inputted move, piece can't move in the specified manor.");
+		}
+		
 		isValid = validateBoardState(move, board) ? isValid : 2;
+		if(isValid == 2) {
+			View.setErrorMessage("Move puts the King in check");
+		}
 		
 		return isValid;
 	}
