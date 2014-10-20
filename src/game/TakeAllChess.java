@@ -385,7 +385,13 @@ public class TakeAllChess extends Rules {
 			getPawnPromotionInput(board, move);
 		}
 		
-		checkWinCondition(activePlayer, board);
+		boolean victoryStatus = checkWinCondition(activePlayer, board);
+		if(victoryStatus && activePlayer.color.equals("White")) {
+			return 1;
+		} else if(victoryStatus && activePlayer.color.equals("Black")) {
+			return 2;
+		}
+		
 		return 0;
 	}
 	
