@@ -14,6 +14,8 @@ public class Game {
 	public Player white = null;
 	public Player black = null;
 	
+	public boolean GameOver = false;
+	
 	public Game() {
 		white = new Player();
 		black = new Player();

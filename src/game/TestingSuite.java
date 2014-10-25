@@ -1,5 +1,9 @@
 package game;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 public class TestingSuite {
 	
 	public View view = null;
@@ -10,32 +14,65 @@ public class TestingSuite {
 	}
 	
 	public void Start() {
-		//do testing
 		
 		game = null;
 		
-		
-		//classic chess
-		System.out.println("**Testing Classic Chess**");
-		
-		if (FoolsMate()) { System.out.println("Fool's Mate test was successful."); }
-		else { System.out.println("Fool's Mate test failed."); }
-		
-		if (ScholarsMate()) { System.out.println("Scholar's Mate test was successful."); }
-		else { System.out.println("Scholar's Mate test failed."); }
-		
-		
-		//take all chess
-		game = new Game();
-		game.rules = new TakeAllChess();
-		game.board = game.rules.SetStartingPositions(this.game.white, this.game.black);
-		//view.DisplayBoard(game.board);
-		game.NextTurn();
-		
-		//movement
-		
-		
-		System.out.println("Testing Complete");
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String input = null;
+		while (input == null) {
+			
+			System.out.println("Welcome to the Automatic Testing Suite");
+			System.out.println("Select a test to run:");
+			System.out.println("0. Return to main menu.");
+			System.out.println("1. Classic Chess: Fool's Mate");
+			System.out.println("2. Classic Chess: Scholar's Mate");
+			
+			
+			try {
+				 input = br.readLine();
+			} catch (IOException e) {
+				input = null;
+				View.setErrorMessage("Input Error: Unable to read input.");
+				view.DisplayErrorMessage();
+			}
+			
+			if (input != null) {
+				try {
+					if(input.equalsIgnoreCase("exit") ||
+							input.equalsIgnoreCase("quit") ||
+							input.equalsIgnoreCase("q")) {
+						view.DisplayExitMessage();
+						System.exit(0);
+					}
+					
+					int option = Integer.parseInt(input);
+					
+					if (option == 0) { 
+						break;
+					}
+					else if (option == 1) { 
+						if (FoolsMate()) { System.out.println("Fool's Mate test was successful.\n"); }
+						else { System.out.println("Fool's Mate test failed.\n"); }
+						input = null;
+					}
+					else if (option == 2) { 
+						if (ScholarsMate()) { System.out.println("Scholar's Mate test was successful.\n"); }
+						else { System.out.println("Scholar's Mate test failed.\n"); }
+						input = null;
+					}
+					else {
+						input = null;
+						System.out.println("Input Error: Not a valid test index.");
+					}
+				}
+				catch (Exception e)
+				{
+					input = null;
+					System.out.println("Error loading test.");
+				}
+			}
+			
+		}
 	}
 	
 	private void CompleteMove(Move move) {
@@ -48,6 +85,7 @@ public class TestingSuite {
 			
 			if(moveResult.gameOver) {
 				view.DisplayWinMessage(moveResult.winner);
+				game.GameOver = true;
 			}
 		}
 		else {
@@ -78,7 +116,12 @@ public class TestingSuite {
 			success = false;
 			System.out.println(e.getMessage());
 		}
-		return success;
+		if (success && game.GameOver)
+		{
+			return success;
+		}
+		return false;
+		
 	}
 	
 	private boolean ScholarsMate() {
@@ -105,7 +148,12 @@ public class TestingSuite {
 			success = false;
 			System.out.println(e.getMessage());
 		}
-		return success;
+		
+		if (success && game.GameOver)
+		{
+			return success;
+		}
+		return false;
 	}
 
 }
