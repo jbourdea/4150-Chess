@@ -16,25 +16,13 @@ public class TestingSuite {
 		
 		
 		//classic chess
-		System.out.println("Testing Checkmate");
+		System.out.println("**Testing Classic Chess**");
 		
-		game = new Game();
-		game.rules = new ClassicChess();
-		game.board = game.rules.SetStartingPositions(this.game.white, this.game.black);
-		view.DisplayBoard(game.board);
-		game.NextTurn();
+		if (FoolsMate()) { System.out.println("Fool's Mate test was successful."); }
+		else { System.out.println("Fool's Mate test failed."); }
 		
-		try {
-			CompleteMove(new Move(game.activePlayer, "c1-c2", game.board));
-			CompleteMove(new Move(game.activePlayer, "d6-d4", game.board));
-			CompleteMove(new Move(game.activePlayer, "b1-b3", game.board));
-			CompleteMove(new Move(game.activePlayer, "e7-a3", game.board));
-			
-		}
-		catch(Exception e)
-		{
-			System.out.println(e.getMessage());
-		}
+		if (ScholarsMate()) { System.out.println("Scholar's Mate test was successful."); }
+		else { System.out.println("Scholar's Mate test failed."); }
 		
 		
 		//take all chess
@@ -66,6 +54,58 @@ public class TestingSuite {
 			view.DisplayErrorMessage();
 		}
 		
+	}
+	
+	private boolean FoolsMate() {
+		boolean success = true;
+		
+		System.out.println("Beginning fools mate test..");
+		game = new Game();
+		game.rules = new ClassicChess();
+		game.board = game.rules.SetStartingPositions(this.game.white, this.game.black);
+		view.DisplayBoard(game.board);
+		game.NextTurn();
+		
+		try {
+			CompleteMove(new Move(game.activePlayer, "c1-c2", game.board));
+			CompleteMove(new Move(game.activePlayer, "d6-d4", game.board));
+			CompleteMove(new Move(game.activePlayer, "b1-b3", game.board));
+			CompleteMove(new Move(game.activePlayer, "e7-a3", game.board));
+			
+		}
+		catch(Exception e)
+		{
+			success = false;
+			System.out.println(e.getMessage());
+		}
+		return success;
+	}
+	
+	private boolean ScholarsMate() {
+		boolean success = true;
+		
+		System.out.println("Beginning Scholar's mate test..");
+		game = new Game();
+		game.rules = new ClassicChess();
+		game.board = game.rules.SetStartingPositions(this.game.white, this.game.black);
+		view.DisplayBoard(game.board);
+		game.NextTurn();
+		
+		try {
+			CompleteMove(new Move(game.activePlayer, "d1-d3", game.board)); //w
+			CompleteMove(new Move(game.activePlayer, "d6-d4", game.board)); //b
+			CompleteMove(new Move(game.activePlayer, "c0-f3", game.board)); //w
+			CompleteMove(new Move(game.activePlayer, "c7-f4", game.board)); //b
+			CompleteMove(new Move(game.activePlayer, "e0-a4", game.board)); //w
+			CompleteMove(new Move(game.activePlayer, "b7-c5", game.board)); //b
+			CompleteMove(new Move(game.activePlayer, "a4-c6", game.board)); //w
+		}
+		catch(Exception e)
+		{
+			success = false;
+			System.out.println(e.getMessage());
+		}
+		return success;
 	}
 
 }
