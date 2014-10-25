@@ -32,8 +32,8 @@ public class ClassicChess extends Rules {
 		board.AddPiece(new Rook(white), 0, 0);
 		board.AddPiece(new Knight(white), 1, 0);
 		board.AddPiece(new Bishop(white), 2, 0);
-		board.AddPiece(new Queen(white), 3, 0);
-		board.AddPiece(new King(white), 4, 0);
+		board.AddPiece(new Queen(white), 4, 0);
+		board.AddPiece(new King(white), 3, 0);
 		board.AddPiece(new Bishop(white), 5, 0);
 		board.AddPiece(new Knight(white), 6, 0);
 		board.AddPiece(new Rook(white), 7, 0);
@@ -527,8 +527,8 @@ public class ClassicChess extends Rules {
 	 * @param move The move that just occurred.
 	 * @return MoveCompleteResult The result of the move occurring.
 	 */
-	public MoveCompleteResult ruleCompleteMove(Player activePlayer, Board board, Move move){
-		setLastMoveJump(activePlayer, board);
+	public MoveCompleteResult ruleCompleteMove(Board board, Move move){
+		setLastMoveJump(move.activePlayer, board);
 		if(move.piece.getClass() == Pawn.class && Math.abs(move.startPosition.yCord - move.endPosition.yCord) == 2) {
 			Pawn p = (Pawn)move.piece;
 			p.lastMoveJump = true;
@@ -538,19 +538,20 @@ public class ClassicChess extends Rules {
 			getPawnPromotionInput(board, move);
 		}
 
+		//System.out.println("Does " + move.activePlayer + " have opp in Check? " + CheckForCheck(move.activePlayer, board));
 		//this move has put the opponent in (at least) check
-		if (CheckForCheck(activePlayer, board)) {
+		if (CheckForCheck(move.activePlayer, board)) {
 
 			boolean checkmate = true;
 			Board newBoard = new Board(board);
 			Move savingMove = null;
 
 			for (Tile tile: newBoard.listOfTiles) {
-				if (checkmate && tile.piece != null && tile.piece.owner == activePlayer.opponent) {
+				if (checkmate && tile.piece != null && tile.piece.owner == move.activePlayer.opponent) {
 
 					for (Tile endPosition: newBoard.listOfTiles) {
 						savingMove = new Move();
-						savingMove.activePlayer = activePlayer.opponent;
+						savingMove.activePlayer = move.activePlayer.opponent;
 						savingMove.piece = tile.piece;
 						savingMove.startPosition = tile;
 						savingMove.endPosition = endPosition;
@@ -584,8 +585,8 @@ public class ClassicChess extends Rules {
 							savingMove.startPosition.piece = null;
 							savingMove.endPosition.piece = savingMove.piece;
 
-							//System.out.println("but does it get us out of check? " + !CheckForCheck(activePlayer, tempBoard));
-							if (!CheckForCheck(activePlayer, tempBoard)) {
+							//System.out.println("but does it get us out of check? " + !CheckForCheck(move.activePlayer, tempBoard));
+							if (!CheckForCheck(move.activePlayer, tempBoard)) {
 								checkmate = false;
 							}
 						}
@@ -594,13 +595,13 @@ public class ClassicChess extends Rules {
 			}
 
 			if (checkmate) {
-				System.out.println(activePlayer + " has put " + activePlayer.opponent + " into checkmate!");
+				System.out.println(move.activePlayer + " has put " + move.activePlayer.opponent + " into checkmate!");
 				MoveCompleteResult moveResult = new MoveCompleteResult(true);
-				moveResult.winner = activePlayer;
+				moveResult.winner = move.activePlayer;
 				return moveResult;
 			}
 
-			System.out.println(activePlayer + " has put " + activePlayer.opponent + " into check.");
+			System.out.println(move.activePlayer + " has put " + move.activePlayer.opponent + " into check.");
 		}
 		return new MoveCompleteResult(false);
 	}

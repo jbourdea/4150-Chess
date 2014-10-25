@@ -9,6 +9,7 @@ public class Move {
 	public Piece piece = null;
 	public Tile endPosition = null;
 	public Tile startPosition = null;
+	public String text = "";
 	
 	public Move() {}
 	
@@ -27,6 +28,7 @@ public class Move {
 	}
 	
 	public Move(Player activePlayer, String move, Board board) {
+		this.text = move;
 		this.activePlayer = activePlayer;
 
 		String start = move.substring(0, move.indexOf('-')).toLowerCase();

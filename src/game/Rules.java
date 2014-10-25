@@ -44,6 +44,16 @@ public class Rules {
 	}
 	
 	/**
+	 * Allows rules to have control over what happens after a move
+	 * @param board 				- reference to the game board
+	 * @param move					- reference to the move project
+	 * @return MoveCompleteResult	- result of the last move, whether it ends the game and who wins
+	 */
+	public MoveCompleteResult ruleCompleteMove(Board board, Move move){
+		return new MoveCompleteResult(false);
+	}
+	
+	/**
 	 * Called after every move in classic and peasants revolt. Checks if the move a player just submitted puts them self into check
 	 * @return false - move given puts the active player in check, true - the move is valid, it doesn't put the active player in check.
 	 */

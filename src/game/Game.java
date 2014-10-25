@@ -54,7 +54,7 @@ public class Game {
 		move.startPosition.piece = null;
 		move.endPosition.piece = piece;
 		piece.hasMoved = true;
-		MoveCompleteResult gameResult = rules.ruleCompleteMove(activePlayer, board, move);
+		MoveCompleteResult gameResult = rules.ruleCompleteMove(board, move);
 		return gameResult;
 	}
 	

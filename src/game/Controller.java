@@ -26,12 +26,11 @@ public class Controller {
 			}
 			
 			if (game.rules == null) {
-				// select a game mode
-				view.DisplayMenu();
 				
 				BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 				String input = null;
 				while (input == null) {
+					view.DisplayMenu();
 					try {
 						 input = br.readLine();
 					} catch (IOException e) {
@@ -51,7 +50,10 @@ public class Controller {
 							if (variation == 1) { game.rules = new ClassicChess(); }
 							else if (variation == 2) { game.rules = new PeasantsRevoltChess(); }
 							else if (variation == 3) { game.rules = new TakeAllChess(); }
-							//else if (variation == 4) { game.rules = new TestingSuite(); }
+							else if (variation == 4) { 
+								new TestingSuite(new View()).Start(); 
+								input = null;
+								}
 							else {
 								input = null;
 								System.out.println("Input Error: Not a valid variation index.");
