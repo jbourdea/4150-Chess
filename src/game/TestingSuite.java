@@ -33,6 +33,7 @@ public class TestingSuite {
 			System.out.println("7. Piece Movement: En Passant Positive");
 			System.out.println("8. Piece Movement: En Passant Negative");
 			System.out.println("9. Piece Movement: Pawns");
+			System.out.println("10. Piece Movement: Rook");
 
 			try {
 				input = br.readLine();
@@ -81,6 +82,9 @@ public class TestingSuite {
 						input = null;
 					} else if (option == 9) {
 						pawnMovementTest();
+						input = null;
+					} else if (option ==10) {
+						rookMovementTest();
 						input = null;
 					} else {
 						input = null;
@@ -330,6 +334,69 @@ public class TestingSuite {
 		System.out.println("| FAIL | Piece Movement: En Passant Negative test failed.\n");
 		return;
 
+	}
+	
+	
+
+	private void rookMovementTest() {
+		boolean success = true;
+
+		System.out.println("Beginning Piece Movement: Rook test..");
+		game = new Game();
+		game.rules = new ClassicChess();
+		game.board = game.rules.SetStartingPositions(this.game.white,
+				this.game.black);
+		view.DisplayBoard(game.board);
+		game.NextTurn();
+
+		try {
+			completeMove(new Move(game.activePlayer, "a1-a3", game.board)); // w
+			
+			completeMove(new Move(game.activePlayer, "b6-b5", game.board)); // b
+			// negative test: move rook past pawn
+			completeMove(new Move(game.activePlayer, "a0-a4", game.board)); // w
+			
+			if (game.board.tiles[0][0].piece.getClass() != Rook.class || game.board.tiles[0][4].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Rook failed the piece infront of it test.");
+				success = false;
+			}
+			
+			// normal vertical movement
+			completeMove(new Move(game.activePlayer, "a0-a2", game.board)); // w
+			if (game.board.tiles[0][2].piece.getClass() != Rook.class || game.board.tiles[0][0].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Rook failed the vertical movement test.");
+				success = false;
+			}
+			
+			completeMove(new Move(game.activePlayer, "b5-b4", game.board)); // b
+			
+			// normal horizontal movement
+			completeMove(new Move(game.activePlayer, "a2-b2", game.board)); // w
+			if (game.board.tiles[1][2].piece.getClass() != Rook.class || game.board.tiles[0][2].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Rook failed the horizontal movement test.");
+				success = false;
+			}
+			
+			completeMove(new Move(game.activePlayer, "b4-b3", game.board)); // b
+			
+			// taking an enemy piece
+			completeMove(new Move(game.activePlayer, "b2-b3", game.board)); // w
+			if (game.board.tiles[1][3].piece.getClass() != Rook.class || game.board.tiles[1][2].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Rook failed the taking enemy piece test.");
+				success = false;
+			}
+			
+			
+		} catch (Exception e) {
+			success = false;
+			System.out.println(e.getMessage());
+		}
+		if (success) {
+			System.out.println("| PASS | Piece Movement: Rook test was successful.\n");
+			return;
+		}
+		System.out.println("| FAIL | Piece Movement: Rook test failed.\n");
+		return;
 	}
 	
 	
