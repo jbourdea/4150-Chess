@@ -4,6 +4,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+/**
+ * 
+ * This class is the testing suite class and is used to run a testing suite in order to allow our code to be tested using a framework custom created by us.
+ *
+ */
 public class TestingSuite {
 
 	public View view = null;
@@ -13,6 +18,9 @@ public class TestingSuite {
 		this.view = view;
 	}
 
+	/**
+	 * This method is called when the test suite is called from the main menu, and is used to display the testing menu to the users, as well as gather their input in regards to which tests to run.
+	 */
 	public void start() {
 
 		game = null;
@@ -32,7 +40,7 @@ public class TestingSuite {
 			System.out.println("6. Piece Movement: Move onto self");
 			System.out.println("7. Piece Movement: En Passant Positive");
 			System.out.println("8. Piece Movement: En Passant Negative");
-			System.out.println("9. Piece Movement: Pawns");
+			System.out.println("9. Piece Movement: Pawn");
 			System.out.println("10. Piece Movement: Rook");
 			System.out.println("11. Piece Movement: Knight");
 			System.out.println("12. Piece Movement: Bishop");
@@ -107,6 +115,10 @@ public class TestingSuite {
 		}
 	}
 
+	/**
+	 * This method is used to handle each move that the testing suite wants to make.
+	 * @param move The move that is going to be made
+	 */
 	private void completeMove(Move move) {
 		System.out.println(move.activePlayer + " moves " + move.text);
 
@@ -126,6 +138,9 @@ public class TestingSuite {
 
 	}
 
+	/**
+	 * This method is called when the user wants to run all the test cases. 
+	 */
 	private void runAllTestCases() {
 		foolsMate();
 		scholarsMate();
@@ -134,9 +149,15 @@ public class TestingSuite {
 		moveOntoSelf();
 		enPassantPositiveTest();
 		enPassantNegativeTest();
-		
+		pawnMovementTest();
+		rookMovementTest();
+		knightMovementTest();
+		bishopMovementTest();
 	}
 	
+	/**
+	 * This test is used to test the Fool's Mate scenario in classic chess.
+	 */
 	private void foolsMate() {
 		boolean success = true;
 
@@ -167,6 +188,9 @@ public class TestingSuite {
 
 	}
 
+	/**
+	 * This test is used to test the Scholar's Mate scenario in classic chess.
+	 */
 	private void scholarsMate() {
 		boolean success = true;
 
@@ -199,6 +223,9 @@ public class TestingSuite {
 		return;
 	}
 
+	/**
+	 * This method is used to test taking all pieces in a take all chess game.
+	 */
 	private void takeAll() {
 		boolean success = true;
 
@@ -231,6 +258,10 @@ public class TestingSuite {
 
 	}
 
+	/**
+	 * This method is used to test if a piece is able to take a piece of the same colour as the active player.
+	 * This is expected to have an error message printed.
+	 */
 	private void takeOwnPiece() {
 		boolean success = true;
 
@@ -257,6 +288,10 @@ public class TestingSuite {
 
 	}
 	
+	/**
+	 * This method is used to test if a piece is able to move onto the same tile where the piece currently is.
+	 * This is expected to have an error message printed.
+	 */
 	private void moveOntoSelf() {
 		boolean success = true;
 
@@ -283,6 +318,9 @@ public class TestingSuite {
 
 	}
 	
+	/**
+	 * This method is used to test if En Passant can properly be performed when the conditions are right.
+	 */
 	private void enPassantPositiveTest() {
 		boolean success = true;
 
@@ -312,6 +350,10 @@ public class TestingSuite {
 		return;
 	}
 	
+	/**
+	 * This method is used to test if En Passant can not be performed when the conditions are wrong.
+	 * This is expected to have an error message printed.
+	 */
 	private void enPassantNegativeTest() {
 		boolean success = true;
 
@@ -344,210 +386,9 @@ public class TestingSuite {
 
 	}
 	
-	private void bishopMovementTest() {
-		boolean success = true;
-
-		System.out.println("Beginning Piece Movement: Bishop test..");
-		game = new Game();
-		game.rules = new ClassicChess();
-		game.board = game.rules.SetStartingPositions(this.game.white,
-				this.game.black);
-		view.DisplayBoard(game.board);
-		game.NextTurn();
-
-		try {
-			completeMove(new Move(game.activePlayer, "c0-c2", game.board)); // w
-			
-			if (game.board.tiles[2][0].piece.getClass() != Bishop.class || game.board.tiles[2][2].piece != null) {
-				System.out.println("| FAIL | Piece Movement: Bishop failed passing over piece and moveset test.");
-				success = false;
-			}
-			
-			// move pawns out of the way
-			completeMove(new Move(game.activePlayer, "b1-b2", game.board)); // w
-			completeMove(new Move(game.activePlayer, "b6-b5", game.board)); // b
-			
-			completeMove(new Move(game.activePlayer, "c0-a2", game.board)); // w
-			
-			if (game.board.tiles[0][2].piece.getClass() != Bishop.class || game.board.tiles[2][0].piece != null) {
-				System.out.println("| FAIL | Piece Movement: Bishop failed diagonal down left test.");
-				success = false;
-			}
-			
-			completeMove(new Move(game.activePlayer, "c7-a5", game.board)); // b
-			
-			if (game.board.tiles[0][5].piece.getClass() != Bishop.class || game.board.tiles[2][7].piece != null) {
-				System.out.println("| FAIL | Piece Movement: Bishop failed diagonal up left test.");
-				success = false;
-			}
-			
-			completeMove(new Move(game.activePlayer, "a2-e6", game.board)); // w
-			
-			if (game.board.tiles[4][6].piece.getClass() != Bishop.class || game.board.tiles[0][2].piece != null) {
-				System.out.println("| FAIL | Piece Movement: Bishop failed taking enemy piece and diagonal down right test.");
-				success = false;
-			}
-			
-			// take other bishop to get out of check
-			completeMove(new Move(game.activePlayer, "f7-e6", game.board)); // b
-			completeMove(new Move(game.activePlayer, "a1-a2", game.board)); // w
-			
-			completeMove(new Move(game.activePlayer, "a5-e1", game.board)); // b
-			
-			if (game.board.tiles[4][1].piece.getClass() != Bishop.class || game.board.tiles[0][5].piece != null) {
-				System.out.println("| FAIL | Piece Movement: Bishop failed taking enemy piece and diagonal up right test.");
-				success = false;
-			}
-			
-			
-		} catch (Exception e) {
-			success = false;
-			System.out.println(e.getMessage());
-		}
-		if (success) {
-			System.out.println("| PASS | Piece Movement: Bishop test was successful.\n");
-			return;
-		}
-		System.out.println("| FAIL | Piece Movement: Bishop test failed.\n");
-		return;
-	}
-	
-	private void knightMovementTest() {
-		boolean success = true;
-
-		System.out.println("Beginning Piece Movement: Knight test..");
-		game = new Game();
-		game.rules = new ClassicChess();
-		game.board = game.rules.SetStartingPositions(this.game.white,
-				this.game.black);
-		view.DisplayBoard(game.board);
-		game.NextTurn();
-
-		try {
-			completeMove(new Move(game.activePlayer, "b0-a2", game.board)); // w
-			
-			if (game.board.tiles[0][2].piece.getClass() != Knight.class || game.board.tiles[1][0].piece != null) {
-				System.out.println("| FAIL | Piece Movement: Knight failed passing over piece and 2 down, 1 left movement test.");
-				success = false;
-			}
-			
-			completeMove(new Move(game.activePlayer, "b7-a5", game.board)); // b
-			
-			if (game.board.tiles[0][5].piece.getClass() != Knight.class || game.board.tiles[1][7].piece != null) {
-				System.out.println("| FAIL | Piece Movement: Knight failed passing over piece and 2 up, 1 left movement test.");
-				success = false;
-			}
-
-			completeMove(new Move(game.activePlayer, "a2-b4", game.board)); // w
-			
-			if (game.board.tiles[1][4].piece.getClass() != Knight.class || game.board.tiles[0][2].piece != null) {
-				System.out.println("| FAIL | Piece Movement: Knight failed 2 down, 1 right movement test.");
-				success = false;
-			}
-			
-			completeMove(new Move(game.activePlayer, "a5-b3", game.board)); // b
-			
-			if (game.board.tiles[1][3].piece.getClass() != Knight.class || game.board.tiles[0][5].piece != null) {
-				System.out.println("| FAIL | Piece Movement: Knight failed 2 up, 1 right movement test.");
-				success = false;
-			}
-			
-			completeMove(new Move(game.activePlayer, "b4-d5", game.board)); // w
-			
-			if (game.board.tiles[3][5].piece.getClass() != Knight.class || game.board.tiles[1][4].piece != null) {
-				System.out.println("| FAIL | Piece Movement: Knight failed 1 down, 2 right movement test.");
-				success = false;
-			}
-			
-			completeMove(new Move(game.activePlayer, "b3-d2", game.board)); // b
-			
-			if (game.board.tiles[3][2].piece.getClass() != Knight.class || game.board.tiles[1][3].piece != null) {
-				System.out.println("| FAIL | Piece Movement: Knight failed 1 up, 2 right movement test.");
-				success = false;
-			}
-			
-			completeMove(new Move(game.activePlayer, "d5-b6", game.board)); // w
-			
-			if (game.board.tiles[1][6].piece.getClass() != Knight.class || game.board.tiles[3][5].piece != null) {
-				System.out.println("| FAIL | Piece Movement: Knight failed taking enemy piece and 1 down, 2 left movement test.");
-				success = false;
-			}
-			
-			
-		} catch (Exception e) {
-			success = false;
-			System.out.println(e.getMessage());
-		}
-		if (success) {
-			System.out.println("| PASS | Piece Movement: Knight test was successful.\n");
-			return;
-		}
-		System.out.println("| FAIL | Piece Movement: Knight test failed.\n");
-		return;
-	}
-
-	private void rookMovementTest() {
-		boolean success = true;
-
-		System.out.println("Beginning Piece Movement: Rook test..");
-		game = new Game();
-		game.rules = new ClassicChess();
-		game.board = game.rules.SetStartingPositions(this.game.white,
-				this.game.black);
-		view.DisplayBoard(game.board);
-		game.NextTurn();
-
-		try {
-			completeMove(new Move(game.activePlayer, "a1-a3", game.board)); // w
-			
-			completeMove(new Move(game.activePlayer, "b6-b5", game.board)); // b
-			// negative test: move rook past pawn
-			completeMove(new Move(game.activePlayer, "a0-a4", game.board)); // w
-			
-			if (game.board.tiles[0][0].piece.getClass() != Rook.class || game.board.tiles[0][4].piece != null) {
-				System.out.println("| FAIL | Piece Movement: Rook failed the piece infront of it test.");
-				success = false;
-			}
-			
-			// normal vertical movement
-			completeMove(new Move(game.activePlayer, "a0-a2", game.board)); // w
-			if (game.board.tiles[0][2].piece.getClass() != Rook.class || game.board.tiles[0][0].piece != null) {
-				System.out.println("| FAIL | Piece Movement: Rook failed the vertical movement test.");
-				success = false;
-			}
-			
-			completeMove(new Move(game.activePlayer, "b5-b4", game.board)); // b
-			
-			// normal horizontal movement
-			completeMove(new Move(game.activePlayer, "a2-b2", game.board)); // w
-			if (game.board.tiles[1][2].piece.getClass() != Rook.class || game.board.tiles[0][2].piece != null) {
-				System.out.println("| FAIL | Piece Movement: Rook failed the horizontal movement test.");
-				success = false;
-			}
-			
-			completeMove(new Move(game.activePlayer, "b4-b3", game.board)); // b
-			
-			// taking an enemy piece
-			completeMove(new Move(game.activePlayer, "b2-b3", game.board)); // w
-			if (game.board.tiles[1][3].piece.getClass() != Rook.class || game.board.tiles[1][2].piece != null) {
-				System.out.println("| FAIL | Piece Movement: Rook failed the taking enemy piece test.");
-				success = false;
-			}
-			
-			
-		} catch (Exception e) {
-			success = false;
-			System.out.println(e.getMessage());
-		}
-		if (success) {
-			System.out.println("| PASS | Piece Movement: Rook test was successful.\n");
-			return;
-		}
-		System.out.println("| FAIL | Piece Movement: Rook test failed.\n");
-		return;
-	}
-	
-	
+	/**
+	 * This method is used to test all of the pawn movement scenarios.
+	 */
 	private void pawnMovementTest() {
 		boolean success = true;
 
@@ -641,6 +482,218 @@ public class TestingSuite {
 			return;
 		}
 		System.out.println("| FAIL | Piece Movement: Pawn test failed.\n");
+		return;
+	}
+	
+	/**
+	 * This method is used to test all of the rook movement scenarios.
+	 */
+	private void rookMovementTest() {
+		boolean success = true;
+
+		System.out.println("Beginning Piece Movement: Rook test..");
+		game = new Game();
+		game.rules = new ClassicChess();
+		game.board = game.rules.SetStartingPositions(this.game.white,
+				this.game.black);
+		view.DisplayBoard(game.board);
+		game.NextTurn();
+
+		try {
+			completeMove(new Move(game.activePlayer, "a1-a3", game.board)); // w
+			
+			completeMove(new Move(game.activePlayer, "b6-b5", game.board)); // b
+			// negative test: move rook past pawn
+			completeMove(new Move(game.activePlayer, "a0-a4", game.board)); // w
+			
+			if (game.board.tiles[0][0].piece.getClass() != Rook.class || game.board.tiles[0][4].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Rook failed the piece infront of it test.");
+				success = false;
+			}
+			
+			// normal vertical movement
+			completeMove(new Move(game.activePlayer, "a0-a2", game.board)); // w
+			if (game.board.tiles[0][2].piece.getClass() != Rook.class || game.board.tiles[0][0].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Rook failed the vertical movement test.");
+				success = false;
+			}
+			
+			completeMove(new Move(game.activePlayer, "b5-b4", game.board)); // b
+			
+			// normal horizontal movement
+			completeMove(new Move(game.activePlayer, "a2-b2", game.board)); // w
+			if (game.board.tiles[1][2].piece.getClass() != Rook.class || game.board.tiles[0][2].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Rook failed the horizontal movement test.");
+				success = false;
+			}
+			
+			completeMove(new Move(game.activePlayer, "b4-b3", game.board)); // b
+			
+			// taking an enemy piece
+			completeMove(new Move(game.activePlayer, "b2-b3", game.board)); // w
+			if (game.board.tiles[1][3].piece.getClass() != Rook.class || game.board.tiles[1][2].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Rook failed the taking enemy piece test.");
+				success = false;
+			}
+			
+			
+		} catch (Exception e) {
+			success = false;
+			System.out.println(e.getMessage());
+		}
+		if (success) {
+			System.out.println("| PASS | Piece Movement: Rook test was successful.\n");
+			return;
+		}
+		System.out.println("| FAIL | Piece Movement: Rook test failed.\n");
+		return;
+	}
+	
+	/**
+	 * This method is used to test all of the knight movement scenarios.
+	 */
+	private void knightMovementTest() {
+		boolean success = true;
+
+		System.out.println("Beginning Piece Movement: Knight test..");
+		game = new Game();
+		game.rules = new ClassicChess();
+		game.board = game.rules.SetStartingPositions(this.game.white,
+				this.game.black);
+		view.DisplayBoard(game.board);
+		game.NextTurn();
+
+		try {
+			completeMove(new Move(game.activePlayer, "b0-a2", game.board)); // w
+			
+			if (game.board.tiles[0][2].piece.getClass() != Knight.class || game.board.tiles[1][0].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Knight failed passing over piece and 2 down, 1 left movement test.");
+				success = false;
+			}
+			
+			completeMove(new Move(game.activePlayer, "b7-a5", game.board)); // b
+			
+			if (game.board.tiles[0][5].piece.getClass() != Knight.class || game.board.tiles[1][7].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Knight failed passing over piece and 2 up, 1 left movement test.");
+				success = false;
+			}
+
+			completeMove(new Move(game.activePlayer, "a2-b4", game.board)); // w
+			
+			if (game.board.tiles[1][4].piece.getClass() != Knight.class || game.board.tiles[0][2].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Knight failed 2 down, 1 right movement test.");
+				success = false;
+			}
+			
+			completeMove(new Move(game.activePlayer, "a5-b3", game.board)); // b
+			
+			if (game.board.tiles[1][3].piece.getClass() != Knight.class || game.board.tiles[0][5].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Knight failed 2 up, 1 right movement test.");
+				success = false;
+			}
+			
+			completeMove(new Move(game.activePlayer, "b4-d5", game.board)); // w
+			
+			if (game.board.tiles[3][5].piece.getClass() != Knight.class || game.board.tiles[1][4].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Knight failed 1 down, 2 right movement test.");
+				success = false;
+			}
+			
+			completeMove(new Move(game.activePlayer, "b3-d2", game.board)); // b
+			
+			if (game.board.tiles[3][2].piece.getClass() != Knight.class || game.board.tiles[1][3].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Knight failed 1 up, 2 right movement test.");
+				success = false;
+			}
+			
+			completeMove(new Move(game.activePlayer, "d5-b6", game.board)); // w
+			
+			if (game.board.tiles[1][6].piece.getClass() != Knight.class || game.board.tiles[3][5].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Knight failed taking enemy piece and 1 down, 2 left movement test.");
+				success = false;
+			}
+			
+			
+		} catch (Exception e) {
+			success = false;
+			System.out.println(e.getMessage());
+		}
+		if (success) {
+			System.out.println("| PASS | Piece Movement: Knight test was successful.\n");
+			return;
+		}
+		System.out.println("| FAIL | Piece Movement: Knight test failed.\n");
+		return;
+	}
+	
+	/**
+	 * This method is used to test all of the bishop movement scenarios.
+	 */
+	private void bishopMovementTest() {
+		boolean success = true;
+
+		System.out.println("Beginning Piece Movement: Bishop test..");
+		game = new Game();
+		game.rules = new ClassicChess();
+		game.board = game.rules.SetStartingPositions(this.game.white,
+				this.game.black);
+		view.DisplayBoard(game.board);
+		game.NextTurn();
+
+		try {
+			completeMove(new Move(game.activePlayer, "c0-c2", game.board)); // w
+			
+			if (game.board.tiles[2][0].piece.getClass() != Bishop.class || game.board.tiles[2][2].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Bishop failed passing over piece and moveset test.");
+				success = false;
+			}
+			
+			// move pawns out of the way
+			completeMove(new Move(game.activePlayer, "b1-b2", game.board)); // w
+			completeMove(new Move(game.activePlayer, "b6-b5", game.board)); // b
+			
+			completeMove(new Move(game.activePlayer, "c0-a2", game.board)); // w
+			
+			if (game.board.tiles[0][2].piece.getClass() != Bishop.class || game.board.tiles[2][0].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Bishop failed diagonal down left test.");
+				success = false;
+			}
+			
+			completeMove(new Move(game.activePlayer, "c7-a5", game.board)); // b
+			
+			if (game.board.tiles[0][5].piece.getClass() != Bishop.class || game.board.tiles[2][7].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Bishop failed diagonal up left test.");
+				success = false;
+			}
+			
+			completeMove(new Move(game.activePlayer, "a2-e6", game.board)); // w
+			
+			if (game.board.tiles[4][6].piece.getClass() != Bishop.class || game.board.tiles[0][2].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Bishop failed taking enemy piece and diagonal down right test.");
+				success = false;
+			}
+			
+			// take other bishop to get out of check
+			completeMove(new Move(game.activePlayer, "f7-e6", game.board)); // b
+			completeMove(new Move(game.activePlayer, "a1-a2", game.board)); // w
+			
+			completeMove(new Move(game.activePlayer, "a5-e1", game.board)); // b
+			
+			if (game.board.tiles[4][1].piece.getClass() != Bishop.class || game.board.tiles[0][5].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Bishop failed taking enemy piece and diagonal up right test.");
+				success = false;
+			}
+			
+			
+		} catch (Exception e) {
+			success = false;
+			System.out.println(e.getMessage());
+		}
+		if (success) {
+			System.out.println("| PASS | Piece Movement: Bishop test was successful.\n");
+			return;
+		}
+		System.out.println("| FAIL | Piece Movement: Bishop test failed.\n");
 		return;
 	}
 
