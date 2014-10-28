@@ -34,6 +34,7 @@ public class TestingSuite {
 			System.out.println("8. Piece Movement: En Passant Negative");
 			System.out.println("9. Piece Movement: Pawns");
 			System.out.println("10. Piece Movement: Rook");
+			System.out.println("11. Piece Movement: Knight");
 
 			try {
 				input = br.readLine();
@@ -86,7 +87,10 @@ public class TestingSuite {
 					} else if (option ==10) {
 						rookMovementTest();
 						input = null;
-					} else {
+					} else if (option ==11) {
+						knightMovementTest();
+						input = null;
+					}else {
 						input = null;
 						System.out.println("Input Error: Not a valid test index.");
 					}
@@ -336,7 +340,79 @@ public class TestingSuite {
 
 	}
 	
-	
+	private void knightMovementTest() {
+		boolean success = true;
+
+		System.out.println("Beginning Piece Movement: Knight test..");
+		game = new Game();
+		game.rules = new ClassicChess();
+		game.board = game.rules.SetStartingPositions(this.game.white,
+				this.game.black);
+		view.DisplayBoard(game.board);
+		game.NextTurn();
+
+		try {
+			completeMove(new Move(game.activePlayer, "b0-a2", game.board)); // w
+			
+			if (game.board.tiles[0][2].piece.getClass() != Knight.class || game.board.tiles[1][0].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Knight failed passing over piece and 2 down, 1 left movement test.");
+				success = false;
+			}
+			
+			completeMove(new Move(game.activePlayer, "b7-a5", game.board)); // b
+			
+			if (game.board.tiles[0][5].piece.getClass() != Knight.class || game.board.tiles[1][7].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Knight failed passing over piece and 2 up, 1 left movement test.");
+				success = false;
+			}
+
+			completeMove(new Move(game.activePlayer, "a2-b4", game.board)); // w
+			
+			if (game.board.tiles[1][4].piece.getClass() != Knight.class || game.board.tiles[0][2].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Knight failed 2 down, 1 right movement test.");
+				success = false;
+			}
+			
+			completeMove(new Move(game.activePlayer, "a5-b3", game.board)); // b
+			
+			if (game.board.tiles[1][3].piece.getClass() != Knight.class || game.board.tiles[0][5].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Knight failed 2 up, 1 right movement test.");
+				success = false;
+			}
+			
+			completeMove(new Move(game.activePlayer, "b4-d5", game.board)); // w
+			
+			if (game.board.tiles[3][5].piece.getClass() != Knight.class || game.board.tiles[1][4].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Knight failed 1 down, 2 right movement test.");
+				success = false;
+			}
+			
+			completeMove(new Move(game.activePlayer, "b3-d2", game.board)); // b
+			
+			if (game.board.tiles[3][2].piece.getClass() != Knight.class || game.board.tiles[1][3].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Knight failed 1 up, 2 right movement test.");
+				success = false;
+			}
+			
+			completeMove(new Move(game.activePlayer, "d5-b6", game.board)); // w
+			
+			if (game.board.tiles[1][6].piece.getClass() != Knight.class || game.board.tiles[3][5].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Knight failed taking enemy piece and 1 down, 2 left movement test.");
+				success = false;
+			}
+			
+			
+		} catch (Exception e) {
+			success = false;
+			System.out.println(e.getMessage());
+		}
+		if (success) {
+			System.out.println("| PASS | Piece Movement: Knight test was successful.\n");
+			return;
+		}
+		System.out.println("| FAIL | Piece Movement: Knight test failed.\n");
+		return;
+	}
 
 	private void rookMovementTest() {
 		boolean success = true;
