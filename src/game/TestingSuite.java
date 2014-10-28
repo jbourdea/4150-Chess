@@ -3,6 +3,8 @@ package game;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class TestingSuite {
 	
@@ -13,7 +15,7 @@ public class TestingSuite {
 		this.view = view;
 	}
 	
-	public void Start() {
+	public void Start() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		
 		game = null;
 		
@@ -26,6 +28,7 @@ public class TestingSuite {
 			System.out.println("0. Return to main menu.");
 			System.out.println("1. Classic Chess: Fool's Mate");
 			System.out.println("2. Classic Chess: Scholar's Mate");
+			System.out.println("3. Take All Chess: Taking all pieces");
 			
 			
 			try {
@@ -58,6 +61,11 @@ public class TestingSuite {
 					else if (option == 2) { 
 						if (ScholarsMate()) { System.out.println("Scholar's Mate test was successful.\n"); }
 						else { System.out.println("Scholar's Mate test failed.\n"); }
+						input = null;
+					}
+					else if (option == 3) { 
+						if (TakeAll()) { System.out.println("Take All Chess: Taking all pieces was successful.\n"); }
+						else { System.out.println("Take All Chess: Taking all pieces failed.\n"); }
 						input = null;
 					}
 					else {
@@ -94,6 +102,39 @@ public class TestingSuite {
 		
 	}
 	
+	private boolean TakeAll() {
+		boolean success = true;
+		
+		System.out.println("Beginning take-all test..");
+		game = new Game();
+		game.rules = new TakeAllChess();
+		Board board = new Board(8,8);
+		Player white = game.white;
+		Player black = game.black;
+		
+		board.AddPiece(new Pawn(white), 0, 1);
+		board.AddPiece(new Pawn(black), 1, 2);
+		
+		game.board = board;
+		view.DisplayBoard(game.board);
+		game.NextTurn();
+		
+		try {
+			CompleteMove(new Move(game.activePlayer, "a1-b2", game.board)); // w
+		}
+		catch(Exception e)
+		{
+			success = false;
+			System.out.println(e.getMessage());
+		}
+		if (success && game.GameOver)
+		{
+			return success;
+		}
+		return false;
+		
+	}
+	
 	private boolean FoolsMate() {
 		boolean success = true;
 		
@@ -105,10 +146,10 @@ public class TestingSuite {
 		game.NextTurn();
 		
 		try {
-			CompleteMove(new Move(game.activePlayer, "c1-c2", game.board));
-			CompleteMove(new Move(game.activePlayer, "d6-d4", game.board));
-			CompleteMove(new Move(game.activePlayer, "b1-b3", game.board));
-			CompleteMove(new Move(game.activePlayer, "e7-a3", game.board));
+			CompleteMove(new Move(game.activePlayer, "c1-c2", game.board)); // w
+			CompleteMove(new Move(game.activePlayer, "d6-d4", game.board)); // b
+			CompleteMove(new Move(game.activePlayer, "b1-b3", game.board)); // w
+			CompleteMove(new Move(game.activePlayer, "e7-a3", game.board)); // b
 			
 		}
 		catch(Exception e)
