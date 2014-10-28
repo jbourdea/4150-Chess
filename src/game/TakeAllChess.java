@@ -378,13 +378,12 @@ public class TakeAllChess extends Rules {
 
 	/**
 	 * Move has been validated, performing the move
-	 * @param activePlayer
 	 * @param board
 	 * @param move
 	 * @return 	MoveCompleteResult
 	 */
-	public MoveCompleteResult ruleCompleteMove(Player activePlayer, Board board, Move move){
-		setLastMoveJump(activePlayer, board);
+	public MoveCompleteResult ruleCompleteMove(Board board, Move move){
+		setLastMoveJump(move.activePlayer, board);
 		if(move.piece.getClass() == Pawn.class && Math.abs(move.startPosition.yCord - move.endPosition.yCord) == 2) {
 			Pawn p = (Pawn)move.piece;
 			p.lastMoveJump = true;
@@ -394,10 +393,10 @@ public class TakeAllChess extends Rules {
 			getPawnPromotionInput(board, move);
 		}
 
-		boolean victoryStatus = checkWinCondition(activePlayer, board);
+		boolean victoryStatus = checkWinCondition(move.activePlayer, board);
 		if(victoryStatus) {
 			MoveCompleteResult moveResult = new MoveCompleteResult(true);
-			moveResult.winner = activePlayer;
+			moveResult.winner = move.activePlayer;
 			return moveResult;
 		}
 
