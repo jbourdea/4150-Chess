@@ -345,7 +345,7 @@ public class TakeAllChess extends Rules {
 		}
 
 		if(isValidMove == 1) {
-			View.setErrorMessage("Illigally inputted move, piece can't move in the specified manor.");
+			View.setErrorMessage("Illegally inputted move, piece can't move in the specified manner.");
 			return 1;
 		}
 

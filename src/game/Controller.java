@@ -51,7 +51,7 @@ public class Controller {
 							else if (variation == 2) { game.rules = new PeasantsRevoltChess(); }
 							else if (variation == 3) { game.rules = new TakeAllChess(); }
 							else if (variation == 4) { 
-								new TestingSuite(new View()).Start(); 
+								new TestingSuite(new View()).start(); 
 								input = null;
 								}
 							else {
