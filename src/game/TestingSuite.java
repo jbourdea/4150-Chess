@@ -35,6 +35,7 @@ public class TestingSuite {
 			System.out.println("9. Piece Movement: Pawns");
 			System.out.println("10. Piece Movement: Rook");
 			System.out.println("11. Piece Movement: Knight");
+			System.out.println("12. Piece Movement: Bishop");
 
 			try {
 				input = br.readLine();
@@ -90,7 +91,10 @@ public class TestingSuite {
 					} else if (option ==11) {
 						knightMovementTest();
 						input = null;
-					}else {
+					} else if (option ==12) {
+						bishopMovementTest();
+						input = null;
+					} else {
 						input = null;
 						System.out.println("Input Error: Not a valid test index.");
 					}
@@ -338,6 +342,74 @@ public class TestingSuite {
 		System.out.println("| FAIL | Piece Movement: En Passant Negative test failed.\n");
 		return;
 
+	}
+	
+	private void bishopMovementTest() {
+		boolean success = true;
+
+		System.out.println("Beginning Piece Movement: Bishop test..");
+		game = new Game();
+		game.rules = new ClassicChess();
+		game.board = game.rules.SetStartingPositions(this.game.white,
+				this.game.black);
+		view.DisplayBoard(game.board);
+		game.NextTurn();
+
+		try {
+			completeMove(new Move(game.activePlayer, "c0-c2", game.board)); // w
+			
+			if (game.board.tiles[2][0].piece.getClass() != Bishop.class || game.board.tiles[2][2].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Bishop failed passing over piece and moveset test.");
+				success = false;
+			}
+			
+			// move pawns out of the way
+			completeMove(new Move(game.activePlayer, "b1-b2", game.board)); // w
+			completeMove(new Move(game.activePlayer, "b6-b5", game.board)); // b
+			
+			completeMove(new Move(game.activePlayer, "c0-a2", game.board)); // w
+			
+			if (game.board.tiles[0][2].piece.getClass() != Bishop.class || game.board.tiles[2][0].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Bishop failed diagonal down left test.");
+				success = false;
+			}
+			
+			completeMove(new Move(game.activePlayer, "c7-a5", game.board)); // b
+			
+			if (game.board.tiles[0][5].piece.getClass() != Bishop.class || game.board.tiles[2][7].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Bishop failed diagonal up left test.");
+				success = false;
+			}
+			
+			completeMove(new Move(game.activePlayer, "a2-e6", game.board)); // w
+			
+			if (game.board.tiles[4][6].piece.getClass() != Bishop.class || game.board.tiles[0][2].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Bishop failed taking enemy piece and diagonal down right test.");
+				success = false;
+			}
+			
+			// take other bishop to get out of check
+			completeMove(new Move(game.activePlayer, "f7-e6", game.board)); // b
+			completeMove(new Move(game.activePlayer, "a1-a2", game.board)); // w
+			
+			completeMove(new Move(game.activePlayer, "a5-e1", game.board)); // b
+			
+			if (game.board.tiles[4][1].piece.getClass() != Bishop.class || game.board.tiles[0][5].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Bishop failed taking enemy piece and diagonal up right test.");
+				success = false;
+			}
+			
+			
+		} catch (Exception e) {
+			success = false;
+			System.out.println(e.getMessage());
+		}
+		if (success) {
+			System.out.println("| PASS | Piece Movement: Bishop test was successful.\n");
+			return;
+		}
+		System.out.println("| FAIL | Piece Movement: Bishop test failed.\n");
+		return;
 	}
 	
 	private void knightMovementTest() {
