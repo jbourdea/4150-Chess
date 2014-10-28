@@ -30,6 +30,8 @@ public class TestingSuite {
 			System.out.println("4. Take All Chess: Taking all pieces");
 			System.out.println("5. Piece Movement: Take own piece");
 			System.out.println("6. Piece Movement: Move onto self");
+			System.out.println("7. Piece Movement: En Passant Positive");
+			System.out.println("8. Piece Movement: En Passant Negative");
 
 			try {
 				input = br.readLine();
@@ -71,10 +73,10 @@ public class TestingSuite {
 						moveOntoSelf();
 						input = null;
 					} else if (option == 7) {
-						takeOwnPiece();
+						enPassantPositiveTest();
 						input = null;
 					} else if (option == 8) {
-						takeOwnPiece();
+						enPassantNegativeTest();
 						input = null;
 					} else {
 						input = null;
@@ -137,10 +139,10 @@ public class TestingSuite {
 			System.out.println(e.getMessage());
 		}
 		if (success && game.GameOver) {
-			System.out.println("Classic Chess: Fool's Mate test was successful.\n");
+			System.out.println("| PASS | Classic Chess: Fool's Mate test was successful.\n");
 			return;
 		}
-		System.out.println("Classic Chess: Fool's Mate test failed.\n");
+		System.out.println("| FAIL | Classic Chess: Fool's Mate test failed.\n");
 		return;
 
 	}
@@ -170,10 +172,10 @@ public class TestingSuite {
 		}
 
 		if (success && game.GameOver) {
-			System.out.println("Classic Chess: Scholar's Mate test was successful.\n");
+			System.out.println("| PASS | Classic Chess: Scholar's Mate test was successful.\n");
 			return;
 		}
-		System.out.println("Classic Chess: Scholar's Mate test failed.\n");
+		System.out.println("| FAIL | Classic Chess: Scholar's Mate test failed.\n");
 		return;
 	}
 
@@ -201,10 +203,10 @@ public class TestingSuite {
 			System.out.println(e.getMessage());
 		}
 		if (success && game.GameOver) {
-			System.out.println("Take All Chess: Taking all pieces was successful.\n");
+			System.out.println("| PASS | Take All Chess: Taking all pieces was successful.\n");
 			return;
 		}
-		System.out.println("Take All Chess: Taking all pieces failed.\n");
+		System.out.println("| FAIL | Take All Chess: Taking all pieces failed.\n");
 		return;
 
 	}
@@ -227,10 +229,10 @@ public class TestingSuite {
 			System.out.println(e.getMessage());
 		}
 		if (success && game.board.tiles[4][0].piece.getClass() == Queen.class && game.board.tiles[5][1].piece.getClass() == Pawn.class) {
-			System.out.println("Piece Movement: Take own piece test was successful.\n");
+			System.out.println("| PASS | Piece Movement: Take own piece test was successful.\n");
 			return;
 		}
-		System.out.println("Piece Movement: Take own piece test failed.\n");
+		System.out.println("| FAIL | Piece Movement: Take own piece test failed.\n");
 		return;
 
 	}
@@ -247,16 +249,78 @@ public class TestingSuite {
 		game.NextTurn();
 
 		try {
-			completeMove(new Move(game.activePlayer, "e0-f1", game.board)); // w
+			completeMove(new Move(game.activePlayer, "e0-e0", game.board)); // w
 		} catch (Exception e) {
 			success = false;
 			System.out.println(e.getMessage());
 		}
-		if (success && game.board.tiles[4][0].piece.getClass() == Queen.class && game.board.tiles[5][1].piece.getClass() == Pawn.class) {
-			System.out.println("Piece Movement: Move onto self test was successful.\n");
+		if (success && game.board.tiles[4][0].piece.getClass() == Queen.class) {
+			System.out.println("| PASS | Piece Movement: Move onto self test was successful.\n");
 			return;
 		}
-		System.out.println("Piece Movement: Move onto self test failed.\n");
+		System.out.println("| FAIL | Piece Movement: Move onto self test failed.\n");
+		return;
+
+	}
+	
+	private void enPassantPositiveTest() {
+		boolean success = true;
+
+		System.out.println("Beginning Piece Movement: En Passant Positive test..");
+		game = new Game();
+		game.rules = new ClassicChess();
+		game.board = game.rules.SetStartingPositions(this.game.white,
+				this.game.black);
+		view.DisplayBoard(game.board);
+		game.NextTurn();
+
+		try {
+			completeMove(new Move(game.activePlayer, "d1-d3", game.board)); // w
+			completeMove(new Move(game.activePlayer, "e6-e4", game.board)); // b
+			completeMove(new Move(game.activePlayer, "d3-e4", game.board)); // w
+			completeMove(new Move(game.activePlayer, "d6-d4", game.board)); // b
+			completeMove(new Move(game.activePlayer, "e4-d5", game.board)); // w
+		} catch (Exception e) {
+			success = false;
+			System.out.println(e.getMessage());
+		}
+		if (success && game.board.tiles[3][5].piece.getClass() == Pawn.class && game.board.tiles[3][4].piece == null) {
+			System.out.println("| PASS | Piece Movement: En Passant Positive test was successful.\n");
+			return;
+		}
+		System.out.println("| FAIL | Piece Movement: En Passant Positive test failed.\n");
+		return;
+
+	}
+	
+	private void enPassantNegativeTest() {
+		boolean success = true;
+
+		System.out.println("Beginning Piece Movement: En Passant Negative test..");
+		game = new Game();
+		game.rules = new ClassicChess();
+		game.board = game.rules.SetStartingPositions(this.game.white,
+				this.game.black);
+		view.DisplayBoard(game.board);
+		game.NextTurn();
+
+		try {
+			completeMove(new Move(game.activePlayer, "d1-d3", game.board)); // w
+			completeMove(new Move(game.activePlayer, "e6-e4", game.board)); // b
+			completeMove(new Move(game.activePlayer, "d3-e4", game.board)); // w
+			completeMove(new Move(game.activePlayer, "d6-d4", game.board)); // b
+			completeMove(new Move(game.activePlayer, "a1-a2", game.board)); // w
+			completeMove(new Move(game.activePlayer, "h6-h4", game.board)); // b
+			completeMove(new Move(game.activePlayer, "e4-d5", game.board)); // w
+		} catch (Exception e) {
+			success = false;
+			System.out.println(e.getMessage());
+		}
+		if (success && game.board.tiles[4][4].piece.getClass() == Pawn.class && game.board.tiles[3][4].piece.getClass() == Pawn.class) {
+			System.out.println("| PASS | Piece Movement: En Passant Negative test was successful.\n");
+			return;
+		}
+		System.out.println("| FAIL | Piece Movement: En Passant Negative test failed.\n");
 		return;
 
 	}
