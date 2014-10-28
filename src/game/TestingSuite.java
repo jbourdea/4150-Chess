@@ -32,6 +32,7 @@ public class TestingSuite {
 			System.out.println("6. Piece Movement: Move onto self");
 			System.out.println("7. Piece Movement: En Passant Positive");
 			System.out.println("8. Piece Movement: En Passant Negative");
+			System.out.println("9. Piece Movement: Pawns");
 
 			try {
 				input = br.readLine();
@@ -78,6 +79,9 @@ public class TestingSuite {
 					} else if (option == 8) {
 						enPassantNegativeTest();
 						input = null;
+					} else if (option == 9) {
+						pawnMovementTest();
+						input = null;
 					} else {
 						input = null;
 						System.out.println("Input Error: Not a valid test index.");
@@ -93,9 +97,10 @@ public class TestingSuite {
 
 	private void completeMove(Move move) {
 		System.out.println(move.activePlayer + " moves " + move.text);
-		game.NextTurn();
+
 		if (move.IsValid() && game.rules.ValidateMove(move, game.board) == 0) {
 			MoveCompleteResult moveResult = game.CompleteMove(move);
+			game.NextTurn();
 			view.DisplayBoard(game.board);
 			// check for game ending condition
 
@@ -115,6 +120,9 @@ public class TestingSuite {
 		takeAll();
 		takeOwnPiece();
 		moveOntoSelf();
+		enPassantPositiveTest();
+		enPassantNegativeTest();
+		
 	}
 	
 	private void foolsMate() {
@@ -290,7 +298,6 @@ public class TestingSuite {
 		}
 		System.out.println("| FAIL | Piece Movement: En Passant Positive test failed.\n");
 		return;
-
 	}
 	
 	private void enPassantNegativeTest() {
@@ -323,6 +330,103 @@ public class TestingSuite {
 		System.out.println("| FAIL | Piece Movement: En Passant Negative test failed.\n");
 		return;
 
+	}
+	
+	
+	private void pawnMovementTest() {
+		boolean success = true;
+
+		System.out.println("Beginning Piece Movement: Pawn test..");
+		game = new Game();
+		game.rules = new ClassicChess();
+		game.board = game.rules.SetStartingPositions(this.game.white,
+				this.game.black);
+		view.DisplayBoard(game.board);
+		game.NextTurn();
+
+		try {
+			// move 1 piece forward
+			completeMove(new Move(game.activePlayer, "a1-a2", game.board)); // w
+			
+			if (game.board.tiles[0][2].piece.getClass() != Pawn.class || game.board.tiles[0][1].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Pawn failed to move one tile forward.");
+				success = false;
+			}
+			
+			// move knight infront of black pawn
+			completeMove(new Move(game.activePlayer, "b7-a5", game.board)); // b
+			// double jump
+			completeMove(new Move(game.activePlayer, "b1-b3", game.board)); // w
+			
+			if (game.board.tiles[1][3].piece.getClass() != Pawn.class || game.board.tiles[1][1].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Pawn failed to double jump.");
+				success = false;
+			}
+			
+			// negative test - double jump with piece infront
+			completeMove(new Move(game.activePlayer, "a6-a4", game.board)); // b
+			
+			if (game.board.tiles[0][6].piece.getClass() != Pawn.class || game.board.tiles[0][4].piece != null || game.board.tiles[0][5].piece.getClass() != Knight.class ) {
+				System.out.println("| FAIL | Piece Movement: Pawn failed the test for double jump with a piece inbetween.");
+				success = false;
+			}
+			
+			completeMove(new Move(game.activePlayer, "c6-c4", game.board)); // b
+			// take other piece
+			completeMove(new Move(game.activePlayer, "b3-c4", game.board)); // w
+			
+			if (game.board.tiles[2][4].piece.getClass() != Pawn.class || game.board.tiles[1][3].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Pawn failed to take the other piece.");
+				success = false;
+			}
+			
+			completeMove(new Move(game.activePlayer, "d6-d4", game.board)); // b
+			// fail double jump
+			completeMove(new Move(game.activePlayer, "c4-c6", game.board)); // w
+			
+			if (game.board.tiles[2][4].piece.getClass() != Pawn.class) {
+				System.out.println("| FAIL | Piece Movement: Pawn failed the double jump test after already double jumping.");
+				success = false;
+			}
+			
+			// negative movement
+			completeMove(new Move(game.activePlayer, "a2-a1", game.board)); // w
+			
+			if (game.board.tiles[0][2].piece.getClass() != Pawn.class) {
+				System.out.println("| FAIL | Piece Movement: Pawn failed the negative direction test.");
+				success = false;
+			}
+			
+			// movement outside moveset
+			completeMove(new Move(game.activePlayer, "a2-g5", game.board)); // w
+			
+			if (game.board.tiles[0][2].piece.getClass() != Pawn.class) {
+				System.out.println("| FAIL | Piece Movement: Pawn failed the moveset movement test.");
+				success = false;
+			}
+			
+			completeMove(new Move(game.activePlayer, "h1-h3", game.board)); // w
+			completeMove(new Move(game.activePlayer, "h6-h4", game.board)); // b
+			
+			// enemy piece infront of pawn
+			completeMove(new Move(game.activePlayer, "h3-h4", game.board)); // w
+			
+			if (game.board.tiles[7][3].piece.getClass() != Pawn.class || game.board.tiles[7][4].piece.getClass() != Pawn.class) {
+				System.out.println("| FAIL | Piece Movement: Pawn failed the piece infront of it test.");
+				success = false;
+			}
+			
+			
+		} catch (Exception e) {
+			success = false;
+			System.out.println(e.getMessage());
+		}
+		if (success) {
+			System.out.println("| PASS | Piece Movement: Pawn test was successful.\n");
+			return;
+		}
+		System.out.println("| FAIL | Piece Movement: Pawn test failed.\n");
+		return;
 	}
 
 }
