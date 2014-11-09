@@ -44,6 +44,7 @@ public class TestingSuite {
 			System.out.println("10. Piece Movement: Rook");
 			System.out.println("11. Piece Movement: Knight");
 			System.out.println("12. Piece Movement: Bishop");
+			System.out.println("13. Piece Movement: Queen");
 
 			try {
 				input = br.readLine();
@@ -102,6 +103,9 @@ public class TestingSuite {
 					} else if (option ==12) {
 						bishopMovementTest();
 						input = null;
+					} else if (option ==13) {
+						queenMovementTest();
+						input = null;
 					} else {
 						input = null;
 						System.out.println("Input Error: Not a valid test index.");
@@ -153,6 +157,7 @@ public class TestingSuite {
 		rookMovementTest();
 		knightMovementTest();
 		bishopMovementTest();
+		queenMovementTest();
 	}
 	
 	/**
@@ -546,6 +551,80 @@ public class TestingSuite {
 			return;
 		}
 		System.out.println("| FAIL | Piece Movement: Rook test failed.\n");
+		return;
+	}
+	
+	/**
+	 * This method is used to test all of the queen movement scenarios.
+	 */
+	private void queenMovementTest() {
+		boolean success = true;
+
+		System.out.println("Beginning Piece Movement: Queen test..");
+		game = new Game();
+		game.rules = new ClassicChess();
+		game.board = game.rules.SetStartingPositions(this.game.white,
+				this.game.black);
+		view.DisplayBoard(game.board);
+		game.NextTurn();
+
+		try {
+			// negative test: move queen vertically past pawn
+			completeMove(new Move(game.activePlayer, "e0-e2", game.board)); // w
+			
+			// negative test: move queen diagonal past pawn
+			completeMove(new Move(game.activePlayer, "e0-g2", game.board)); // w
+			
+			// move pawn out of the way
+			completeMove(new Move(game.activePlayer, "e1-e3", game.board)); // w
+			
+			// move pawn out of the way
+			completeMove(new Move(game.activePlayer, "e6-e4", game.board)); // b
+
+			// move queen behind pawn
+			completeMove(new Move(game.activePlayer, "e0-e2", game.board)); // w
+			if (game.board.tiles[4][2].piece.getClass() != Queen.class || game.board.tiles[4][0].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Queen failed vertical movement test.");
+				success = false;
+			}
+			
+			// move queen behind pawn
+			completeMove(new Move(game.activePlayer, "e7-e5", game.board)); // b
+			if (game.board.tiles[4][5].piece.getClass() != Queen.class || game.board.tiles[4][7].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Queen failed vertical movement test.");
+				success = false;
+			}
+			
+			// move queen diagonal
+			completeMove(new Move(game.activePlayer, "e2-c4", game.board)); // w
+			if (game.board.tiles[2][4].piece.getClass() != Queen.class || game.board.tiles[4][2].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Queen failed diagonal movement test.");
+				success = false;
+			}
+			
+			// move queen horizontal pawn
+			completeMove(new Move(game.activePlayer, "e5-a5", game.board)); // b
+			if (game.board.tiles[0][5].piece.getClass() != Queen.class || game.board.tiles[4][5].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Queen failed horizontal movement test.");
+				success = false;
+			}
+			
+			// negative test: move queen to a spot outside their move set
+			completeMove(new Move(game.activePlayer, "c4-h5", game.board)); // w
+			if (game.board.tiles[2][4].piece.getClass() != Queen.class || game.board.tiles[7][5].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Queen failed moveset movement test.");
+				success = false;
+			}
+			
+		} catch (Exception e) {
+			success = false;
+			System.out.println(e.getMessage());
+		}
+		if (success) {
+			System.out.println("| PASS | Piece Movement: Queen test was successful.\n");
+			return;
+		}
+		System.out.println("| FAIL | Piece Movement: Queen test failed.\n");
 		return;
 	}
 	
