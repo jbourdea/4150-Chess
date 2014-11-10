@@ -348,7 +348,7 @@ public class ClassicChess extends Rules {
 				}
 
 				// if there are no pieces inbetween
-				if(board.tiles[startXCord + 1][startYCord].piece == null && board.tiles[startXCord + 2][startYCord].piece == null) {
+				if(board.tiles[startXCord + 1][startYCord].piece == null && board.tiles[startXCord + 2][startYCord].piece == null && board.tiles[startXCord + 3][startYCord].piece == null) {
 					board.tiles[startXCord + 1][startYCord].piece = board.tiles[7][startYCord].piece;
 					board.tiles[7][startYCord].piece = null;
 					return true;
@@ -362,7 +362,7 @@ public class ClassicChess extends Rules {
 				}
 
 				// if there are no pieces inbetween
-				if(board.tiles[startXCord - 1][startYCord].piece == null && board.tiles[startXCord - 2][startYCord].piece == null && board.tiles[startXCord - 3][startYCord].piece == null) {
+				if(board.tiles[startXCord - 1][startYCord].piece == null && board.tiles[startXCord - 2][startYCord].piece == null) {
 					board.tiles[startXCord - 1][startYCord].piece = board.tiles[0][startYCord].piece;
 					board.tiles[0][startYCord].piece = null;
 					return true;
