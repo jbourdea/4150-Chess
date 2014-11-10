@@ -40,9 +40,9 @@ public class TestingSuite {
 			System.out.println("3. Classic Chess: Scholar's Mate");
 			System.out.println("4. Classic Chess: Castling");
 			System.out.println("5. Classic Chess: Check");
-			System.out.println("~~~. Classic Chess: Stalemate");
+			System.out.println("6. Classic Chess: Stalemate");
 			System.out.println("7. Take All Chess: Taking all pieces");
-			System.out.println("~~~. Take All Chess: Stalemate");
+			System.out.println("8. Take All Chess: Stalemate");
 			System.out.println("9. Piece Movement: Take own piece");
 			System.out.println("10. Piece Movement: Move onto self");
 			System.out.println("11. Piece Movement: En Passant Positive");
