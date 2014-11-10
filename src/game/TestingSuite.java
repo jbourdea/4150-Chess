@@ -38,7 +38,7 @@ public class TestingSuite {
 			System.out.println("1. Run All Test Cases.");
 			System.out.println("2. Classic Chess: Fool's Mate");
 			System.out.println("3. Classic Chess: Scholar's Mate");
-			System.out.println("~~~. Classic Chess: Castling");
+			System.out.println("4. Classic Chess: Castling");
 			System.out.println("~~~. Classic Chess: Check");
 			System.out.println("~~~. Classic Chess: Stalemate");
 			System.out.println("7. Take All Chess: Taking all pieces");
@@ -47,7 +47,7 @@ public class TestingSuite {
 			System.out.println("10. Piece Movement: Move onto self");
 			System.out.println("11. Piece Movement: En Passant Positive");
 			System.out.println("12. Piece Movement: En Passant Negative");
-			System.out.println("~~~. Piece Movement: Pawn Promotion");
+			System.out.println("13. Piece Movement: Pawn Promotion");
 			System.out.println("14. Piece Movement: Pawn");
 			System.out.println("15. Piece Movement: Rook");
 			System.out.println("16. Piece Movement: Knight");
@@ -261,39 +261,50 @@ public class TestingSuite {
 		return;
 	}
 	
-
-	/**
-	 * TODO: comment
-	 */
 	private void classicCastling() {
 		boolean success = true;
 
-		System.out.println("Beginning Classic Chess: Scholar's Mate test..");
+		System.out.println("Beginning Classic Chess: Castling test..");
 		game = new Game();
 		game.rules = new ClassicChess();
-		game.board = game.rules.SetStartingPositions(this.game.white,
-				this.game.black);
+		Board board = new Board(8, 8);
+		Player white = game.white;
+		Player black = game.black;
+
+		board.AddPiece(new King(white), 3, 0);
+        board.AddPiece(new Rook(white), 0, 0);
+		board.AddPiece(new King(black), 3, 7);
+        board.AddPiece(new Rook(black), 7, 7);
+
+		game.board = board;
 		view.DisplayBoard(game.board);
 		game.NextTurn();
 
 		try {
-			completeMove(new Move(game.activePlayer, "d1-d3", game.board)); // w
-			completeMove(new Move(game.activePlayer, "d6-d4", game.board)); // b
-			completeMove(new Move(game.activePlayer, "c0-f3", game.board)); // w
-			completeMove(new Move(game.activePlayer, "c7-f4", game.board)); // b
-			completeMove(new Move(game.activePlayer, "e0-a4", game.board)); // w
-			completeMove(new Move(game.activePlayer, "b7-c5", game.board)); // b
-			completeMove(new Move(game.activePlayer, "a4-c6", game.board)); // w
+			completeMove(new Move(game.activePlayer, "d0-b0", game.board)); // w
+            
+            if (game.board.tiles[1][0].piece.getClass() != King.class || game.board.tiles[2][0].piece.getClass() != Rook.class) {
+				System.out.println("| FAIL | Castling: King failed castling left.");
+				success = false;
+			}
+            
+            completeMove(new Move(game.activePlayer, "d7-f7", game.board)); // b
+            
+            if (game.board.tiles[5][7].piece.getClass() != King.class || game.board.tiles[4][7].piece.getClass() != Rook.class) {
+				System.out.println("| FAIL | Castling: King failed castling right.");
+				success = false;
+			}
+            
 		} catch (Exception e) {
 			success = false;
 			System.out.println(e.getMessage());
 		}
-
-		if (success && game.GameOver) {
-			System.out.println("| PASS | Classic Chess: Scholar's Mate test was successful.\n");
+		
+		if (success) {
+			System.out.println("| PASS | Classic Chess: Castling was successful.\n");
 			return;
 		}
-		System.out.println("| FAIL | Classic Chess: Scholar's Mate test failed.\n");
+		System.out.println("| FAIL | Classic Chess: Castling failed.\n");
 		return;
 	}
 	
