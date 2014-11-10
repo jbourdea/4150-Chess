@@ -346,37 +346,45 @@ public class TestingSuite {
 	
 	
 	/**
-	 * TODO: comment
+	 * This method is used to test if the stalemate check is working properly in a classic chess game. 
 	 */
 	private void classicStalemate() {
 		boolean success = true;
 
-		System.out.println("Beginning Classic Chess: Scholar's Mate test..");
+		System.out.println("Beginning Classic Chess: Stalemate test..");
 		game = new Game();
 		game.rules = new ClassicChess();
-		game.board = game.rules.SetStartingPositions(this.game.white,
-				this.game.black);
+		Board board = new Board(8, 8);
+		Player white = game.white;
+		Player black = game.black;
+
+		board.AddPiece(new King(white), 1, 1);
+		board.AddPiece(new King(black), 6, 6);
+
+		board.AddPiece(new Rook(black), 0, 6);
+		board.AddPiece(new Rook(black), 2, 6);
+		board.AddPiece(new Rook(black), 6, 3);	
+
+		game.board = board;
 		view.DisplayBoard(game.board);
 		game.NextTurn();
 
 		try {
-			completeMove(new Move(game.activePlayer, "d1-d3", game.board)); // w
-			completeMove(new Move(game.activePlayer, "d6-d4", game.board)); // b
-			completeMove(new Move(game.activePlayer, "c0-f3", game.board)); // w
-			completeMove(new Move(game.activePlayer, "c7-f4", game.board)); // b
-			completeMove(new Move(game.activePlayer, "e0-a4", game.board)); // w
-			completeMove(new Move(game.activePlayer, "b7-c5", game.board)); // b
-			completeMove(new Move(game.activePlayer, "a4-c6", game.board)); // w
+			completeMove(new Move(game.activePlayer, "b1-b0", game.board)); // w
+			completeMove(new Move(game.activePlayer, "g3-g1", game.board)); // b
+			if(game.rules.checkForStalemate(game.activePlayer, game.board)){
+				view.DisplayStalemateMessage(game.rules.getStalemateMessage(game.activePlayer));
+				game.GameOver = true;
+			}
 		} catch (Exception e) {
 			success = false;
 			System.out.println(e.getMessage());
 		}
-
 		if (success && game.GameOver) {
-			System.out.println("| PASS | Classic Chess: Scholar's Mate test was successful.\n");
+			System.out.println("| PASS | Classic Chess: Stalemate test was successful.\n");
 			return;
 		}
-		System.out.println("| FAIL | Classic Chess: Scholar's Mate test failed.\n");
+		System.out.println("| FAIL | Classic Chess: Stalemate test failed.\n");
 		return;
 	}
 
