@@ -39,7 +39,7 @@ public class TestingSuite {
 			System.out.println("2. Classic Chess: Fool's Mate");
 			System.out.println("3. Classic Chess: Scholar's Mate");
 			System.out.println("4. Classic Chess: Castling");
-			System.out.println("~~~. Classic Chess: Check");
+			System.out.println("5. Classic Chess: Check");
 			System.out.println("~~~. Classic Chess: Stalemate");
 			System.out.println("7. Take All Chess: Taking all pieces");
 			System.out.println("~~~. Take All Chess: Stalemate");
@@ -308,14 +308,10 @@ public class TestingSuite {
 		return;
 	}
 	
-	
-	/**
-	 * TODO: comment
-	 */
 	private void classicCheck() {
 		boolean success = true;
 
-		System.out.println("Beginning Classic Chess: Scholar's Mate test..");
+		System.out.println("Beginning Classic Chess: Check test..");
 		game = new Game();
 		game.rules = new ClassicChess();
 		game.board = game.rules.SetStartingPositions(this.game.white,
@@ -324,23 +320,35 @@ public class TestingSuite {
 		game.NextTurn();
 
 		try {
-			completeMove(new Move(game.activePlayer, "d1-d3", game.board)); // w
-			completeMove(new Move(game.activePlayer, "d6-d4", game.board)); // b
-			completeMove(new Move(game.activePlayer, "c0-f3", game.board)); // w
-			completeMove(new Move(game.activePlayer, "c7-f4", game.board)); // b
-			completeMove(new Move(game.activePlayer, "e0-a4", game.board)); // w
-			completeMove(new Move(game.activePlayer, "b7-c5", game.board)); // b
-			completeMove(new Move(game.activePlayer, "a4-c6", game.board)); // w
+			completeMove(new Move(game.activePlayer, "c0-c2", game.board)); // w
+			completeMove(new Move(game.activePlayer, "b1-b2", game.board)); // w
+			completeMove(new Move(game.activePlayer, "b6-b5", game.board)); // b
+			completeMove(new Move(game.activePlayer, "c0-a2", game.board)); // w
+			completeMove(new Move(game.activePlayer, "c7-a5", game.board)); // b
+			// place black in check
+			completeMove(new Move(game.activePlayer, "a2-e6", game.board)); // w
+			
+			// attempt to make a move while in check
+			completeMove(new Move(game.activePlayer, "c6-c5", game.board)); // b
+			
+			if (game.board.tiles[2][6].piece.getClass() != Pawn.class || game.board.tiles[2][5].piece != null) {
+				System.out.println("| FAIL | Piece Movement: Pawn moved while in checkmate.");
+				success = false;
+			}
+			
+			// get out of check
+			completeMove(new Move(game.activePlayer, "f7-e6", game.board)); // b
+			
 		} catch (Exception e) {
 			success = false;
 			System.out.println(e.getMessage());
 		}
 
 		if (success && game.GameOver) {
-			System.out.println("| PASS | Classic Chess: Scholar's Mate test was successful.\n");
+			System.out.println("| PASS | Classic Chess: Check test was successful.\n");
 			return;
 		}
-		System.out.println("| FAIL | Classic Chess: Scholar's Mate test failed.\n");
+		System.out.println("| FAIL | Classic Chess: Check test failed.\n");
 		return;
 	}
 	
