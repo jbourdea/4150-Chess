@@ -344,7 +344,7 @@ public class TestingSuite {
 			System.out.println(e.getMessage());
 		}
 
-		if (success && game.GameOver) {
+		if (success) {
 			System.out.println("| PASS | Classic Chess: Check test was successful.\n");
 			return;
 		}
