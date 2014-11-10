@@ -1,7 +1,9 @@
 package game;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
@@ -13,6 +15,7 @@ public class TestingSuite {
 
 	public View view = null;
 	public Game game = null;
+	public InputStream stdin = System.in;
 	
 	public TestingSuite(View view) {
 		this.view = view;
@@ -567,39 +570,100 @@ public class TestingSuite {
 	
 	
 	/**
-	 * TODO: comment
+	 * This method is used to test if all the possible scenarios for Pawn Promotion are working.
 	 */
 	private void pawnPromotion() {
 		boolean success = true;
 
-		System.out.println("Beginning Piece Movement: En Passant Negative test..");
+		System.out.println("Beginning Piece Movement: Pawn Promotion test..");
 		game = new Game();
 		game.rules = new ClassicChess();
-		game.board = game.rules.SetStartingPositions(this.game.white,
-				this.game.black);
+		Board board = new Board(8, 8);
+		Player white = game.white;
+		Player black = game.black;
+
+		board.AddPiece(new King(white), 6, 6);
+		board.AddPiece(new King(black), 6, 1);
+		
+		board.AddPiece(new Pawn(black), 0, 1);
+		board.AddPiece(new Pawn(black), 1, 1);
+		board.AddPiece(new Pawn(black), 2, 1);
+		
+		board.AddPiece(new Pawn(white), 0, 6);
+		board.AddPiece(new Pawn(white), 1, 6);
+		board.AddPiece(new Pawn(white), 2, 6);
+
+		game.board = board;
 		view.DisplayBoard(game.board);
 		game.NextTurn();
 
 		try {
-			completeMove(new Move(game.activePlayer, "d1-d3", game.board)); // w
-			completeMove(new Move(game.activePlayer, "e6-e4", game.board)); // b
-			completeMove(new Move(game.activePlayer, "d3-e4", game.board)); // w
-			completeMove(new Move(game.activePlayer, "d6-d4", game.board)); // b
-			completeMove(new Move(game.activePlayer, "a1-a2", game.board)); // w
-			completeMove(new Move(game.activePlayer, "h6-h4", game.board)); // b
-			completeMove(new Move(game.activePlayer, "e4-d5", game.board)); // w
+			//promote a white Pawn into a Rook
+			String data = "R\r\n";
+			try {
+				//changes standard input, reads in data from above.
+				System.setIn(new ByteArrayInputStream(data.getBytes()));
+				completeMove(new Move(game.activePlayer, "a6-a7", game.board)); // w
+			} finally {
+				System.setIn(stdin);
+			}
+			if (game.board.tiles[0][7].piece.getClass() != Rook.class) {
+				System.out.println("| FAIL | Piece Movement: Pawn Promotion failed to promote a pawn to a Rook");
+				success = false;
+			}
+			
+			//promote a black Pawn into a Knight
+			data = "N\r\n";
+			try {
+				System.setIn(new ByteArrayInputStream(data.getBytes()));
+				completeMove(new Move(game.activePlayer, "a1-a0", game.board)); // b
+			} finally {
+				System.setIn(stdin);
+			}
+			if (game.board.tiles[0][0].piece.getClass() != Knight.class) {
+				System.out.println("| FAIL | Piece Movement: Pawn Promotion failed to promote a pawn to a Knight");
+				success = false;
+			}
+			
+			//promote a white Pawn into a Queen
+			data = "Q\r\n";
+			try {
+				System.setIn(new ByteArrayInputStream(data.getBytes()));
+				completeMove(new Move(game.activePlayer, "b6-b7", game.board)); // w
+			} finally {
+				System.setIn(stdin);
+			}
+			if (game.board.tiles[1][7].piece.getClass() != Queen.class) {
+				System.out.println("| FAIL | Piece Movement: Pawn Promotion failed to promote a pawn to a Queen");
+				success = false;
+			}
+			
+			//promote a black Pawn into a Bishop
+			data = "B\r\n";
+			try {
+				System.setIn(new ByteArrayInputStream(data.getBytes()));
+				completeMove(new Move(game.activePlayer, "b1-b0", game.board)); // b
+			} finally {
+				System.setIn(stdin);
+			}
+			if (game.board.tiles[1][0].piece.getClass() != Bishop.class) {
+				System.out.println("| FAIL | Piece Movement: Pawn Promotion failed to promote a pawn to a Bishop");
+				success = false;
+			}
+			
 		} catch (Exception e) {
 			success = false;
 			System.out.println(e.getMessage());
 		}
-		if (success && game.board.tiles[4][4].piece.getClass() == Pawn.class && game.board.tiles[3][4].piece.getClass() == Pawn.class) {
-			System.out.println("| PASS | Piece Movement: En Passant Negative test was successful.\n");
+		if (success) {
+			System.out.println("| PASS | Piece Movement: Pawn Promotion was successful.\n");
 			return;
 		}
-		System.out.println("| FAIL | Piece Movement: En Passant Negative test failed.\n");
+		System.out.println("| FAIL | Piece Movement: Pawn Promotion failed.\n");
 		return;
 
 	}
+	
 	
 	/**
 	 * This method is used to test all of the pawn movement scenarios.
