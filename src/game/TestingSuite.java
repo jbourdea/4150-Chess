@@ -433,36 +433,40 @@ public class TestingSuite {
 	
 	
 	/**
-	 * TODO: comment
+	 * This method is used to test if the stalemate check is working properly in a take all game. 
 	 */
 	private void takeAllStalemate() {
 		boolean success = true;
 
-		System.out.println("Beginning Take All Chess: Taking all pieces test..");
+		System.out.println("Beginning Take All Chess: Stalemate test..");
 		game = new Game();
 		game.rules = new TakeAllChess();
 		Board board = new Board(8, 8);
 		Player white = game.white;
 		Player black = game.black;
 
-		board.AddPiece(new Pawn(white), 0, 1);
-		board.AddPiece(new Pawn(black), 1, 2);
+		board.AddPiece(new Pawn(white), 3, 3);
+		board.AddPiece(new Pawn(black), 3, 5);	
 
 		game.board = board;
 		view.DisplayBoard(game.board);
 		game.NextTurn();
 
 		try {
-			completeMove(new Move(game.activePlayer, "a1-b2", game.board)); // w
+			completeMove(new Move(game.activePlayer, "d3-d4", game.board)); // w
+			if(game.rules.checkForStalemate(game.activePlayer, game.board)){
+				view.DisplayStalemateMessage(game.rules.getStalemateMessage(game.activePlayer));
+				game.GameOver = true;
+			}
 		} catch (Exception e) {
 			success = false;
 			System.out.println(e.getMessage());
 		}
 		if (success && game.GameOver) {
-			System.out.println("| PASS | Take All Chess: Taking all pieces was successful.\n");
+			System.out.println("| PASS | Take All Chess: Stalemate was successful.\n");
 			return;
 		}
-		System.out.println("| FAIL | Take All Chess: Taking all pieces failed.\n");
+		System.out.println("| FAIL | Take All Chess: Stalemate failed.\n");
 		return;
 
 	}
