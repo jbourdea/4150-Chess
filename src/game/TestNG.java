@@ -1,5 +1,7 @@
 package game;
 
+import java.util.Random;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -10,10 +12,11 @@ public class TestNG {
 	 * @param move The move that is going to be made
 	 */
 	public void CompleteMove(Move move, Game game) {
+		//System.out.print(move);
 		if (move.IsValid() && game.rules.ValidateMove(move, game.board) == 0) {
 			MoveCompleteResult moveResult = game.CompleteMove(move);
 			game.NextTurn();
-			
+			//new View().DisplayBoard(game.board);
 			// check for game ending condition
 			if (moveResult.gameOver) {
 				game.GameOver = true;
@@ -105,5 +108,33 @@ public class TestNG {
 		
 		Assert.assertEquals(game.rules.CheckForCheck(game.activePlayer.opponent, game.board), true);
 		Assert.assertEquals(game.GameOver, true);
+	}
+	
+	@Test
+	public void testFuzzInput() {
+		View view = new View();
+		Game game = new Game();
+		game.rules = new ClassicChess();
+		game.board = game.rules.SetStartingPositions(game.white, game.black);
+
+		game.NextTurn();
+		
+		int i = 0;
+		while (i < 10000) {
+			CompleteMove(genRandomMove(game.activePlayer, game.board), game);
+			i++;
+		}
+		
+	}
+	
+	//generates a random, not necessarily valid move
+	private Move genRandomMove(Player player, Board board) {
+		int min = 0;
+		int max = board.listOfTiles.size() - 1;
+		
+		Tile startTile = board.listOfTiles.get(new Random().nextInt((max - min) + 1) + min);
+		Tile endTile = board.listOfTiles.get(new Random().nextInt((max - min) + 1) + min);
+		
+		return new Move(player, startTile, endTile);
 	}
 }
