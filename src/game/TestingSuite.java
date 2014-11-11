@@ -150,7 +150,7 @@ public class TestingSuite {
 	 * This method is used to handle each move that the testing suite wants to make.
 	 * @param move The move that is going to be made
 	 */
-	private void completeMove(Move move) {
+	public void completeMove(Move move) {
 		System.out.println(move.activePlayer + " moves " + move.text);
 
 		if (move.IsValid() && game.rules.ValidateMove(move, game.board) == 0) {

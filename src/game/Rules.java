@@ -83,4 +83,9 @@ public class Rules {
 	public String getStalemateMessage(Player activePlayer) {
 		return this.stalemateMessage;
 	}
+	
+	public boolean CheckForCheck(Player activePlayer, Board board) {
+		return false;
+	}
+	
 }
