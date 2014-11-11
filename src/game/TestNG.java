@@ -61,6 +61,18 @@ public class TestNG {
 	}
 	
 	@Test
+	public void testAddPiece() {
+		Board board = new Board(8,8);
+		Player white = new Player();
+		white.color = "White";
+		
+		Piece piece = new King(white);
+		board.AddPiece(piece, 3, 3);
+		
+		Assert.assertEquals(board.tiles[3][3].piece, piece);
+	}
+	
+	@Test
 	public void testCheck() {
 		View view = new View();
 		Game game = new Game();
