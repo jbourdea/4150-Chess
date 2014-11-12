@@ -106,7 +106,7 @@ public class TakeAllChess extends Rules {
 				}
 			}
 		}
-		else if(move.piece.hasMoved == false && yDifference == direction * 2) {
+		else if(move.piece.hasMoved == false && yDifference == direction * 2 && xDifference == 0) {
 			// double jump for first move
 			//checking that the final position is empty (does not contain a piece) and that the space in between is also empty.
 			if(move.endPosition.piece == null && board.tiles[move.startPosition.xCord][move.startPosition.yCord + direction].piece == null) {
