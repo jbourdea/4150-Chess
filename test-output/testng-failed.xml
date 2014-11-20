@@ -5,7 +5,7 @@
     <classes>
       <class name="game.TestNG">
         <methods>
-          <include name="testCheckMate"/>
+          <include name="testFuzzInput"/>
         </methods>
       </class> <!-- game.TestNG -->
     </classes>

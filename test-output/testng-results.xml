@@ -1,32 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testng-results skipped="0" failed="0" total="5" passed="5">
+<testng-results skipped="0" failed="0" total="7" passed="7">
   <reporter-output>
   </reporter-output>
-  <suite name="Default suite" duration-ms="25" started-at="2014-11-11T03:45:15Z" finished-at="2014-11-11T03:45:15Z">
+  <suite name="Default suite" duration-ms="20809" started-at="2014-11-12T02:14:09Z" finished-at="2014-11-12T02:14:30Z">
     <groups>
     </groups>
-    <test name="Default test" duration-ms="25" started-at="2014-11-11T03:45:15Z" finished-at="2014-11-11T03:45:15Z">
+    <test name="Default test" duration-ms="20809" started-at="2014-11-12T02:14:09Z" finished-at="2014-11-12T02:14:30Z">
       <class name="game.TestNG">
-        <test-method status="PASS" signature="testBoardInstantiation()[pri:0, instance:game.TestNG@528c0d5d]" name="testBoardInstantiation" duration-ms="8" started-at="2014-11-10T22:45:15Z" finished-at="2014-11-10T22:45:15Z">
+        <test-method status="PASS" signature="testAddPiece()[pri:0, instance:game.TestNG@1ee8d9a5]" name="testAddPiece" duration-ms="9" started-at="2014-11-11T21:14:09Z" finished-at="2014-11-11T21:14:09Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testAddPiece -->
+        <test-method status="PASS" signature="testBoardInstantiation()[pri:0, instance:game.TestNG@1ee8d9a5]" name="testBoardInstantiation" duration-ms="0" started-at="2014-11-11T21:14:09Z" finished-at="2014-11-11T21:14:09Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- testBoardInstantiation -->
-        <test-method status="PASS" signature="testCheck()[pri:0, instance:game.TestNG@528c0d5d]" name="testCheck" duration-ms="4" started-at="2014-11-10T22:45:15Z" finished-at="2014-11-10T22:45:15Z">
+        <test-method status="PASS" signature="testCheck()[pri:0, instance:game.TestNG@1ee8d9a5]" name="testCheck" duration-ms="4" started-at="2014-11-11T21:14:09Z" finished-at="2014-11-11T21:14:09Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- testCheck -->
-        <test-method status="PASS" signature="testCheckMate()[pri:0, instance:game.TestNG@528c0d5d]" name="testCheckMate" duration-ms="2" started-at="2014-11-10T22:45:15Z" finished-at="2014-11-10T22:45:15Z">
+        <test-method status="PASS" signature="testCheckMate()[pri:0, instance:game.TestNG@1ee8d9a5]" name="testCheckMate" duration-ms="2" started-at="2014-11-11T21:14:09Z" finished-at="2014-11-11T21:14:09Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- testCheckMate -->
-        <test-method status="PASS" signature="testGameInstantiation()[pri:0, instance:game.TestNG@528c0d5d]" name="testGameInstantiation" duration-ms="0" started-at="2014-11-10T22:45:15Z" finished-at="2014-11-10T22:45:15Z">
+        <test-method status="PASS" signature="testFuzzInput()[pri:0, instance:game.TestNG@1ee8d9a5]" name="testFuzzInput" duration-ms="20784" started-at="2014-11-11T21:14:09Z" finished-at="2014-11-11T21:14:30Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testFuzzInput -->
+        <test-method status="PASS" signature="testGameInstantiation()[pri:0, instance:game.TestNG@1ee8d9a5]" name="testGameInstantiation" duration-ms="1" started-at="2014-11-11T21:14:30Z" finished-at="2014-11-11T21:14:30Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- testGameInstantiation -->
-        <test-method status="PASS" signature="testKingInstantiation()[pri:0, instance:game.TestNG@528c0d5d]" name="testKingInstantiation" duration-ms="0" started-at="2014-11-10T22:45:15Z" finished-at="2014-11-10T22:45:15Z">
+        <test-method status="PASS" signature="testPieceInstantiation()[pri:0, instance:game.TestNG@1ee8d9a5]" name="testPieceInstantiation" duration-ms="1" started-at="2014-11-11T21:14:30Z" finished-at="2014-11-11T21:14:30Z">
           <reporter-output>
           </reporter-output>
-        </test-method> <!-- testKingInstantiation -->
+        </test-method> <!-- testPieceInstantiation -->
       </class> <!-- game.TestNG -->
     </test> <!-- Default test -->
   </suite> <!-- Default suite -->

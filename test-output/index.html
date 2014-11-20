@@ -48,7 +48,7 @@
               <ul>
                 <li>
                   <a href="#" class="navigator-link " panel-name="test-xml-Default_suite">
-                    <span>C:\Users\Jonathan\AppData\Local\Temp\testng-eclipse-1690652967\testng-customsuite.xml</span>
+                    <span>C:\Users\Jonathan\AppData\Local\Temp\testng-eclipse-1527170566\testng-customsuite.xml</span>
                   </a> <!-- navigator-link  -->
                 </li>
                 <li>
@@ -90,7 +90,7 @@
               <div class="suite-section-content">
                 <ul>
                   <li>
-                    <span class="method-stats">5 methods,   5 passed</span>
+                    <span class="method-stats">7 methods,   7 passed</span>
                   </li>
                   <li>
                     <span class="method-list-title passed">Passed methods</span>
@@ -99,6 +99,11 @@
                       <a href="#" panel-name="suite-Default_suite" class="show-methods passed suite-Default_suite"> (show)</a> <!-- show-methods passed suite-Default_suite -->
                     </span>
                     <div class="method-list-content passed suite-Default_suite">
+                      <span>
+                        <img width="3%" src="passed.png"/>
+                        <a href="#" class="method navigator-link" panel-name="suite-Default_suite" title="game.TestNG" hash-for-method="testAddPiece">testAddPiece</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
                       <span>
                         <img width="3%" src="passed.png"/>
                         <a href="#" class="method navigator-link" panel-name="suite-Default_suite" title="game.TestNG" hash-for-method="testBoardInstantiation">testBoardInstantiation</a> <!-- method navigator-link -->
@@ -116,12 +121,17 @@
                       <br/>
                       <span>
                         <img width="3%" src="passed.png"/>
+                        <a href="#" class="method navigator-link" panel-name="suite-Default_suite" title="game.TestNG" hash-for-method="testFuzzInput">testFuzzInput</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img width="3%" src="passed.png"/>
                         <a href="#" class="method navigator-link" panel-name="suite-Default_suite" title="game.TestNG" hash-for-method="testGameInstantiation">testGameInstantiation</a> <!-- method navigator-link -->
                       </span>
                       <br/>
                       <span>
                         <img width="3%" src="passed.png"/>
-                        <a href="#" class="method navigator-link" panel-name="suite-Default_suite" title="game.TestNG" hash-for-method="testKingInstantiation">testKingInstantiation</a> <!-- method navigator-link -->
+                        <a href="#" class="method navigator-link" panel-name="suite-Default_suite" title="game.TestNG" hash-for-method="testPieceInstantiation">testPieceInstantiation</a> <!-- method navigator-link -->
                       </span>
                       <br/>
                     </div> <!-- method-list-content passed suite-Default_suite -->
@@ -142,6 +152,13 @@
               <span class="class-name">game.TestNG</span>
             </div> <!-- main-panel-header rounded-window-top -->
             <div class="main-panel-content rounded-window-bottom">
+              <div class="method">
+                <div class="method-content">
+                  <a name="testAddPiece">
+                  </a> <!-- testAddPiece -->
+                  <span class="method-name">testAddPiece</span>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
               <div class="method">
                 <div class="method-content">
                   <a name="testBoardInstantiation">
@@ -165,6 +182,13 @@
               </div> <!-- method -->
               <div class="method">
                 <div class="method-content">
+                  <a name="testFuzzInput">
+                  </a> <!-- testFuzzInput -->
+                  <span class="method-name">testFuzzInput</span>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+              <div class="method">
+                <div class="method-content">
                   <a name="testGameInstantiation">
                   </a> <!-- testGameInstantiation -->
                   <span class="method-name">testGameInstantiation</span>
@@ -172,9 +196,9 @@
               </div> <!-- method -->
               <div class="method">
                 <div class="method-content">
-                  <a name="testKingInstantiation">
-                  </a> <!-- testKingInstantiation -->
-                  <span class="method-name">testKingInstantiation</span>
+                  <a name="testPieceInstantiation">
+                  </a> <!-- testPieceInstantiation -->
+                  <span class="method-name">testPieceInstantiation</span>
                 </div> <!-- method-content -->
               </div> <!-- method -->
             </div> <!-- main-panel-content rounded-window-bottom -->
@@ -182,7 +206,7 @@
         </div> <!-- panel Default_suite -->
         <div panel-name="test-xml-Default_suite" class="panel">
           <div class="main-panel-header rounded-window-top">
-            <span class="header-content">C:\Users\Jonathan\AppData\Local\Temp\testng-eclipse-1690652967\testng-customsuite.xml</span>
+            <span class="header-content">C:\Users\Jonathan\AppData\Local\Temp\testng-eclipse-1527170566\testng-customsuite.xml</span>
           </div> <!-- main-panel-header rounded-window-top -->
           <div class="main-panel-content rounded-window-bottom">
             <pre>
@@ -231,32 +255,40 @@ data.addColumn('number', 'Number');
 data.addColumn('string', 'Method');
 data.addColumn('string', 'Class');
 data.addColumn('number', 'Time (ms)');
-data.addRows(5);
+data.addRows(7);
 data.setCell(0, 0, 0)
-data.setCell(0, 1, 'testBoardInstantiation')
+data.setCell(0, 1, 'testFuzzInput')
 data.setCell(0, 2, 'game.TestNG')
-data.setCell(0, 3, 8);
+data.setCell(0, 3, 20784);
 data.setCell(1, 0, 1)
-data.setCell(1, 1, 'testCheck')
+data.setCell(1, 1, 'testAddPiece')
 data.setCell(1, 2, 'game.TestNG')
-data.setCell(1, 3, 4);
+data.setCell(1, 3, 9);
 data.setCell(2, 0, 2)
-data.setCell(2, 1, 'testCheckMate')
+data.setCell(2, 1, 'testCheck')
 data.setCell(2, 2, 'game.TestNG')
-data.setCell(2, 3, 2);
+data.setCell(2, 3, 4);
 data.setCell(3, 0, 3)
-data.setCell(3, 1, 'testGameInstantiation')
+data.setCell(3, 1, 'testCheckMate')
 data.setCell(3, 2, 'game.TestNG')
-data.setCell(3, 3, 0);
+data.setCell(3, 3, 2);
 data.setCell(4, 0, 4)
-data.setCell(4, 1, 'testKingInstantiation')
+data.setCell(4, 1, 'testPieceInstantiation')
 data.setCell(4, 2, 'game.TestNG')
-data.setCell(4, 3, 0);
+data.setCell(4, 3, 1);
+data.setCell(5, 0, 5)
+data.setCell(5, 1, 'testGameInstantiation')
+data.setCell(5, 2, 'game.TestNG')
+data.setCell(5, 3, 1);
+data.setCell(6, 0, 6)
+data.setCell(6, 1, 'testBoardInstantiation')
+data.setCell(6, 2, 'game.TestNG')
+data.setCell(6, 3, 0);
 window.suiteTableData['Default_suite']= { tableData: data, tableDiv: 'times-div-Default_suite'}
 return data;
 }
               </script>
-              <span class="suite-total-time">Total running time: 14 ms</span>
+              <span class="suite-total-time">Total running time: 20 seconds</span>
               <div id="times-div-Default_suite">
               </div> <!-- times-div-Default_suite -->
             </div> <!-- times-div -->
@@ -284,24 +316,32 @@ return data;
             <div class="chronological-class">
               <div class="chronological-class-name">game.TestNG</div> <!-- chronological-class-name -->
               <div class="test-method">
-                <span class="method-name">testBoardInstantiation</span>
+                <span class="method-name">testAddPiece</span>
                 <span class="method-start">0 ms</span>
               </div> <!-- test-method -->
               <div class="test-method">
+                <span class="method-name">testBoardInstantiation</span>
+                <span class="method-start">10 ms</span>
+              </div> <!-- test-method -->
+              <div class="test-method">
                 <span class="method-name">testCheck</span>
-                <span class="method-start">9 ms</span>
+                <span class="method-start">11 ms</span>
               </div> <!-- test-method -->
               <div class="test-method">
                 <span class="method-name">testCheckMate</span>
-                <span class="method-start">13 ms</span>
+                <span class="method-start">15 ms</span>
+              </div> <!-- test-method -->
+              <div class="test-method">
+                <span class="method-name">testFuzzInput</span>
+                <span class="method-start">17 ms</span>
               </div> <!-- test-method -->
               <div class="test-method">
                 <span class="method-name">testGameInstantiation</span>
-                <span class="method-start">16 ms</span>
+                <span class="method-start">20801 ms</span>
               </div> <!-- test-method -->
               <div class="test-method">
-                <span class="method-name">testKingInstantiation</span>
-                <span class="method-start">17 ms</span>
+                <span class="method-name">testPieceInstantiation</span>
+                <span class="method-start">20802 ms</span>
               </div> <!-- test-method -->
           </div> <!-- main-panel-content rounded-window-bottom -->
         </div> <!-- panel -->
