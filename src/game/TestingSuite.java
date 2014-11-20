@@ -57,6 +57,8 @@ public class TestingSuite {
 			System.out.println("20. Move Instantiation");
 			System.out.println("21. Stalemate Message");
 			System.out.println("22. View Test");
+			System.out.println("23. Castling Without A Rook");
+			System.out.println("24. Castling After Rook Movement");
 
 			try {
 				input = br.readLine();
@@ -145,6 +147,12 @@ public class TestingSuite {
 					} else if (option == 22) {
 						viewTest();
 						input = null;
+					} else if (option == 23) {
+						castlingWithoutRook();
+						input = null;
+					} else if (option == 24) {
+						castlingAfterRookMove();
+						input = null;
 					} else {
 						input = null;
 						System.out.println("Input Error: Not a valid test index.");
@@ -162,7 +170,7 @@ public class TestingSuite {
 	 * This method is used to handle each move that the testing suite wants to make.
 	 * @param move The move that is going to be made
 	 */
-	public void completeMove(Move move) {
+	public boolean completeMove(Move move) {
 		System.out.println(move.activePlayer + " moves " + move.text);
 
 		if (move.IsValid() && game.rules.ValidateMove(move, game.board) == 0) {
@@ -175,8 +183,9 @@ public class TestingSuite {
 				view.DisplayWinMessage(moveResult.winner);
 				game.GameOver = true;
 			}
+			return true;
 		} else {
-			view.DisplayErrorMessage();
+			return false;
 		}
 
 	}
@@ -206,6 +215,7 @@ public class TestingSuite {
 		moveInstantiationTest();
 		stalemateMessageTest();
 		viewTest();
+		castlingWithoutRook();
 	}
 	
 	/**
@@ -1264,6 +1274,71 @@ public class TestingSuite {
 			return;
 		}
 		System.out.println("| FAIL | Stalemate Message test failed.\n");
+		return;
+	}
+	
+	private void castlingWithoutRook() {
+		boolean success = false;
+
+		game = new Game();
+		game.rules = new ClassicChess();
+		Board board = new Board(8, 8);
+		Player white = game.white;
+		Player black = game.black;
+
+		board.AddPiece(new King(white), 3, 0);
+        board.AddPiece(new Bishop(white), 0, 0);
+		board.AddPiece(new King(black), 3, 7);
+        board.AddPiece(new Bishop(black), 7, 7);
+
+		game.board = board;
+		view.DisplayBoard(game.board);
+		game.NextTurn();
+
+		if (!completeMove(new Move(game.activePlayer, "d0-b0", game.board))) {
+			success = true;
+		}
+            		
+		if (success) {
+			System.out.println("| PASS | Castling test was successful.\n");
+			return;
+		}
+		System.out.println("| FAIL | Castling failed.\n");
+		return;
+	}
+	
+	private void castlingAfterRookMove() {
+		boolean success = false;
+
+		game = new Game();
+		game.rules = new ClassicChess();
+		Board board = new Board(8, 8);
+		Player white = game.white;
+		Player black = game.black;
+
+		board.AddPiece(new King(white), 3, 0);
+        board.AddPiece(new Rook(white), 0, 0);
+		board.AddPiece(new King(black), 3, 7);
+        board.AddPiece(new Rook(black), 7, 7);
+
+		game.board = board;
+		view.DisplayBoard(game.board);
+		game.NextTurn();
+		
+		completeMove(new Move(game.activePlayer, "a0-a1", game.board));
+		completeMove(new Move(game.activePlayer, "h7-h6", game.board));
+		completeMove(new Move(game.activePlayer, "a1-a0", game.board));
+		completeMove(new Move(game.activePlayer, "h6-h5", game.board));
+
+		if (!completeMove(new Move(game.activePlayer, "d0-b0", game.board))) {
+			success = true;
+		}
+            		
+		if (success) {
+			System.out.println("| PASS | Castling test was successful.\n");
+			return;
+		}
+		System.out.println("| FAIL | Castling failed.\n");
 		return;
 	}
 
