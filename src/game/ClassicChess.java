@@ -343,7 +343,7 @@ public class ClassicChess extends Rules {
 			// check right rook
 			if(move.startPosition.xCord < move.endPosition.xCord) {
 				// if a piece isn't there, if it has moved, or if it isn't a rook, it doesn't pass
-				if(board.tiles[7][startYCord].piece == null || board.tiles[7][startYCord].piece.hasMoved == true || board.tiles[7][startYCord].piece.getClass() != Rook.class) {
+				if(board.tiles[7][startYCord].piece == null || board.tiles[7][startYCord].piece.hasMoved == true) {
 					return false;
 				}
 
@@ -616,16 +616,16 @@ public class ClassicChess extends Rules {
 		while (input == null) {
 			try {
 				input = br.readLine();
-				if(input.equalsIgnoreCase("q") || input.equalsIgnoreCase("queen")) {
+				if(input.equalsIgnoreCase("q")) {
 					board.tiles[move.endPosition.xCord][move.endPosition.yCord].addPiece(new Queen(move.activePlayer));
 				}
-				else if(input.equalsIgnoreCase("r") || input.equalsIgnoreCase("rook")) {
+				else if(input.equalsIgnoreCase("r")) {
 					board.tiles[move.endPosition.xCord][move.endPosition.yCord].addPiece(new Rook(move.activePlayer));
 				}
-				else if(input.equalsIgnoreCase("n") || input.equalsIgnoreCase("knight")) {
+				else if(input.equalsIgnoreCase("n")) {
 					board.tiles[move.endPosition.xCord][move.endPosition.yCord].addPiece(new Knight(move.activePlayer));
 				}
-				else if(input.equalsIgnoreCase("b") || input.equalsIgnoreCase("bishop")) {
+				else if(input.equalsIgnoreCase("b")) {
 					board.tiles[move.endPosition.xCord][move.endPosition.yCord].addPiece(new Bishop(move.activePlayer));
 				}
 				else{
@@ -682,31 +682,12 @@ public class ClassicChess extends Rules {
 			}
 		}
 
-		//Has no valid moves other than potentially the king.
-		if(kingTile == null) { //player has no king, can't be in stalemate with no king.
-			return false;
-		}
-
 		//Loop through all the potential moved for the king, and check if the player is in check for each of them.
 		Move exMove = new Move();
 		exMove.activePlayer = activePlayer;
 		exMove.startPosition = kingTile;
 		exMove.piece = kingTile.piece;
 
-		for (Tile endTile : board.listOfTiles) {
-			exMove.endPosition = endTile;
-			if(!validateKingMove(exMove, board)) {
-				continue;
-			}
-			//is a valid move for the king. Perform the move on a fake board and check for check.
-			Board newBoard = new Board(board);	
-			newBoard.tiles[endTile.xCord][endTile.yCord].piece = new King(activePlayer);
-			newBoard.tiles[kingTile.xCord][kingTile.yCord].piece = null;
-
-			if(!CheckForCheck(activePlayer.opponent, newBoard)) { //opponent doesn't have them in check after the move
-				return false;
-			}
-		}
 
 		return true;
 	}
