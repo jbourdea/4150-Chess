@@ -95,7 +95,7 @@ public class ClassicChess extends Rules {
 					if(board.tiles[move.endPosition.xCord][move.startPosition.yCord].piece != null){
 						if(board.tiles[move.endPosition.xCord][move.startPosition.yCord].piece.getClass() == Pawn.class){
 							Pawn p = (Pawn)board.tiles[move.endPosition.xCord][move.startPosition.yCord].piece;
-							if(p.lastMoveJump == true && p.owner != move.activePlayer){
+							if(p.lastMoveJump == true) {
 								board.tiles[move.endPosition.xCord][move.startPosition.yCord].piece = null;
 								return true;
 							}
@@ -398,7 +398,7 @@ public class ClassicChess extends Rules {
 		else if(move.piece.getClass() == Knight.class) {
 			isValid = (validateKnightMove(move, board) == true) ? 0 : 1;
 		}
-		else if(move.piece.getClass() == King.class) {
+		else { //this is a king
 			isValid = (validateKingMove(move, board) == true) ? 0 : 1;
 		}
 
@@ -430,13 +430,13 @@ public class ClassicChess extends Rules {
 				if (tile.piece.getClass() == King.class && tile.piece.owner == activePlayer) {
 					kingPosition = tile;
 				}
-				else if (tile.piece.getClass() == King.class && tile.piece.owner != activePlayer) {
+				else if (tile.piece.getClass() == King.class) {
 					enemyKing = tile;
 				}
 			}
 		}
 		//if (kingPosition == null) { return false; }
-		if (enemyKing == null) { return false; }
+		//if (enemyKing == null) { return false; }
 
 		//iterate through the active players pieces and tell them to try and kill the enemy king
 		//if they can (legally) then the active player has their opponent in check
@@ -466,7 +466,7 @@ public class ClassicChess extends Rules {
 					else if(regicide.piece.getClass() == Knight.class) {
 						isValid = validateKnightMove(regicide, board);
 					}
-					else if(regicide.piece.getClass() == King.class) {
+					else { //this is a king
 						isValid = validateKingMove(regicide, board);
 					}
 					if (isValid) {
@@ -532,9 +532,9 @@ public class ClassicChess extends Rules {
 		if(move.piece.getClass() == Pawn.class && Math.abs(move.startPosition.yCord - move.endPosition.yCord) == 2) {
 			Pawn p = (Pawn)move.piece;
 			p.lastMoveJump = true;
-		}else if(move.piece.getClass() == Pawn.class && move.endPosition.yCord == 7 && move.piece.owner.color.equals("White")) {
+		}else if(move.piece.getClass() == Pawn.class && move.endPosition.yCord == 7) {
 			getPawnPromotionInput(board, move);
-		}else if(move.piece.getClass() == Pawn.class && move.endPosition.yCord == 0 && move.piece.owner.color.equals("Black")) {
+		}else if(move.piece.getClass() == Pawn.class && move.endPosition.yCord == 0) {
 			getPawnPromotionInput(board, move);
 		}
 
@@ -573,7 +573,7 @@ public class ClassicChess extends Rules {
 						else if(savingMove.piece.getClass() == Knight.class) {
 							isValid = validateKnightMove(savingMove, newBoard);
 						}
-						else if(savingMove.piece.getClass() == King.class) {
+						else { //this is a king
 							isValid = validateKingMove(savingMove, newBoard);
 						}
 						//System.out.println("valid? " + isValid);
@@ -609,41 +609,32 @@ public class ClassicChess extends Rules {
 	/**
 	 * Gets input for doing the Pawn Promotion
 	 */
-	public void getPawnPromotionInput(Board board, Move move){
+	public void getPawnPromotionInput(Board board, Move move) {
 		System.out.println("Please enter a valid input for Pawn Promotion. Choose between Q (Queen), R (Rook), N (Knight), and B (Bishop).");
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String input = null;
 		while (input == null) {
 			try {
 				input = br.readLine();
-			} catch (IOException e) {
-				input = null;
-				System.out.println("Input Error: Unable to read input.");
-			}
-			if (input != null) {
-				try {
-					if(input.equalsIgnoreCase("q") || input.equalsIgnoreCase("queen")) {
-						board.tiles[move.endPosition.xCord][move.endPosition.yCord].addPiece(new Queen(move.activePlayer));
-					}
-					else if(input.equalsIgnoreCase("r") || input.equalsIgnoreCase("rook")) {
-						board.tiles[move.endPosition.xCord][move.endPosition.yCord].addPiece(new Rook(move.activePlayer));
-					}
-					else if(input.equalsIgnoreCase("n") || input.equalsIgnoreCase("knight")) {
-						board.tiles[move.endPosition.xCord][move.endPosition.yCord].addPiece(new Knight(move.activePlayer));
-					}
-					else if(input.equalsIgnoreCase("b") || input.equalsIgnoreCase("bishop")) {
-						board.tiles[move.endPosition.xCord][move.endPosition.yCord].addPiece(new Bishop(move.activePlayer));
-					}
-					else{
-						input = null;
-						System.out.println("Please choose a valid input between Q (Queen), R (Rook), N (Knight), and B (Bishop).");
-					}
+				if(input.equalsIgnoreCase("q") || input.equalsIgnoreCase("queen")) {
+					board.tiles[move.endPosition.xCord][move.endPosition.yCord].addPiece(new Queen(move.activePlayer));
 				}
-				catch (Exception e)
-				{
+				else if(input.equalsIgnoreCase("r") || input.equalsIgnoreCase("rook")) {
+					board.tiles[move.endPosition.xCord][move.endPosition.yCord].addPiece(new Rook(move.activePlayer));
+				}
+				else if(input.equalsIgnoreCase("n") || input.equalsIgnoreCase("knight")) {
+					board.tiles[move.endPosition.xCord][move.endPosition.yCord].addPiece(new Knight(move.activePlayer));
+				}
+				else if(input.equalsIgnoreCase("b") || input.equalsIgnoreCase("bishop")) {
+					board.tiles[move.endPosition.xCord][move.endPosition.yCord].addPiece(new Bishop(move.activePlayer));
+				}
+				else{
 					input = null;
 					System.out.println("Please choose a valid input between Q (Queen), R (Rook), N (Knight), and B (Bishop).");
 				}
+			} catch (IOException e) {
+				input = null;
+				System.out.println("Input Error: Unable to read input.");
 			}
 		}
 	}
