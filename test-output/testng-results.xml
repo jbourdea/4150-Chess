@@ -2,6 +2,7 @@
 <testng-results skipped="0" failed="0" total="7" passed="7">
   <reporter-output>
   </reporter-output>
+<<<<<<< HEAD
   <suite name="Default suite" duration-ms="20809" started-at="2014-11-12T02:14:09Z" finished-at="2014-11-12T02:14:30Z">
     <groups>
     </groups>
@@ -32,6 +33,38 @@
           </reporter-output>
         </test-method> <!-- testGameInstantiation -->
         <test-method status="PASS" signature="testPieceInstantiation()[pri:0, instance:game.TestNG@1ee8d9a5]" name="testPieceInstantiation" duration-ms="1" started-at="2014-11-11T21:14:30Z" finished-at="2014-11-11T21:14:30Z">
+=======
+  <suite name="Default suite" duration-ms="340" started-at="2014-11-20T18:39:21Z" finished-at="2014-11-20T18:39:21Z">
+    <groups>
+    </groups>
+    <test name="Default test" duration-ms="340" started-at="2014-11-20T18:39:21Z" finished-at="2014-11-20T18:39:21Z">
+      <class name="game.TestNG">
+        <test-method status="PASS" signature="testAddPiece()[pri:0, instance:game.TestNG@3cc3b9c9]" name="testAddPiece" duration-ms="17" started-at="2014-11-20T13:39:21Z" finished-at="2014-11-20T13:39:21Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testAddPiece -->
+        <test-method status="PASS" signature="testBoardInstantiation()[pri:0, instance:game.TestNG@3cc3b9c9]" name="testBoardInstantiation" duration-ms="1" started-at="2014-11-20T13:39:21Z" finished-at="2014-11-20T13:39:21Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testBoardInstantiation -->
+        <test-method status="PASS" signature="testCheck()[pri:0, instance:game.TestNG@3cc3b9c9]" name="testCheck" duration-ms="7" started-at="2014-11-20T13:39:21Z" finished-at="2014-11-20T13:39:21Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCheck -->
+        <test-method status="PASS" signature="testCheckMate()[pri:0, instance:game.TestNG@3cc3b9c9]" name="testCheckMate" duration-ms="5" started-at="2014-11-20T13:39:21Z" finished-at="2014-11-20T13:39:21Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCheckMate -->
+        <test-method status="PASS" signature="testFuzzInput()[pri:0, instance:game.TestNG@3cc3b9c9]" name="testFuzzInput" duration-ms="277" started-at="2014-11-20T13:39:21Z" finished-at="2014-11-20T13:39:21Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testFuzzInput -->
+        <test-method status="PASS" signature="testGameInstantiation()[pri:0, instance:game.TestNG@3cc3b9c9]" name="testGameInstantiation" duration-ms="1" started-at="2014-11-20T13:39:21Z" finished-at="2014-11-20T13:39:21Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testGameInstantiation -->
+        <test-method status="PASS" signature="testPieceInstantiation()[pri:0, instance:game.TestNG@3cc3b9c9]" name="testPieceInstantiation" duration-ms="1" started-at="2014-11-20T13:39:21Z" finished-at="2014-11-20T13:39:21Z">
+>>>>>>> origin/master
           <reporter-output>
           </reporter-output>
         </test-method> <!-- testPieceInstantiation -->

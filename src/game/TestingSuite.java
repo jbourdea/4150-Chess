@@ -216,6 +216,7 @@ public class TestingSuite {
 		stalemateMessageTest();
 		viewTest();
 		castlingWithoutRook();
+		castlingAfterRookMove();
 	}
 	
 	/**
@@ -393,6 +394,8 @@ public class TestingSuite {
 
 		board.AddPiece(new King(white), 1, 1);
 		board.AddPiece(new King(black), 6, 6);
+		board.AddPiece(new Pawn(black), 7, 5);
+		board.AddPiece(new Pawn(white), 7, 4);
 
 		board.AddPiece(new Rook(black), 0, 6);
 		board.AddPiece(new Rook(black), 2, 6);
