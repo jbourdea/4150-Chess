@@ -1278,7 +1278,7 @@ public class TestingSuite {
 	}
 	
 	private void castlingWithoutRook() {
-		boolean success = false;
+		boolean success = true;
 
 		game = new Game();
 		game.rules = new ClassicChess();
@@ -1295,16 +1295,18 @@ public class TestingSuite {
 		view.DisplayBoard(game.board);
 		game.NextTurn();
 
-		if (!completeMove(new Move(game.activePlayer, "d0-b0", game.board))) {
-			success = true;
-		}
-            		
-		if (success) {
-			System.out.println("| PASS | Castling test was successful.\n");
+		if (completeMove(new Move(game.activePlayer, "d0-b0", game.board))) {
+			System.out.println("| FAIL | Castling failed.\n");
 			return;
 		}
-		System.out.println("| FAIL | Castling failed.\n");
-		return;
+		completeMove(new Move(game.activePlayer, "d0-d1", game.board));
+		
+		if (completeMove(new Move(game.activePlayer, "e7-h7", game.board))) {
+			System.out.println("| FAIL | Castling failed.\n");
+			return;
+		}
+            		
+		System.out.println("| PASS | Castling test was successful.\n");
 	}
 	
 	private void castlingAfterRookMove() {
