@@ -54,6 +54,9 @@ public class TestingSuite {
 			System.out.println("17. Piece Movement: Bishop");
 			System.out.println("18. Piece Movement: Queen");
 			System.out.println("19. Piece Movement: King");
+			System.out.println("20. Move Instantiation");
+			System.out.println("21. Stalemate Message");
+			System.out.println("22. View Test");
 
 			try {
 				input = br.readLine();
@@ -133,6 +136,15 @@ public class TestingSuite {
 					} else if (option == 19) {
 						kingMovementTest();
 						input = null;
+					} else if (option == 20) {
+						moveInstantiationTest();
+						input = null;
+					} else if (option == 21) {
+						stalemateMessageTest();
+						input = null;
+					} else if (option == 22) {
+						viewTest();
+						input = null;
 					} else {
 						input = null;
 						System.out.println("Input Error: Not a valid test index.");
@@ -191,6 +203,9 @@ public class TestingSuite {
 		bishopMovementTest();
 		queenMovementTest();
 		kingMovementTest();
+		moveInstantiationTest();
+		stalemateMessageTest();
+		viewTest();
 	}
 	
 	/**
@@ -1170,6 +1185,85 @@ public class TestingSuite {
 			return;
 		}
 		System.out.println("| FAIL | Piece Movement: King test failed.\n");
+		return;
+	}
+	
+	private void moveInstantiationTest() {
+		
+		boolean success = true;
+
+		System.out.println("Beginning Move instantiation test..");
+		game = new Game();
+		game.rules = new ClassicChess();
+		game.board = game.rules.SetStartingPositions(this.game.white,
+				this.game.black);
+		game.NextTurn();
+
+		try {
+			Move move = new Move(game.activePlayer, "d0-d2", game.board);
+			move = new Move(move);
+			move = new Move(game.activePlayer, game.board.tiles[0][0], game.board.tiles[1][1]);
+			
+		} catch (Exception e) {
+			success = false;
+			System.out.println(e.getMessage());
+		}
+		if (success) {
+			System.out.println("| PASS | Move Instantiation test was successful.\n");
+			return;
+		}
+		System.out.println("| FAIL | Move Instantiation test failed.\n");
+		return;
+	}
+	
+	private void viewTest() {
+		boolean success = true;
+		game = new Game();
+		game.rules = new ClassicChess();
+		game.board = game.rules.SetStartingPositions(this.game.white,
+				this.game.black);
+		game.NextTurn();
+		
+		try {
+		View view = new View();
+
+		view.DisplayBoard(game.board);
+		view.DisplayTurnNotification(game.turnNumber, game.activePlayer.color);
+		view.setErrorMessage("Test Message");
+		view.DisplayErrorMessage();
+		view.DisplayErrorMessage(view.getErrorMessage());
+		view.DisplayStalemateMessage(game.activePlayer.color);
+		view.DisplaySurrenderMessage(game.activePlayer.color);
+		view.DisplayWinMessage(game.activePlayer);
+		view.DisplayExitMessage();
+		}
+		catch (Exception e) {
+			success = false;
+		}
+		if (success) {
+			System.out.println("| PASS | View test was successful.\n");
+			return;
+		}
+		System.out.println("| FAIL | View test failed.\n");
+		return;
+	}
+	
+	public void stalemateMessageTest() {
+		boolean success = true;
+		
+		try {
+		Rules rules = new ClassicChess();
+		rules.getStalemateMessage(new Player());
+
+		}
+		catch (Exception e) {
+			success = false;
+		}
+		if (success) {
+			System.out.println("| PASS | Stalemate Message test was successful.\n");
+			return;
+		}
+		System.out.println("| FAIL | Stalemate Message test failed.\n");
 		return;
 	}
 

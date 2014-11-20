@@ -16,6 +16,7 @@ public class TestNG {
 		if (move.IsValid() && game.rules.ValidateMove(move, game.board) == 0) {
 			MoveCompleteResult moveResult = game.CompleteMove(move);
 			game.NextTurn();
+			//System.out.println(move.piece);
 			//new View().DisplayBoard(game.board);
 			// check for game ending condition
 			if (moveResult.gameOver) {
